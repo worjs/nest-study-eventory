@@ -121,6 +121,8 @@ ALTER TABLE "review" ADD CONSTRAINT "review_user_id_fkey" FOREIGN KEY ("user_id"
 -- AddForeignKey
 ALTER TABLE "city" ADD CONSTRAINT "city_region_id_fkey" FOREIGN KEY ("region_id") REFERENCES "region"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
+------- 아래로는 직접 작성한 기본 데이터 추가 쿼리입니다 -------
+
 -- 카테고리 기본 데이터 추가
 INSERT INTO "category" ("name") VALUES
                                     ('요리'), ('파티'), ('독서'), ('러닝'), ('등산'),
