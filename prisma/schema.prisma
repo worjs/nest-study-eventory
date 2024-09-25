@@ -12,3 +12,113 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String    @id @default(uuid())
+  cityId    Int?      @map("city_id")
+  name      String
+  email     String    @unique
+  password  String
+  birthday  DateTime?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  event     Event[]
+  eventJoin EventJoin[]
+  review    Review[]
+
+  city City? @relation(fields: [cityId], references: [id])
+
+  @@map("user")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  event Event[]
+
+  @@map("category")
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  hostId      String   @map("host_id")
+  categoryId  Int      @map("category_id")
+  cityId      Int      @map("city_id")
+  title       String
+  description String
+  maxPeople   Int      @map("max_people")
+  startTime   DateTime @map("start_time")
+  endTime     DateTime @map("end_time")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  host     User     @relation(fields: [hostId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+  city     City     @relation(fields: [cityId], references: [id])
+
+  eventJoin EventJoin[]
+  review    Review[]
+
+  @@map("event")
+}
+
+model EventJoin {
+  id        Int      @id @default(autoincrement())
+  eventId   String   @map("event_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([eventId, userId])
+  @@map("event_join")
+}
+
+model Review {
+  id          Int      @id @default(autoincrement())
+  eventId     String   @map("event_id")
+  userId      String   @map("user_id")
+  title       String
+  score       Int
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([eventId, userId])
+  @@map("review")
+}
+
+model Region {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  city City[]
+
+  @@map("region")
+}
+
+model City {
+  id        Int      @id @default(autoincrement())
+  regionId  Int      @map("region_id")
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  event Event[]
+  user  User[]
+
+  region Region @relation(fields: [regionId], references: [id])
+
+  @@map("city")
+}
