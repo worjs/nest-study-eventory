@@ -10,6 +10,7 @@ permissions: write-all
 jobs:
   CI:
     runs-on: ubuntu-latest
+    environment: development
 
     steps:
       - uses: actions/checkout@v3
