@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Region } from '@prisma/client';
+import { RegionData } from '../type/region-data.type';
 
 export class RegionDto {
   @ApiProperty({
@@ -14,14 +14,14 @@ export class RegionDto {
   })
   name!: string;
 
-  static from(region: Region): RegionDto {
+  static from(region: RegionData): RegionDto {
     return {
       id: region.id,
       name: region.name,
     };
   }
 
-  static fromArray(regions: Region[]): RegionDto[] {
+  static fromArray(regions: RegionData[]): RegionDto[] {
     return regions.map((region) => this.from(region));
   }
 }
@@ -33,7 +33,7 @@ export class RegionListDto {
   })
   regions!: RegionDto[];
 
-  static from(regions: Region[]): RegionListDto {
+  static from(regions: RegionData[]): RegionListDto {
     return {
       regions: RegionDto.fromArray(regions),
     };
