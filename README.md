@@ -1,85 +1,87 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 모임 관리 플랫폼 Eventory : Back-End 강의용 프로젝트 for Junior
+본 프로젝트는 GDG on Campus Korea University에서 진행되는 Junior 멤버 대상 BE 강의자료로 사용되는 프로젝트입니다.  
+매 주 강의에서 다룰 코드는 사전에 업데이트 될 예정이며, **모든 수강생은 본 레포지토리를 포크하거나, 별도의 레포지토리를 생성해주세요.**
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 안내사항
+1. 본 레포지토리는 강의용 레포지토리입니다. 직접 PR이나 Issue를 생성하지 말아주세요.
+2. Issue와 PR에서 closed된 항목들을 확인해주세요. 본 레포지토리 코드에 대한 히스토리, 설명을 확인할 수 있습니다.
+3. 최종 과제는 5주차 수업에서 공개되며 세부사항은 Issue로 발행합니다.
+4. HW 코드는 5주차 수업 이후부터 6주차 수업 전까지 순차적으로 업로드 될 예정입니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Spec
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+모임 관리 플랫폼 Eventory는 아래와 같은 기능을 포함합니다.      
+**아래의 Spec은 향후 변경될 가능성이 있습니다.**
 
-## Project setup
+- 유저
+    - email, pw 기반으로 가입할 수 있습니다.
+    - 이름은 필수 입력 정보입니다.
+    - 거주 지역과 생년월일은 선택 입력 정보입니다.
+- 모임
+    - 유저는 모임을 생성할 수 있습니다. 해당 모임의 호스트가 됩니다.
+    - 모임에는 다른 유저들이 참여할 수 있습니다.
+    - 모임은 아래 정보를 포함합니다.
+        - 제목
+        - 내용
+        - 호스트
+        - 카테고리
+        - 지역
+        - 날짜 (1박 이상은 고려하지 않습니다.)
+        - 시작 시각
+        - 종료 시각
+        - 최대 정원 (정원에는 호스트도 포함합니다)
+    - 모임은 시작 전/진행 중/종료의 3단계의 상태를 가집니다.
+    - 모임은 시작 전까지만 수정할 수 있습니다.
+    - 모임의 수정/삭제는 호스트만 할 수 있습니다.
+- 리뷰
+    - 모임이 끝나면 참여자들은 리뷰를 작성할 수 있습니다.
+    - 리뷰는 유저 당 하나만 남길 수 있습니다.
+    - 리뷰는 아래의 정보를 포함합니다.
+        - 제목
+        - 내용 (선택)
+        - 평점 (1~5 사이의 정수)
+    - 리뷰의 수정/삭제는 작성자만 할 수 있습니다.
+- 지역
+    - 지역은 특별시/광역시/도 - 시/군/구의 2단계로 구성됩니다.
+- 카테고리
+    - 카테고리는 총 30가지이며, 유저가 별도로 추가/수정/삭제할 수 없습니다.
 
-```bash
-$ yarn install
-```
+## API List
+수업 및 과제에서 구현할 API List입니다.
+각 API에 대한 상세한 Spec은 해당 주차에 Issue로 발행할 예정입니다.  
+링크를 통해 해당 Issue로 이동할 수 있습니다.
 
-## Compile and run the project
+- Auth 
+    - POST /sign-up **(Week5)**
+    - POST /login **(Week5)**
+    - POST /refresh **(Week5)**
+- User
+    - GET /me **(Week5-HW)**
+    - GET /:id **(Week5-HW)**
+- Event
+    - GET / **(Week2-HW)**
+    - GET /me **(Week5-HW)**
+    - GET /:id **(Week2-HW)**
+    - POST / **(Week2-HW)**
+    - PUT or PATCH /:id **(Week3-HW)**
+    - DELETE /:id **(Week3-HW)**
+    - POST /:id/join **(Week3-HW)**
+    - POST /:id/out **(Week3-HW)**
+- Review
+    - GET / **(Week2)**
+    - GET /:id **(Week2)**
+    - POST / **(Week2)**
+    - PUT /:id **(Week3)**
+    - PATCH /:id **(Week3)**
+    - DELETE /:id **(Week3)**
+- Region 
+    - GET / [**(Week1)**](https://github.com/worjs/nest-study-eventory/issues/6)
+      **(Week2)**
+- Category 
+    - GET / [**(Week1-HW)**](https://github.com/worjs/nest-study-eventory/issues/7)
 
-```bash
-# development
-$ yarn run start
+## DB Schema
+아래는 DB 스키마입니다. 역시 변경 가능성이 있습니다.
+![image](https://github.com/user-attachments/assets/1ffe4912-5e79-4826-99f1-0c8641b0c527)
 
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
