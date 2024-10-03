@@ -1,4 +1,4 @@
 export type CategoriesData = {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 };
