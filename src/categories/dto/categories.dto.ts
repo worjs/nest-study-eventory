@@ -15,15 +15,15 @@ export class CategoriesDto {
   })
   name!: string;
 
-  static from(categories: CategoriesData): CategoriesDto {
+  static from(category: CategoriesData): CategoriesDto {
     return {
-      id: categories.id,
-      name: categories.name,
+      id: category.id,
+      name: category.name,
     };
   }
 
-  static fromArray(categories: CategoriesData[]): CategoriesDto[] {
-    return categories.map((categories) => this.from(categories));
+  static fromArray(category: CategoriesData[]): CategoriesDto[] {
+    return category.map((categories) => this.from(categories));
   }
 }
 

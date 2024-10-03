@@ -7,7 +7,7 @@ export class CategoriesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllCategories(): Promise<CategoriesData[]> {
-    return this.prisma.region.findMany({
+    return this.prisma.category.findMany({
       select: {
         id: true,
         name: true,
