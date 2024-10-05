@@ -39,5 +39,5 @@ export class CreateReviewPayload {
     type: String,
     nullable: true,
   })
-  content?: string | number;
+  description?: string | null;
 }

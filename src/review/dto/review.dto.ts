@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ReviewData } from '../type/review-data.type';
 
 export class ReviewDto {
   @ApiProperty({
@@ -37,4 +38,15 @@ export class ReviewDto {
     nullable: true,
   })
   description!: string | null;
+
+  static from(review: ReviewData): ReviewDto {
+    return {
+      id: review.id,
+      eventId: review.eventId,
+      userId: review.userId,
+      score: review.score,
+      title: review.title,
+      description: review.description,
+    };
+  }
 }
