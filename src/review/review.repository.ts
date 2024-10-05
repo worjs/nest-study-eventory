@@ -56,4 +56,17 @@ export class ReviewRepository {
 
     return !!review;
   }
+
+  async isUserJoinedEvent(userId: number, eventId: number): Promise<boolean> {
+    const event = await this.prisma.eventJoin.findUnique({
+      where: {
+        eventId_userId: {
+          eventId,
+          userId,
+        },
+      },
+    });
+
+    return !!event;
+  }
 }

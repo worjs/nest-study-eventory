@@ -17,9 +17,16 @@ export class ReviewService {
       payload.userId,
       payload.eventId,
     );
-
     if (isReviewExist) {
       throw new ConflictException('해당 유저의 리뷰가 이미 존재합니다.');
+    }
+
+    const isUserJoinedEvent = await this.reviewRepository.isUserJoinedEvent(
+      payload.userId,
+      payload.eventId,
+    );
+    if (!isUserJoinedEvent) {
+      throw new ConflictException('해당 유저가 이벤트에 참가하지 않았습니다.');
     }
 
     const event = await this.reviewRepository.getEventById(payload.eventId);
