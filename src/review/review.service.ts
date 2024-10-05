@@ -33,6 +33,12 @@ export class ReviewService {
       );
     }
 
+    if (event.hostId === payload.userId) {
+      throw new ConflictException(
+        '자신이 주최한 이벤트에는 리뷰를 작성 할 수 없습니다.',
+      );
+    }
+
     const user = await this.reviewRepository.getUserById(payload.userId);
     if (!user) {
       throw new NotFoundException('User가 존재하지 않습니다.');
