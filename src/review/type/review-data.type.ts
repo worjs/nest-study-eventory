@@ -1,7 +1,7 @@
 export type ReviewData = {
   id: number;
-  eventId: string;
-  userId: string;
+  eventId: number;
+  userId: number;
   score: number;
   title: string;
   description: string | null;

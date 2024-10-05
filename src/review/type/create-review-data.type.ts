@@ -1,6 +1,6 @@
 export type CreateReviewData = {
-  eventId: string;
-  userId: string;
+  eventId: number;
+  userId: number;
   score: number;
   title: string;
   description?: string | null;

@@ -28,7 +28,7 @@ export class ReviewRepository {
     });
   }
 
-  async getUserById(userId: string): Promise<User | null> {
+  async getUserById(userId: number): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: {
         id: userId,
@@ -36,7 +36,7 @@ export class ReviewRepository {
     });
   }
 
-  async getEventById(eventId: string): Promise<Event | null> {
+  async getEventById(eventId: number): Promise<Event | null> {
     return this.prisma.event.findUnique({
       where: {
         id: eventId,
@@ -44,7 +44,7 @@ export class ReviewRepository {
     });
   }
 
-  async isReviewExist(userId: string, eventId: string): Promise<boolean> {
+  async isReviewExist(userId: number, eventId: number): Promise<boolean> {
     const review = await this.prisma.review.findUnique({
       where: {
         eventId_userId: {

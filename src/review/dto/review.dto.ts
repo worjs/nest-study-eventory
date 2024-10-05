@@ -10,15 +10,15 @@ export class ReviewDto {
 
   @ApiProperty({
     description: '모임 ID',
-    type: String,
+    type: Number,
   })
-  eventId!: string;
+  eventId!: number;
 
   @ApiProperty({
     description: '유저 ID',
-    type: String,
+    type: Number,
   })
-  userId!: string;
+  userId!: number;
 
   @ApiProperty({
     description: '별점',

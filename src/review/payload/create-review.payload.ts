@@ -2,19 +2,19 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class CreateReviewPayload {
-  @IsString()
+  @IsInt()
   @ApiProperty({
     description: '모임 ID',
-    type: String,
+    type: Number,
   })
-  eventId!: string;
+  eventId!: number;
 
-  @IsString()
+  @IsInt()
   @ApiProperty({
     description: '유저 ID',
-    type: String,
+    type: Number,
   })
-  userId!: string;
+  userId!: number;
 
   @IsInt()
   @Min(1)
