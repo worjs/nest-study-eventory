@@ -57,16 +57,16 @@
     - POST /refresh **(Week5)**
 - User
     - GET /me **(Week5-HW)**
-    - GET /:id **(Week5-HW)**
+    - GET /:userId **(Week5-HW)**
 - Event
     - GET / [**(Week2-HW)**](https://github.com/worjs/nest-study-eventory/issues/17)
     - GET /me **(Week5-HW)**
-    - GET /:id [**(Week2-HW)**](https://github.com/worjs/nest-study-eventory/issues/16)
+    - GET /:eventId [**(Week2-HW)**](https://github.com/worjs/nest-study-eventory/issues/16)
     - POST / [**(Week2-HW)**](https://github.com/worjs/nest-study-eventory/issues/14)
-    - PUT or PATCH /:id **(Week3-HW)**
-    - DELETE /:id **(Week3-HW)**
-    - POST /:id/join [**(Week2-HW)**](https://github.com/worjs/nest-study-eventory/issues/18)
-    - POST /:id/out [**(Week2-HW)**](https://github.com/worjs/nest-study-eventory/issues/19)
+    - PUT or PATCH /:eventId **(Week3-HW)**
+    - DELETE /:eventId **(Week3-HW)**
+    - POST /:eventId/join [**(Week2-HW)**](https://github.com/worjs/nest-study-eventory/issues/18)
+    - POST /:eventId/out [**(Week2-HW)**](https://github.com/worjs/nest-study-eventory/issues/19)
 - Review
     - GET / [**(Week2)**](https://github.com/worjs/nest-study-eventory/issues/12)
     - GET /:reviewId [**(Week2)**](https://github.com/worjs/nest-study-eventory/issues/11)
