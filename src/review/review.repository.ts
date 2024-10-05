@@ -69,6 +69,7 @@ export class ReviewRepository {
 
     return !!event;
   }
+
   async getReviewById(reviewId: number): Promise<ReviewData | null> {
     return this.prisma.review.findUnique({
       where: {
