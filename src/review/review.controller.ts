@@ -31,7 +31,7 @@ export class ReviewController {
   @Get(':reviewId')
   @ApiOperation({ summary: '리뷰 상세 정보를 가져옵니다' })
   @ApiOkResponse({ type: ReviewDto })
-  async getReview(
+  async getReviewById(
     @Param('reviewId', ParseIntPipe) reviewId: number,
   ): Promise<ReviewDto> {
     return this.reviewService.getReviewById(reviewId);
