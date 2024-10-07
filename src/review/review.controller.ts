@@ -1,6 +1,18 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { ReviewService } from './review.service';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ReviewDto } from './dto/review.dto';
 import { CreateReviewPayload } from './payload/create-review.payload';
 
@@ -14,5 +26,14 @@ export class ReviewController {
   @ApiCreatedResponse({ type: ReviewDto })
   async createReview(@Body() payload: CreateReviewPayload): Promise<ReviewDto> {
     return this.reviewService.createReview(payload);
+  }
+
+  @Get(':reviewId')
+  @ApiOperation({ summary: '리뷰 상세 정보를 가져옵니다' })
+  @ApiOkResponse({ type: ReviewDto })
+  async getReviewById(
+    @Param('reviewId', ParseIntPipe) reviewId: number,
+  ): Promise<ReviewDto> {
+    return this.reviewService.getReviewById(reviewId);
   }
 }
