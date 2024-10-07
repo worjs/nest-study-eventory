@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { ReviewRepository } from './review.repository';
 import { CreateReviewPayload } from './payload/create-review.payload';
-import { ReviewDto } from './dto/review.dto';
+import { ReviewDto, ReviewListDto } from './dto/review.dto';
 import { CreateReviewData } from './type/create-review-data.type';
+import { ReviewQuery } from './query/review.query';
 
 @Injectable()
 export class ReviewService {
@@ -72,5 +73,11 @@ export class ReviewService {
     }
 
     return ReviewDto.from(review);
+  }
+
+  async getReviews(query: ReviewQuery): Promise<ReviewListDto> {
+    const reviews = await this.reviewRepository.getReviews(query);
+
+    return ReviewListDto.from(reviews);
   }
 }

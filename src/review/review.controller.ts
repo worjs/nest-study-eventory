@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import {
@@ -13,8 +14,9 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { ReviewDto } from './dto/review.dto';
+import { ReviewDto, ReviewListDto } from './dto/review.dto';
 import { CreateReviewPayload } from './payload/create-review.payload';
+import { ReviewQuery } from './query/review.query';
 
 @Controller('reviews')
 @ApiTags('Review API')
@@ -35,5 +37,12 @@ export class ReviewController {
     @Param('reviewId', ParseIntPipe) reviewId: number,
   ): Promise<ReviewDto> {
     return this.reviewService.getReviewById(reviewId);
+  }
+
+  @Get()
+  @ApiOperation({ summary: '여러 리뷰 정보를 가져옵니다' })
+  @ApiOkResponse({ type: ReviewListDto })
+  async getReviews(@Query() query: ReviewQuery): Promise<ReviewListDto> {
+    return this.reviewService.getReviews(query);
   }
 }

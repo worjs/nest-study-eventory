@@ -49,4 +49,22 @@ export class ReviewDto {
       description: review.description,
     };
   }
+
+  static fromArray(reviews: ReviewData[]): ReviewDto[] {
+    return reviews.map((review) => this.from(review));
+  }
+}
+
+export class ReviewListDto {
+  @ApiProperty({
+    description: '리뷰 목록',
+    type: [ReviewDto],
+  })
+  reviews!: ReviewDto[];
+
+  static from(reviews: ReviewData[]): ReviewListDto {
+    return {
+      reviews: ReviewDto.fromArray(reviews),
+    };
+  }
 }
