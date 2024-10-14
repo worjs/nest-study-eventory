@@ -29,7 +29,11 @@ export class CategoryDto {
 export class CategoryListDto {
   @ApiProperty({
     description: '카테고리 목록',
+<<<<<<< HEAD
     type: [CategoryDto],
+=======
+    type: [CategoryDto]
+>>>>>>> bdbee3c (Category folder changed)
   })
   categories!: CategoryDto[];
 
