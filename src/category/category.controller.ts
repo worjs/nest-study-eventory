@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { Controller } from '@nestjs/common';
-
-@Controller('category')
-export class CategoryController {}
-=======
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
@@ -22,4 +16,3 @@ export class CategoryController {
     return this.categoryService.findAllCategories();
   }
 }
->>>>>>> bdbee3c (Category folder changed)

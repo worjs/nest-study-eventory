@@ -1,9 +1,4 @@
 import { Injectable } from '@nestjs/common';
-<<<<<<< HEAD
-
-@Injectable()
-export class CategoryService {}
-=======
 import { CategoryRepository } from './category.repository';
 import { CategoryListDto } from './dto/category.dto';
 import { CategoryData } from './type/category-data.type';
@@ -18,4 +13,3 @@ export class CategoryService {
     return CategoryListDto.from(categories);
   }
 }
->>>>>>> bdbee3c (Category folder changed)

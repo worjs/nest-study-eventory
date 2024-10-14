@@ -34,6 +34,7 @@ export class CategoryListDto {
 =======
     type: [CategoryDto]
 >>>>>>> bdbee3c (Category folder changed)
+    type: [CategoryDto]
   })
   categories!: CategoryDto[];
 
