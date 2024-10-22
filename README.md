@@ -76,7 +76,7 @@
     - DELETE /:reviewId **(Week3)**
 - Region 
     - GET / [**(Week1)**](https://github.com/worjs/nest-study-eventory/issues/6)
-      [**(Week2)**](https://github.com/worjs/nest-study-eventory/issues/9)
+      [**(Week2-HW)**](https://github.com/worjs/nest-study-eventory/issues/9)
 - Category 
     - GET / [**(Week1-HW)**](https://github.com/worjs/nest-study-eventory/issues/7)
 
