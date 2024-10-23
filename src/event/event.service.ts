@@ -42,10 +42,6 @@ export class EventService {
       );
     }
 
-    if (payload.maxPeople < 1) {
-      throw new ConflictException('최대 인원은 1명 이상이어야 합니다.');
-    }
-
     const createData: CreateEventData = {
       hostId: payload.hostId,
       title: payload.title,

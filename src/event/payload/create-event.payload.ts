@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsInt, IsDate, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateEventPayload {
   @IsInt()
@@ -38,6 +39,7 @@ export class CreateEventPayload {
   cityId!: number;
 
   @IsDate()
+  @Type(() => Date)
   @ApiProperty({
     description: '시작 시간',
     type: Date,
@@ -45,6 +47,7 @@ export class CreateEventPayload {
   startTime!: Date;
 
   @IsDate()
+  @Type(() => Date)
   @ApiProperty({
     description: '종료 시간',
     type: Date,
