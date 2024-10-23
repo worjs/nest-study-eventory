@@ -10,9 +10,9 @@ export class EventDto {
 
   @ApiProperty({
     description: '호스트 ID',
-    type: String,
+    type: Number,
   })
-  hostId!: string;
+  hostId!: number;
 
   @ApiProperty({
     description: '이벤트 제목',

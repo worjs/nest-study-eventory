@@ -1,6 +1,6 @@
 export type EventData = {
   id: number;
-  hostId: string;
+  hostId: number;
   title: string;
   description: string;
   categoryId: number;
