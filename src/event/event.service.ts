@@ -55,6 +55,8 @@ export class EventService {
 
     const event = await this.eventRepository.createEvent(createData);
 
+    await this.eventRepository.addHostToEvent(event.id, payload.hostId);
+
     return EventDto.from(event);
   }
 }
