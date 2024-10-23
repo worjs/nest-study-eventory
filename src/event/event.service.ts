@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { EventRepository } from './event.repository';
 import { CreateEventData } from './type/create-event-data.type';
 import { CreateEventPayload } from './payload/create-event.payload';
@@ -9,6 +13,39 @@ export class EventService {
   constructor(private readonly eventRepository: EventRepository) {}
 
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
+    const host = await this.eventRepository.getHostById(payload.hostId);
+    if (!host) {
+      throw new NotFoundException('해당 Host가 존재하지 않습니다.');
+    }
+
+    const category = await this.eventRepository.getCategoryById(
+      payload.categoryId,
+    );
+    if (!category) {
+      throw new NotFoundException('해당 Category가 존재하지 않습니다.');
+    }
+
+    const city = await this.eventRepository.getCityById(payload.cityId);
+    if (!city) {
+      throw new NotFoundException('해당 City가 존재하지 않습니다.');
+    }
+
+    if (payload.startTime > payload.endTime) {
+      throw new ConflictException(
+        '시작 시간이 종료 시간보다 늦을 수 없습니다.',
+      );
+    }
+
+    if (payload.startTime < new Date()) {
+      throw new ConflictException(
+        '시작 시간이 현재 시간보다 빠를 수 없습니다.',
+      );
+    }
+
+    if (payload.maxPeople < 1) {
+      throw new ConflictException('최대 인원은 1명 이상이어야 합니다.');
+    }
+
     const createData: CreateEventData = {
       hostId: payload.hostId,
       title: payload.title,

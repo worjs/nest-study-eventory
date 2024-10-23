@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { CreateEventData } from './type/create-event-data.type';
 import { EventData } from './type/event-data.type';
+import { User, Category, City } from '@prisma/client';
 @Injectable()
 export class EventRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -29,6 +30,30 @@ export class EventRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
+      },
+    });
+  }
+
+  async getHostById(hostId: number): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        id: hostId,
+      },
+    });
+  }
+
+  async getCategoryById(categoryId: number): Promise<Category | null> {
+    return this.prisma.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+  }
+
+  async getCityById(cityId: number): Promise<City | null> {
+    return this.prisma.city.findUnique({
+      where: {
+        id: cityId,
       },
     });
   }
