@@ -21,7 +21,7 @@ export class EventDto {
   title!: string;
 
   @ApiProperty({
-    description: '이벤트 설명',
+    description: '이벤트 내용',
     type: String,
   })
   description!: string;
@@ -33,7 +33,7 @@ export class EventDto {
   categoryId!: number;
 
   @ApiProperty({
-    description: '도시 ID',
+    description: '지역 ID',
     type: Number,
   })
   cityId!: number;

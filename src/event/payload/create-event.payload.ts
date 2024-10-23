@@ -18,7 +18,7 @@ export class CreateEventPayload {
 
   @IsString()
   @ApiProperty({
-    description: '이벤트 설명',
+    description: '이벤트 내용',
     type: String,
   })
   description!: string;
@@ -32,7 +32,7 @@ export class CreateEventPayload {
 
   @IsInt()
   @ApiProperty({
-    description: '도시 ID',
+    description: '지역 ID',
     type: Number,
   })
   cityId!: number;
