@@ -13,19 +13,20 @@ export class EventService {
   constructor(private readonly eventRepository: EventRepository) {}
 
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
-    const host = await this.eventRepository.getHostById(payload.hostId);
+    const [host, category, city] = await Promise.all([
+      this.eventRepository.getHostById(payload.hostId),
+      this.eventRepository.getCategoryById(payload.categoryId),
+      this.eventRepository.getCityById(payload.cityId),
+    ]);
+
     if (!host) {
       throw new NotFoundException('해당 Host가 존재하지 않습니다.');
     }
 
-    const category = await this.eventRepository.getCategoryById(
-      payload.categoryId,
-    );
     if (!category) {
       throw new NotFoundException('해당 Category가 존재하지 않습니다.');
     }
 
-    const city = await this.eventRepository.getCityById(payload.cityId);
     if (!city) {
       throw new NotFoundException('해당 City가 존재하지 않습니다.');
     }
