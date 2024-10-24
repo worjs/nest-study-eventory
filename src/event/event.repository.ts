@@ -3,6 +3,7 @@ import { PrismaService } from 'src/common/services/prisma.service';
 import { CreateEventData } from './type/create-event-data.type';
 import { EventData } from './type/event-data.type';
 import { User, Category, City } from '@prisma/client';
+
 @Injectable()
 export class EventRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -18,6 +19,14 @@ export class EventRepository {
         startTime: data.startTime,
         endTime: data.endTime,
         maxPeople: data.maxPeople,
+
+        eventJoin: {
+          create: [
+            {
+              userId: data.hostId,
+            },
+          ],
+        },
       },
 
       select: {
@@ -30,15 +39,6 @@ export class EventRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
-      },
-    });
-  }
-
-  async addHostToEvent(eventId: number, hostId: number): Promise<void> {
-    await this.prisma.eventJoin.create({
-      data: {
-        eventId: eventId,
-        userId: hostId,
       },
     });
   }
