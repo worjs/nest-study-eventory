@@ -1,7 +1,10 @@
-export type CreateReviewData = {
-  eventId: number;
-  userId: number;
-  score: number;
-  title: string;
-  description?: string | null;
+export type CreateEventData = {
+  hostId: number,
+  title: string,
+  description: string,
+  categoryId: number,
+  cityId: number,
+  startTime: Date,
+  endTime: Date,
+  maxPeople: number,
 };

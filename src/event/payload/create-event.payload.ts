@@ -60,17 +60,6 @@ export class CreateEventPayload {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
   };
 
 
