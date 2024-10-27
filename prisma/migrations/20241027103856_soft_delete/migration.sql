@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "user" ADD COLUMN     "deletedAt" TIMESTAMP(3);
+ALTER TABLE "user" ADD COLUMN     "deleted_at" TIMESTAMP(3);
