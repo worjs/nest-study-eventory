@@ -35,8 +35,6 @@ export class EventService {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
 
-    
-
     if (event.startTime < new Date()) {
       throw new ConflictException(
         '모임이 이미 시작되었습니다. 수정/ 삭제가 불가능합니다.',
