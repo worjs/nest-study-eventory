@@ -77,7 +77,7 @@ export class ReviewController {
   @ApiNoContentResponse()
   async deleteReview(
     @Param('reviewId', ParseIntPipe) reviewId: number,
-  ): Promise<ReviewDto> {
+  ): Promise<void> {
     return this.reviewService.deleteReview(reviewId);
   }
 }
