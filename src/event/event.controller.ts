@@ -7,42 +7,42 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ReviewService } from './event.service';
+import { EventService } from './event.service';
 import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { ReviewDto, ReviewListDto } from './dto/event.dto';
-import { CreateReviewPayload } from './payload/create-event.payload';
-import { ReviewQuery } from './query/event.query';
+import { EventDto, EventListDto } from './dto/event.dto';
+import { EventPayload } from './payload/create-event.payload';
+import { EventQuery } from './query/event.query';
 
-@Controller('reviews')
-@ApiTags('Review API')
-export class ReviewController {
-  constructor(private readonly reviewService: ReviewService) {}
+@Controller('events')
+@ApiTags('Event API')
+export class EventController {
+  constructor(private readonly eventService: EventService) {}
 
   @Post()
   @ApiOperation({ summary: '리뷰를 생성합니다' })
-  @ApiCreatedResponse({ type: ReviewDto })
-  async createReview(@Body() payload: CreateReviewPayload): Promise<ReviewDto> {
-    return this.reviewService.createReview(payload);
+  @ApiCreatedResponse({ type: EventDto })
+  async createEvent(@Body() payload: CreateEventPayload): Promise<EventDto> {
+    return this.eventService.createEvent(payload);
   }
 
-  @Get(':reviewId')
+  @Get(':EventId')
   @ApiOperation({ summary: '리뷰 상세 정보를 가져옵니다' })
-  @ApiOkResponse({ type: ReviewDto })
-  async getReviewById(
-    @Param('reviewId', ParseIntPipe) reviewId: number,
-  ): Promise<ReviewDto> {
-    return this.reviewService.getReviewById(reviewId);
+  @ApiOkResponse({ type: EventDto })
+  async getEventById(
+    @Param('eventId', ParseIntPipe) eventId: number,
+  ): Promise<EventDto> {
+    return this.eventService.getEventById(eventId);
   }
 
   @Get()
   @ApiOperation({ summary: '여러 리뷰 정보를 가져옵니다' })
-  @ApiOkResponse({ type: ReviewListDto })
-  async getReviews(@Query() query: ReviewQuery): Promise<ReviewListDto> {
-    return this.reviewService.getReviews(query);
+  @ApiOkResponse({ type: EventListDto })
+  async getEvents(@Query() query: EventQuery): Promise<EventListDto> {
+    return this.eventService.getEvents(query);
   }
 }

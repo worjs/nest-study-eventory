@@ -3,26 +3,26 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ReviewRepository } from './event.repository';
-import { CreateReviewPayload } from './payload/create-event.payload';
-import { ReviewDto, ReviewListDto } from './dto/event.dto';
-import { CreateReviewData } from './type/create-event-data.type';
-import { ReviewQuery } from './query/event.query';
+import { EventRepository } from './event.repository';
+import { CreateEventPayload } from './payload/create-event.payload';
+import { EventDto, EventListDto } from './dto/event.dto';
+import { CreateEventData } from './type/create-event-data.type';
+import { EventQuery } from './query/event.query';
 
 @Injectable()
-export class ReviewService {
-  constructor(private readonly reviewRepository: ReviewRepository) {}
+export class EventService {
+  constructor(private readonly eventRepository: EventRepository) {}
 
-  async createReview(payload: CreateReviewPayload): Promise<ReviewDto> {
-    const isReviewExist = await this.reviewRepository.isReviewExist(
+  async createEvent(payload: CreateEventPayload): Promise<EventDto> {
+    const isEventExist = await this.eventRepository.isEventExist(
       payload.userId,
       payload.eventId,
     );
-    if (isReviewExist) {
+    if (isEventExist) {
       throw new ConflictException('해당 유저의 리뷰가 이미 존재합니다.');
     }
 
-    const isUserJoinedEvent = await this.reviewRepository.isUserJoinedEvent(
+    const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
       payload.userId,
       payload.eventId,
     );
@@ -30,14 +30,16 @@ export class ReviewService {
       throw new ConflictException('해당 유저가 이벤트에 참가하지 않았습니다.');
     }
 
-    const event = await this.reviewRepository.getEventById(payload.eventId);
+    const event = await this.eventRepository.getEventById(payload.eventId);
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
 
-    if (event.endTime > new Date()) {
+    
+
+    if (event.startTime < new Date()) {
       throw new ConflictException(
-        'Event가 종료되지 않았습니다. 아직 리뷰를 작성할 수 없습니다.',
+        '모임이 이미 시작되었습니다. 수정/ 삭제가 불가능합니다.',
       );
     }
 
@@ -47,37 +49,40 @@ export class ReviewService {
       );
     }
 
-    const user = await this.reviewRepository.getUserById(payload.userId);
+    const user = await this.eventRepository.getHostById(payload.hostId);
     if (!user) {
-      throw new NotFoundException('User가 존재하지 않습니다.');
+      throw new NotFoundException('host가 존재하지 않습니다.');
     }
 
-    const createData: CreateReviewData = {
-      userId: payload.userId,
-      eventId: payload.eventId,
-      score: payload.score,
+    const createData: CreateEventData = {
+      hostId: payload.hostId,
       title: payload.title,
       description: payload.description,
+      categoryId: payload.categoryId,
+      cityId: payload.cityId,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      maxPeople: payload.maxPeople,
     };
 
-    const review = await this.reviewRepository.createReview(createData);
+    const event = await this.eventRepository.createEvent(createData);
 
-    return ReviewDto.from(review);
+    return EventDto.from(event);
   }
 
-  async getReviewById(reviewId: number): Promise<ReviewDto> {
-    const review = await this.reviewRepository.getReviewById(reviewId);
+  async getEventById(eventId: number): Promise<EventDto> {
+    const event = await this.eventRepository.getEventById(eventId);
 
-    if (!review) {
-      throw new NotFoundException('Review가 존재하지 않습니다.');
+    if (!event) {
+      throw new NotFoundException('event가 존재하지 않습니다.');
     }
 
-    return ReviewDto.from(review);
+    return EventDto.from(event);
   }
 
-  async getReviews(query: ReviewQuery): Promise<ReviewListDto> {
-    const reviews = await this.reviewRepository.getReviews(query);
+  async getEvents(query: EventQuery): Promise<EventListDto> {
+    const events = await this.eventRepository.getEvents(query);
 
-    return ReviewListDto.from(reviews);
+    return EventListDto.from(events);
   }
 }

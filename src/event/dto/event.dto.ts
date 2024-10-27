@@ -1,70 +1,85 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ReviewData } from '../type/event-data.type';
+import { EventData } from '../type/event-data.type';
 
-export class ReviewDto {
+export class EventDto {
   @ApiProperty({
-    description: '리뷰 ID',
+    description: '호스트 ID',
     type: Number,
   })
-  id!: number;
+  hostId!: number;
 
   @ApiProperty({
-    description: '모임 ID',
-    type: Number,
-  })
-  eventId!: number;
-
-  @ApiProperty({
-    description: '유저 ID',
-    type: Number,
-  })
-  userId!: number;
-
-  @ApiProperty({
-    description: '별점',
-    type: Number,
-  })
-  score!: number;
-
-  @ApiProperty({
-    description: '리뷰 제목',
+    description: '모임 이름',
     type: String,
+    nullable: true,
   })
   title!: string;
 
   @ApiProperty({
-    description: '리뷰 내용',
+    description: '모임 설명',
     type: String,
     nullable: true,
   })
-  description!: string | null;
+  description!: string;
 
-  static from(review: ReviewData): ReviewDto {
+  @ApiProperty({
+    description: '카테고리 ID',
+    type: Number,
+  })
+  categoryId!: number;
+
+  @ApiProperty({
+    description: '도시 ID',
+    type: Number,
+  })
+  cityId!: number;
+
+  @ApiProperty({
+    description: '시작 시간',
+    type: Date,
+  })
+  startTime!: Date;
+
+  @ApiProperty({
+    description: '종료 시간',
+    type: Date,
+  })
+  endTime!: Date;
+
+  @ApiProperty({
+    description: '최대 인원',
+    type: Number,
+  })
+  maxPeople!: number;
+
+  static from(event: EventData): EventDto {
     return {
-      id: review.id,
-      eventId: review.eventId,
-      userId: review.userId,
-      score: review.score,
-      title: review.title,
-      description: review.description,
+      hostId: event.hostId,
+      title: event.title,
+      description: event.description,
+      categoryId: event.categoryId,
+      cityId: event.cityId,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      maxPeople: event.maxPeople,
     };
   }
 
-  static fromArray(reviews: ReviewData[]): ReviewDto[] {
-    return reviews.map((review) => this.from(review));
+  static fromArray(events: EventData[]): EventDto[] {
+    return events.map((event) => this.from(event));
   }
 }
 
-export class ReviewListDto {
+export class EventListDto {
   @ApiProperty({
-    description: '리뷰 목록',
-    type: [ReviewDto],
+    description: '모임 목록',
+    type: [EventDto],
   })
-  reviews!: ReviewDto[];
+  events!: EventDto[];
 
-  static from(reviews: ReviewData[]): ReviewListDto {
+  static from(events: EventData[]): EventListDto {
     return {
-      reviews: ReviewDto.fromArray(reviews),
+      events: EventDto.fromArray(events),
     };
   }
 }

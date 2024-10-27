@@ -1,4 +1,4 @@
-export type ReviewData = {
+export type EventData = {
   id: number;
   hostId: number;
   title: string;
