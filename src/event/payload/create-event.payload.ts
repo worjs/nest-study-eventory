@@ -57,9 +57,4 @@ export class CreateEventPayload {
     type: Number,
   })
   maxPeople!: number;
-
-
-
-  };
-
-
+}
