@@ -61,8 +61,8 @@ export class EventController {
   @ApiOkResponse({ type: EventDto })
   async outEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Param('userId', ParseIntPipe) userId: number,): Promise<void> {
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<void> {
     return this.eventService.outEvent(eventId, userId);
   }
-
 }

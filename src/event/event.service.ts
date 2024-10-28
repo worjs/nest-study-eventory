@@ -14,8 +14,6 @@ export class EventService {
   constructor(private readonly eventRepository: EventRepository) {}
 
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
-   
-
     /*const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
       payload.userId,
       payload.eventId,
@@ -35,7 +33,6 @@ export class EventService {
         '모임이 이미 시작되었습니다. 수정/ 삭제가 불가능합니다.',
       );
     }
-    
 
     const user = await this.eventRepository.getHostById(payload.hostId);
     if (!user) {

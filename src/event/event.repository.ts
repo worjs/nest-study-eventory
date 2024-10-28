@@ -94,7 +94,7 @@ export class EventRepository {
       },
     });
   }
-  
+
   async outEvent(eventId: number, userId: number): Promise<void> {
     await this.prisma.eventJoin.delete({
       where: {
@@ -145,7 +145,4 @@ export class EventRepository {
       },
     });
   }
-
-
-
 }
