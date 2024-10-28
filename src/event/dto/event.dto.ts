@@ -9,6 +9,12 @@ export class EventDto {
   hostId!: number;
 
   @ApiProperty({
+    description: '모임 ID',
+    type: Number,
+  })
+  id!: number;
+
+  @ApiProperty({
     description: '모임 이름',
     type: String,
     nullable: true,
@@ -55,6 +61,7 @@ export class EventDto {
   static from(event: EventData): EventDto {
     return {
       hostId: event.hostId,
+      id: event.id,
       title: event.title,
       description: event.description,
       categoryId: event.categoryId,
