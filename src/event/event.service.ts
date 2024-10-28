@@ -14,12 +14,12 @@ export class EventService {
   constructor(private readonly eventRepository: EventRepository) {}
 
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
-    const isEventExist = await this.eventRepository.isEventExist(
+    /*const isEventExist = await this.eventRepository.isEventExist(
       payload.hostId,
     );
     if (isEventExist) {
       throw new ConflictException('해당 호스트의 모임이 이미 존재합니다.');
-    }
+    }*/
 
     /*const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
       payload.userId,
@@ -40,16 +40,27 @@ export class EventService {
         '모임이 이미 시작되었습니다. 수정/ 삭제가 불가능합니다.',
       );
     }
-
+    /*
     if (event1.hostId === payload.hostId) {
       throw new ConflictException(
         '자신이 주최한 이벤트에는 리뷰를 작성 할 수 없습니다.',
       );
     }
+    */
 
     const user = await this.eventRepository.getHostById(payload.hostId);
     if (!user) {
       throw new NotFoundException('host가 존재하지 않습니다.');
+    }
+
+    const user2 = await this.eventRepository.getHostByCategoryId(payload.categoryId);
+    if (!user2) {
+      throw new NotFoundException('category가 존재하지 않습니다.');
+    }
+
+    const user3 = await this.eventRepository.getHostByCityId(payload.cityId);
+    if (!user3) {
+      throw new NotFoundException('city가 존재하지 않습니다.');
     }
 
     const createData: CreateEventData = {
@@ -68,7 +79,7 @@ export class EventService {
     return EventDto.from(event);
   }
 
-  async getEventById(eventId: number): Promise<EventDto> {
+  async getEventByEventId(eventId: number): Promise<EventDto> {
     const event = await this.eventRepository.getEventById(eventId);
 
     if (!event) {
@@ -83,6 +94,7 @@ export class EventService {
 
     return EventListDto.from(events);
   }
+  
   async joinEvent(eventId: number, userId: number): Promise<void> {
     const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
       userId,

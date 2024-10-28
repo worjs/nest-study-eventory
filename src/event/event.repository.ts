@@ -20,6 +20,11 @@ export class EventRepository {
         startTime: data.startTime,
         endTime: data.endTime,
         maxPeople: data.maxPeople,
+        eventJoin: {
+          create: {
+            userId: data.hostId,
+        },
+        },
       },
       select: {
         id: true,
@@ -35,13 +40,7 @@ export class EventRepository {
     });
   }
 
-  async getUserById(userId: number): Promise<User | null> {
-    return this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-  }
+
 
   async getHostById(hostId: number): Promise<User | null> {
     return this.prisma.user.findUnique({
@@ -51,10 +50,26 @@ export class EventRepository {
     });
   }
 
-  async isEventExist(hostId: number): Promise<boolean> {
+  async getHostByCategoryId(categoryId: number): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+  }
+
+  async getHostByCityId(cityId: number): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        id: cityId,
+      },
+    });
+  }
+
+  async isEventExist(id: number): Promise<boolean> {
     const event = await this.prisma.event.findUnique({
       where: {
-        id: hostId,
+        id: id,
       },
     });
 

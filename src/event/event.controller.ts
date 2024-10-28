@@ -24,35 +24,34 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Post()
-  @ApiOperation({ summary: '리뷰를 생성합니다' })
+  @ApiOperation({ summary: '모임을 생성합니다' })
   @ApiCreatedResponse({ type: EventDto })
   async createEvent(@Body() payload: CreateEventPayload): Promise<EventDto> {
     return this.eventService.createEvent(payload);
   }
 
   @Get(':eventId')
-  @ApiOperation({ summary: '리뷰 상세 정보를 가져옵니다' })
+  @ApiOperation({ summary: '모임 상세 정보를 가져옵니다' })
   @ApiOkResponse({ type: EventDto })
   async getEventById(
     @Param('eventId', ParseIntPipe) eventId: number,
   ): Promise<EventDto> {
-    return this.eventService.getEventById(eventId);
+    return this.eventService.getEventByEventId(eventId);
   }
 
   @Get()
-  @ApiOperation({ summary: '여러 리뷰 정보를 가져옵니다' })
+  @ApiOperation({ summary: '여러 모임 정보를 가져옵니다' })
   @ApiOkResponse({ type: EventListDto })
   async getEvents(@Query() query: EventQuery): Promise<EventListDto> {
     return this.eventService.getEvents(query);
   }
 
   @Post(':eventId/join')
-  @ApiOperation({ summary: '이벤트에 참가합니다' })
+  @ApiOperation({ summary: '모임에 참가합니다' })
   @ApiOkResponse({ type: EventListDto })
   async joinEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Param('userId', ParseIntPipe) userId: number,
-  ): Promise<EventDto> {
+    @Param('userId', ParseIntPipe) userId: number,): Promise<void> {
     return this.eventService.joinEvent(eventId, userId);
   }
 }
