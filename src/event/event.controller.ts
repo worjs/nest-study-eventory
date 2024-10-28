@@ -48,10 +48,20 @@ export class EventController {
 
   @Post(':eventId/join')
   @ApiOperation({ summary: '모임에 참가합니다' })
-  @ApiOkResponse({ type: EventListDto })
+  @ApiOkResponse({ type: EventDto })
   async joinEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
     @Param('userId', ParseIntPipe) userId: number,): Promise<void> {
     return this.eventService.joinEvent(eventId, userId);
   }
+
+  @Post('eventId/out')
+  @ApiOperation({ summary: '유저를 event에서 내보냅니다.' })
+  @ApiOkResponse({ type: EventDto })
+  async outEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+    @Param('userId', ParseIntPipe) userId: number,): Promise<void> {
+    return this.eventService.outEvent(eventId, userId);
+  }
+
 }

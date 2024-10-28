@@ -116,4 +116,22 @@ export class EventService {
 
     await this.eventRepository.joinEvent(eventId, userId);
   }
+  async outEvent(eventId: number, userId: number): Promise<void> {
+    const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
+      userId,
+      eventId,
+    );
+    if (!isUserJoinedEvent) {
+      throw new ConflictException('해당 유저가 참가하지 않은 이벤트입니다.');
+    }
+
+    const event = await this.eventRepository.getEventById(eventId);
+    if (!event) {
+      throw new NotFoundException('Event가 존재하지 않습니다.');
+    }
+
+    event.maxPeople = event.maxPeople + 1;
+
+    await this.eventRepository.outEvent(eventId, userId);
+  }
 }
