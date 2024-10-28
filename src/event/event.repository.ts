@@ -23,7 +23,7 @@ export class EventRepository {
         eventJoin: {
           create: {
             userId: data.hostId,
-        },
+          },
         },
       },
       select: {
@@ -39,8 +39,6 @@ export class EventRepository {
       },
     });
   }
-
-
 
   async getHostById(hostId: number): Promise<User | null> {
     return this.prisma.user.findUnique({

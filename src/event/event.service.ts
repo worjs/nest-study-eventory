@@ -53,7 +53,9 @@ export class EventService {
       throw new NotFoundException('host가 존재하지 않습니다.');
     }
 
-    const user2 = await this.eventRepository.getHostByCategoryId(payload.categoryId);
+    const user2 = await this.eventRepository.getHostByCategoryId(
+      payload.categoryId,
+    );
     if (!user2) {
       throw new NotFoundException('category가 존재하지 않습니다.');
     }
@@ -94,7 +96,7 @@ export class EventService {
 
     return EventListDto.from(events);
   }
-  
+
   async joinEvent(eventId: number, userId: number): Promise<void> {
     const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
       userId,
