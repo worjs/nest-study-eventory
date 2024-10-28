@@ -96,8 +96,8 @@ export class EventService {
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
-    
-    if (event.maxPeople ==0) {
+
+    if (event.maxPeople == 0) {
       throw new ConflictException('이미 정원이 다 찼습니다.');
     }
     event.maxPeople = event.maxPeople - 1;

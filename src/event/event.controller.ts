@@ -53,12 +53,6 @@ export class EventController {
     @Param('eventId', ParseIntPipe) eventId: number,
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<EventDto> {
-    return this.eventService.joinEvent(eventId,userId);
+    return this.eventService.joinEvent(eventId, userId);
   }
-
-
-
-
-
-
 }
