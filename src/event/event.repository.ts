@@ -98,6 +98,8 @@ export class EventRepository {
     return this.prisma.event.findMany({
       where: {
         hostId: query.hostId,
+        cityId: query.cityId,
+        categoryId: query.categoryId,
       },
       select: {
         id: true,
