@@ -75,10 +75,10 @@ export class EventRepository {
     return !!event;
   }
 */
-  async getEventByHostId(hostId: number): Promise<EventData | null> {
+  async getEventById(eventId: number): Promise<EventData | null> {
     return this.prisma.event.findUnique({
       where: {
-        id: hostId,
+        id: eventId,
       },
       select: {
         id: true,

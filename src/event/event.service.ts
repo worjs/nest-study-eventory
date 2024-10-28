@@ -30,7 +30,7 @@ export class EventService {
     }
       */
 
-    const event1 = await this.eventRepository.getEventByHostId(payload.hostId);
+    const event1 = await this.eventRepository.getEventById(payload.hostId);
     if (!event1) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
@@ -68,8 +68,8 @@ export class EventService {
     return EventDto.from(event);
   }
 
-  async getEventByHostId(eventId: number): Promise<EventDto> {
-    const event = await this.eventRepository.getEventByHostId(eventId);
+  async getEventById(eventId: number): Promise<EventDto> {
+    const event = await this.eventRepository.getEventById(eventId);
 
     if (!event) {
       throw new NotFoundException('event가 존재하지 않습니다.');
