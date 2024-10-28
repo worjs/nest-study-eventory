@@ -11,5 +11,4 @@ export class EventQuery {
     type: Number,
   })
   hostId?: number;
-
 }
