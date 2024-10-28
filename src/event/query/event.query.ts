@@ -11,4 +11,22 @@ export class EventQuery {
     type: Number,
   })
   hostId?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  @ApiPropertyOptional({
+    description: '카테고리 ID',
+    type: Number,
+  })
+  categoryId?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  @ApiPropertyOptional({
+    description: '도시 ID',
+    type: Number,
+  })
+  cityId?: number;
 }

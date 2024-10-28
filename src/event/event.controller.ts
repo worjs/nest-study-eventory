@@ -15,7 +15,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EventDto, EventListDto } from './dto/event.dto';
-import { EventPayload } from './payload/create-event.payload';
+import { CreateEventPayload } from './payload/create-event.payload';
 import { EventQuery } from './query/event.query';
 
 @Controller('events')
@@ -30,7 +30,7 @@ export class EventController {
     return this.eventService.createEvent(payload);
   }
 
-  @Get(':EventId')
+  @Get(':eventId')
   @ApiOperation({ summary: '리뷰 상세 정보를 가져옵니다' })
   @ApiOkResponse({ type: EventDto })
   async getEventById(
@@ -44,5 +44,15 @@ export class EventController {
   @ApiOkResponse({ type: EventListDto })
   async getEvents(@Query() query: EventQuery): Promise<EventListDto> {
     return this.eventService.getEvents(query);
+  }
+
+  @Post(':eventId/join')
+  @ApiOperation({ summary: '이벤트에 참가합니다' })
+  @ApiOkResponse({ type: EventListDto })
+  async joinEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<EventDto> {
+    return this.eventService.joinEvent(eventId, userId);
   }
 }
