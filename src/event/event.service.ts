@@ -15,33 +15,33 @@ export class EventService {
 
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
     const isEventExist = await this.eventRepository.isEventExist(
-      payload.userId,
-      payload.eventId,
+      payload.hostId,
     );
     if (isEventExist) {
-      throw new ConflictException('해당 유저의 리뷰가 이미 존재합니다.');
+      throw new ConflictException('해당 호스트의 모임이 이미 존재합니다.');
     }
 
-    const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
+    /*const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
       payload.userId,
       payload.eventId,
     );
     if (!isUserJoinedEvent) {
       throw new ConflictException('해당 유저가 이벤트에 참가하지 않았습니다.');
     }
+      */
 
-    const event = await this.eventRepository.getEventById(payload.eventId);
-    if (!event) {
+    const event1 = await this.eventRepository.getEventByHostId(payload.hostId);
+    if (!event1) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
 
-    if (event.startTime < new Date()) {
+    if (event1.startTime < new Date()) {
       throw new ConflictException(
         '모임이 이미 시작되었습니다. 수정/ 삭제가 불가능합니다.',
       );
     }
 
-    if (event.hostId === payload.userId) {
+    if (event1.hostId === payload.hostId) {
       throw new ConflictException(
         '자신이 주최한 이벤트에는 리뷰를 작성 할 수 없습니다.',
       );
@@ -68,8 +68,8 @@ export class EventService {
     return EventDto.from(event);
   }
 
-  async getEventById(eventId: number): Promise<EventDto> {
-    const event = await this.eventRepository.getEventById(eventId);
+  async getEventByHostId(eventId: number): Promise<EventDto> {
+    const event = await this.eventRepository.getEventByHostId(eventId);
 
     if (!event) {
       throw new NotFoundException('event가 존재하지 않습니다.');

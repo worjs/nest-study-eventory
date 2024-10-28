@@ -1,30 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/services/prisma.service';
-import { CreateReviewData } from './type/create-event-data.type';
-import { ReviewData } from './type/event-data.type';
+import { CreateEventData } from './type/create-event-data.type';
+import { EventData } from './type/event-data.type';
 import { User, Event } from '@prisma/client';
-import { ReviewQuery } from './query/event.query';
+import { EventQuery } from './query/event.query';
 
 @Injectable()
-export class ReviewRepository {
+export class EventRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createReview(data: CreateReviewData): Promise<ReviewData> {
-    return this.prisma.review.create({
+  async createEvent(data: CreateEventData): Promise<EventData> {
+    return this.prisma.event.create({
       data: {
-        userId: data.userId,
-        eventId: data.eventId,
-        score: data.score,
+        hostId: data.hostId,
         title: data.title,
         description: data.description,
+        categoryId: data.categoryId,
+        cityId: data.cityId,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        maxPeople: data.maxPeople,
+        
       },
       select: {
         id: true,
-        userId: true,
-        eventId: true,
-        score: true,
+        hostId: true,
         title: true,
         description: true,
+        categoryId: true,
+        cityId: true,
+        startTime: true,
+        endTime: true,
+        maxPeople: true,
       },
     });
   }
@@ -37,28 +44,25 @@ export class ReviewRepository {
     });
   }
 
-  async getEventById(eventId: number): Promise<Event | null> {
-    return this.prisma.event.findUnique({
+  async getHostById(hostId: number): Promise<User | null> {
+    return this.prisma.user.findUnique({
       where: {
-        id: eventId,
+        id: hostId,
       },
     });
   }
 
-  async isReviewExist(userId: number, eventId: number): Promise<boolean> {
-    const review = await this.prisma.review.findUnique({
+  async isEventExist(hostId: number): Promise<boolean> {
+    const event = await this.prisma.event.findUnique({
       where: {
-        eventId_userId: {
-          eventId,
-          userId,
-        },
+        id: hostId,
       },
     });
 
-    return !!review;
+    return !!event;
   }
 
-  async isUserJoinedEvent(userId: number, eventId: number): Promise<boolean> {
+ /* async isUserJoinedEvent(userId: number, eventId: number): Promise<boolean> {
     const event = await this.prisma.eventJoin.findUnique({
       where: {
         eventId_userId: {
@@ -70,36 +74,41 @@ export class ReviewRepository {
 
     return !!event;
   }
-
-  async getReviewById(reviewId: number): Promise<ReviewData | null> {
-    return this.prisma.review.findUnique({
+*/
+  async getEventByHostId(hostId: number): Promise<EventData | null> {
+    return this.prisma.event.findUnique({
       where: {
-        id: reviewId,
+        id: hostId,
       },
       select: {
         id: true,
-        userId: true,
-        eventId: true,
-        score: true,
+        hostId: true,
         title: true,
         description: true,
+        categoryId: true,
+        cityId: true,
+        startTime: true,
+        endTime: true,
+        maxPeople: true,
       },
     });
   }
 
-  async getReviews(query: ReviewQuery): Promise<ReviewData[]> {
-    return this.prisma.review.findMany({
+  async getEvents(query: EventQuery): Promise<EventData[]> {
+    return this.prisma.event.findMany({
       where: {
-        eventId: query.eventId,
-        userId: query.userId,
+        hostId: query.hostId,
       },
       select: {
         id: true,
-        userId: true,
-        eventId: true,
-        score: true,
+        hostId: true,
         title: true,
         description: true,
+        categoryId: true,
+        cityId: true,
+        startTime: true,
+        endTime: true,
+        maxPeople: true,
       },
     });
   }

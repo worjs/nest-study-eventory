@@ -2,22 +2,14 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsInt, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class ReviewQuery {
+export class EventQuery {
   @IsOptional()
   @IsInt()
   @Type(() => Number)
   @ApiPropertyOptional({
-    description: '이벤트 ID',
+    description: '호스트 ID',
     type: Number,
   })
-  eventId?: number;
+  hostId?: number;
 
-  @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  @ApiPropertyOptional({
-    description: '유저 ID',
-    type: Number,
-  })
-  userId?: number;
 }
