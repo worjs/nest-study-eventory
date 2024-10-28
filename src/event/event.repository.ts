@@ -62,7 +62,7 @@ export class EventRepository {
     return !!event;
   }
 
- /* async isUserJoinedEvent(userId: number, eventId: number): Promise<boolean> {
+ async isUserJoinedEvent(userId: number, eventId: number): Promise<boolean> {
     const event = await this.prisma.eventJoin.findUnique({
       where: {
         eventId_userId: {
@@ -74,7 +74,30 @@ export class EventRepository {
 
     return !!event;
   }
-*/
+  async joinEvent( eventId: number, userId: number): Promise<void> {
+    await this.prisma.eventJoin.create({
+      data: {
+        eventId,
+        userId,
+      },
+    });
+
+  
+
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
   async getEventById(eventId: number): Promise<EventData | null> {
     return this.prisma.event.findUnique({
       where: {

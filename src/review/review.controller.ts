@@ -45,4 +45,10 @@ export class ReviewController {
   async getReviews(@Query() query: ReviewQuery): Promise<ReviewListDto> {
     return this.reviewService.getReviews(query);
   }
+  
+
+
+
+
+
 }

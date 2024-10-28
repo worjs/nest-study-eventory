@@ -83,4 +83,25 @@ export class EventService {
 
     return EventListDto.from(events);
   }
+  async joinEvent(eventId: number, userId: number): Promise<void> {
+    const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
+      userId,
+      eventId,
+    );
+    if (isUserJoinedEvent) {
+      throw new ConflictException('해당 유저가 이미 참가한 이벤트입니다.');
+    }
+
+    const event = await this.eventRepository.getEventById(eventId);
+    if (!event) {
+      throw new NotFoundException('Event가 존재하지 않습니다.');
+    }
+    
+    if (event.maxPeople ==0) {
+      throw new ConflictException('이미 정원이 다 찼습니다.');
+    }
+    event.maxPeople = event.maxPeople - 1;
+
+    await this.eventRepository.joinEvent(eventId, userId);
+  }
 }
