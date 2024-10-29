@@ -16,6 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
+import { CreateEventJoinPayload } from './payload/create-eventJoin.payload';
 import { EventQuery } from './query/event.query';
 
 @Controller('events')
@@ -51,9 +52,9 @@ export class EventController {
   @ApiOkResponse({ type: EventDto })
   async joinEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Body('userId') userId: string,
+    @Body() payload: CreateEventJoinPayload
   ): Promise<void> {
-    return this.eventService.joinEvent(eventId, parseInt(userId, 10));
+    return this.eventService.joinEvent(eventId, payload.userId);
   }
 
   @Post(':eventId/out')
@@ -61,8 +62,8 @@ export class EventController {
   @ApiOkResponse({ type: EventDto })
   async outEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Body('userId') userId: string,
+    @Body() payload: CreateEventJoinPayload
   ): Promise<void> {
-    return this.eventService.joinEvent(eventId, parseInt(userId, 10));
+    return this.eventService.joinEvent(eventId, payload.userId);
   }
 }

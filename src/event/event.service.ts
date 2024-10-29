@@ -8,6 +8,7 @@ import { CreateEventPayload } from './payload/create-event.payload';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventData } from './type/create-event-data.type';
 import { EventQuery } from './query/event.query';
+import { CreateEventJoinPayload } from './payload/create-eventJoin.payload';
 
 @Injectable()
 export class EventService {
