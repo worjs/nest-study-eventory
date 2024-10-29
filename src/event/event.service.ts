@@ -6,6 +6,7 @@ import {
 import { EventRepository } from './event.repository';
 import { CreateEventData } from './type/create-event-data.type';
 import { CreateEventPayload } from './payload/create-event.payload';
+import { JoinEventPayload } from './payload/join-event.payload';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { EventQuery } from './query/event.query';
 
