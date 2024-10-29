@@ -52,7 +52,7 @@ export class EventController {
   @ApiOkResponse({ type: EventDto })
   async joinEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Body() payload: CreateEventJoinPayload
+    @Body() payload: CreateEventJoinPayload,
   ): Promise<void> {
     return this.eventService.joinEvent(eventId, payload.userId);
   }
@@ -62,7 +62,7 @@ export class EventController {
   @ApiOkResponse({ type: EventDto })
   async outEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Body() payload: CreateEventJoinPayload
+    @Body() payload: CreateEventJoinPayload,
   ): Promise<void> {
     return this.eventService.joinEvent(eventId, payload.userId);
   }
