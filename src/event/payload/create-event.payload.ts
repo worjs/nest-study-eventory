@@ -3,7 +3,6 @@ import { IsDate, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { min } from 'lodash';
 import { Type } from 'class-transformer';
 
-
 export class CreateEventPayload {
   @IsInt()
   @ApiProperty({

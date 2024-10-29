@@ -49,7 +49,6 @@ export class EventRepository {
     });
   }
 
-
   async getHostByCategoryId(categoryId: number): Promise<Category | null> {
     return this.prisma.category.findUnique({
       where: {
@@ -96,7 +95,7 @@ export class EventRepository {
       },
     });
   }
-  async getEventJoin(eventId: number): Promise<EventJoin| null> {
+  async getEventJoin(eventId: number): Promise<EventJoin | null> {
     return this.prisma.eventJoin.findUnique({
       where: {
         id: eventId,
@@ -118,7 +117,7 @@ export class EventRepository {
         eventId,
       },
     });
-    }
+  }
 
   async outEvent(eventId: number, userId: number): Promise<void> {
     await this.prisma.eventJoin.delete({

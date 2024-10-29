@@ -21,7 +21,6 @@ export class EventService {
     if (!isUserJoinedEvent) {
       throw new ConflictException('해당 유저가 이벤트에 참가하지 않았습니다.');
     }*/
-      
 
     const event1 = await this.eventRepository.getEventById(payload.hostId);
     if (!event1) {
@@ -94,7 +93,7 @@ export class EventService {
     }
 
     const event = await this.eventRepository.getEventById(eventId);
-    
+
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
@@ -104,7 +103,6 @@ export class EventService {
     if (event.maxPeople == eventcount) {
       throw new ConflictException('이미 정원이 다 찼습니다.');
     }
-    
 
     await this.eventRepository.joinEvent(eventId, userId);
   }
@@ -121,8 +119,6 @@ export class EventService {
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
-
-    
 
     await this.eventRepository.outEvent(eventId, userId);
   }
