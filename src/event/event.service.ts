@@ -15,26 +15,28 @@ export class EventService {
 
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
     /*const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
-      payload.userId,
-      payload.eventId,
+      payload.Id,
+      payload.hostId,
     );
     if (!isUserJoinedEvent) {
       throw new ConflictException('해당 유저가 이벤트에 참가하지 않았습니다.');
-    }
-      */
+    }*/
+      
 
     const event1 = await this.eventRepository.getEventById(payload.hostId);
     if (!event1) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
+    /*이건 이벤트 만드는거여서 상관 없음!
 
     if (event1.startTime < new Date()) {
       throw new ConflictException(
         '모임이 이미 시작되었습니다. 수정/ 삭제가 불가능합니다.',
       );
-    }
+    } 
+      */
 
-    const user = await this.eventRepository.getHostById(payload.hostId);
+    const user = await this.eventRepository.getUserById(payload.hostId);
     if (!user) {
       throw new NotFoundException('host가 존재하지 않습니다.');
     }
@@ -79,7 +81,6 @@ export class EventService {
 
   async getEvents(query: EventQuery): Promise<EventListDto> {
     const events = await this.eventRepository.getEvents(query);
-
     return EventListDto.from(events);
   }
 
@@ -93,14 +94,17 @@ export class EventService {
     }
 
     const event = await this.eventRepository.getEventById(eventId);
+    
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
 
-    if (event.maxPeople == 0) {
+    const eventcount = await this.eventRepository.getEventJoinCount(eventId);
+
+    if (event.maxPeople == eventcount) {
       throw new ConflictException('이미 정원이 다 찼습니다.');
     }
-    event.maxPeople = event.maxPeople - 1;
+    
 
     await this.eventRepository.joinEvent(eventId, userId);
   }
@@ -118,7 +122,7 @@ export class EventService {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
 
-    event.maxPeople = event.maxPeople + 1;
+    
 
     await this.eventRepository.outEvent(eventId, userId);
   }

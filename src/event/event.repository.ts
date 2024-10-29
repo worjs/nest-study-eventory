@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/services/prisma.service';
 import { CreateEventData } from './type/create-event-data.type';
 import { EventData } from './type/event-data.type';
-import { User, Event } from '@prisma/client';
+import { User, Event, Category, City, EventJoin } from '@prisma/client';
 import { EventQuery } from './query/event.query';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class EventRepository {
@@ -40,24 +41,25 @@ export class EventRepository {
     });
   }
 
-  async getHostById(hostId: number): Promise<User | null> {
+  async getUserById(userId: number): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: {
-        id: hostId,
+        id: userId,
       },
     });
   }
 
-  async getHostByCategoryId(categoryId: number): Promise<User | null> {
-    return this.prisma.user.findUnique({
+
+  async getHostByCategoryId(categoryId: number): Promise<Category | null> {
+    return this.prisma.category.findUnique({
       where: {
         id: categoryId,
       },
     });
   }
 
-  async getHostByCityId(cityId: number): Promise<User | null> {
-    return this.prisma.user.findUnique({
+  async getHostByCityId(cityId: number): Promise<City | null> {
+    return this.prisma.city.findUnique({
       where: {
         id: cityId,
       },
@@ -94,6 +96,29 @@ export class EventRepository {
       },
     });
   }
+  async getEventJoin(eventId: number): Promise<EventJoin| null> {
+    return this.prisma.eventJoin.findUnique({
+      where: {
+        id: eventId,
+      },
+      select: {
+        id: true,
+        eventId: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  }
+
+  //index.d.ts에서 eventJoin 에 적용가능한 aggregate count 찾았습니다!
+  async getEventJoinCount(eventId: number): Promise<number> {
+    return this.prisma.eventJoin.count({
+      where: {
+        eventId,
+      },
+    });
+    }
 
   async outEvent(eventId: number, userId: number): Promise<void> {
     await this.prisma.eventJoin.delete({
