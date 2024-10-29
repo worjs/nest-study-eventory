@@ -51,18 +51,18 @@ export class EventController {
   @ApiOkResponse({ type: EventDto })
   async joinEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Param('userId', ParseIntPipe) userId: number,
+    @Body('userId') userId: string,
   ): Promise<void> {
-    return this.eventService.joinEvent(eventId, userId);
+    return this.eventService.joinEvent(eventId, parseInt(userId, 10));
   }
 
-  @Post('eventId/out')
+  @Post(':eventId/out')
   @ApiOperation({ summary: '유저를 event에서 내보냅니다.' })
   @ApiOkResponse({ type: EventDto })
   async outEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Param('userId', ParseIntPipe) userId: number,
+    @Body('userId') userId: string,
   ): Promise<void> {
-    return this.eventService.outEvent(eventId, userId);
+    return this.eventService.joinEvent(eventId, parseInt(userId, 10));
   }
 }

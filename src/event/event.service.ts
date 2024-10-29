@@ -22,10 +22,6 @@ export class EventService {
       throw new ConflictException('해당 유저가 이벤트에 참가하지 않았습니다.');
     }*/
 
-    const event1 = await this.eventRepository.getEventById(payload.hostId);
-    if (!event1) {
-      throw new NotFoundException('Event가 존재하지 않습니다.');
-    }
     /*이건 이벤트 만드는거여서 상관 없음!
 
     if (event1.startTime < new Date()) {

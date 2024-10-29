@@ -93,6 +93,13 @@ export class EventRepository {
         eventId,
         userId,
       },
+      select: {
+        id: true,
+        eventId: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
   async getEventJoin(eventId: number): Promise<EventJoin | null> {
@@ -130,10 +137,10 @@ export class EventRepository {
     });
   }
 
-  async getEventById(eventId: number): Promise<EventData | null> {
+  async getEventById(id: number): Promise<EventData | null> {
     return this.prisma.event.findUnique({
       where: {
-        id: eventId,
+        id: id,
       },
       select: {
         id: true,
