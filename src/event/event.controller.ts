@@ -10,13 +10,14 @@ import {
 import { EventService } from './event.service';
 import {
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
-import { CreateEventJoinPayload } from './payload/create-eventJoin.payload';
+import { EventParticipantPayload } from './payload/create-eventJoin.payload';
 import { EventQuery } from './query/event.query';
 
 @Controller('events')
@@ -49,20 +50,20 @@ export class EventController {
 
   @Post(':eventId/join')
   @ApiOperation({ summary: '모임에 참가합니다' })
-  @ApiOkResponse({ type: EventDto })
+  @ApiNoContentResponse()
   async joinEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Body() payload: CreateEventJoinPayload,
+    @Body() payload: EventParticipantPayload,
   ): Promise<void> {
     return this.eventService.joinEvent(eventId, payload.userId);
   }
 
   @Post(':eventId/out')
   @ApiOperation({ summary: '유저를 event에서 내보냅니다.' })
-  @ApiOkResponse({ type: EventDto })
+  @ApiNoContentResponse()
   async outEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @Body() payload: CreateEventJoinPayload,
+    @Body() payload: EventParticipantPayload,
   ): Promise<void> {
     return this.eventService.outEvent(eventId, payload.userId);
   }

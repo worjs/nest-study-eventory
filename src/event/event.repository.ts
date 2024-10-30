@@ -49,7 +49,7 @@ export class EventRepository {
     });
   }
 
-  async getHostByCategoryId(categoryId: number): Promise<Category | null> {
+  async getCategoryById(categoryId: number): Promise<Category | null> {
     return this.prisma.category.findUnique({
       where: {
         id: categoryId,
@@ -57,7 +57,7 @@ export class EventRepository {
     });
   }
 
-  async getHostByCityId(cityId: number): Promise<City | null> {
+  async getCityById(cityId: number): Promise<City | null> {
     return this.prisma.city.findUnique({
       where: {
         id: cityId,
@@ -102,10 +102,10 @@ export class EventRepository {
       },
     });
   }
-  async getEventJoin(eventId: number): Promise<EventJoin | null> {
+  async getEventJoin(id: number): Promise<EventJoin | null> {
     return this.prisma.eventJoin.findUnique({
       where: {
-        id: eventId,
+        id: id,
       },
       select: {
         id: true,
@@ -136,6 +136,17 @@ export class EventRepository {
       },
     });
   }
+  async isUserHost(userId: number, eventId: number): Promise<boolean> { 
+    const event = await this.prisma.event.findUnique({
+      where: {
+        id: eventId,
+      },
+    });
+
+    return event?.hostId === userId;
+  }
+
+    
 
   async getEventById(id: number): Promise<EventData | null> {
     return this.prisma.event.findUnique({
@@ -155,6 +166,7 @@ export class EventRepository {
       },
     });
   }
+  
 
   async getEvents(query: EventQuery): Promise<EventData[]> {
     return this.prisma.event.findMany({

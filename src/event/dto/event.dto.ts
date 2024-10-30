@@ -17,14 +17,12 @@ export class EventDto {
   @ApiProperty({
     description: '모임 이름',
     type: String,
-    nullable: true,
   })
   title!: string;
 
   @ApiProperty({
     description: '모임 설명',
     type: String,
-    nullable: true,
   })
   description!: string;
 
