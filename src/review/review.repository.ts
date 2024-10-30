@@ -45,7 +45,7 @@ export class ReviewRepository {
     });
   }
 
-  async isReviewExist(userId: number, eventId: number): Promise<boolean> {
+  async isReviewExist(userId: number, eventId: number): Promise<boolean> { //404
     const review = await this.prisma.review.findUnique({
       where: {
         eventId_userId: {
@@ -58,7 +58,7 @@ export class ReviewRepository {
     return !!review;
   }
 
-  async isUserJoinedEvent(userId: number, eventId: number): Promise<boolean> {
+  async isUserJoinedEvent(userId: number, eventId: number): Promise<boolean> { //404
     const event = await this.prisma.eventJoin.findUnique({
       where: {
         eventId_userId: {
