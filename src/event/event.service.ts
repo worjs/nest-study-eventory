@@ -15,22 +15,7 @@ export class EventService {
   constructor(private readonly eventRepository: EventRepository) {}
 
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
-    /*const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
-      payload.Id,
-      payload.hostId,
-    );
-    if (!isUserJoinedEvent) {
-      throw new ConflictException('해당 유저가 이벤트에 참가하지 않았습니다.');
-    }*/
-
-    /*이건 이벤트 만드는거여서 상관 없음!
-
-    if (event1.startTime < new Date()) {
-      throw new ConflictException(
-        '모임이 이미 시작되었습니다. 수정/ 삭제가 불가능합니다.',
-      );
-    } 
-      */
+   
 
     const user = await this.eventRepository.getUserById(payload.hostId);
     if (!user) {
