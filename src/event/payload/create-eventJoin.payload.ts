@@ -10,5 +10,4 @@ export class CreateEventJoinPayload {
     type: Number,
   })
   userId!: number;
-
 }
