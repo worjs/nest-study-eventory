@@ -11,10 +11,4 @@ export class CreateEventJoinPayload {
   })
   userId!: number;
 
-  @IsInt()
-  @ApiProperty({
-    description: '모임 ID',
-    type: Number,
-  })
-  eventId!: number;
 }
