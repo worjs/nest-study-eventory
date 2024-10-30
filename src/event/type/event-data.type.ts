@@ -8,4 +8,11 @@ export type EventData = {
   startTime: Date;
   endTime: Date;
   maxPeople: number;
+  eventJoin: EventJoinData[];
+};
+
+export type EventJoinData = {
+  id: number;
+  eventId: number;
+  userId: number;
 };

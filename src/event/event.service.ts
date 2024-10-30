@@ -80,7 +80,7 @@ export class EventService {
   async joinEvent(eventId: number, payload: JoinEventPayload): Promise<void> {
     const userId = payload.userId;
     const event = await this.eventRepository.getEventById(eventId);
-    const userCount = await this.eventRepository.getParticipantsCount(eventId);
+    const userCount = event?.eventJoin.length || 0;
 
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');

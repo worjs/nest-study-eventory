@@ -40,6 +40,7 @@ export class EventRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
+        eventJoin: true,
       },
     });
   }
@@ -84,6 +85,7 @@ export class EventRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
+        eventJoin: true,
       },
     });
   }
@@ -105,14 +107,7 @@ export class EventRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
-      },
-    });
-  }
-
-  async getParticipantsCount(eventId: number): Promise<number> {
-    return this.prisma.eventJoin.count({
-      where: {
-        eventId,
+        eventJoin: true,
       },
     });
   }
