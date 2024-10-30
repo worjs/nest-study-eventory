@@ -136,7 +136,7 @@ export class EventRepository {
       },
     });
   }
-  async isUserHost(userId: number, eventId: number): Promise<boolean> { 
+  async isUserHost(userId: number, eventId: number): Promise<boolean> {
     const event = await this.prisma.event.findUnique({
       where: {
         id: eventId,
@@ -145,8 +145,6 @@ export class EventRepository {
 
     return event?.hostId === userId;
   }
-
-    
 
   async getEventById(id: number): Promise<EventData | null> {
     return this.prisma.event.findUnique({
@@ -166,7 +164,6 @@ export class EventRepository {
       },
     });
   }
-  
 
   async getEvents(query: EventQuery): Promise<EventData[]> {
     return this.prisma.event.findMany({

@@ -31,15 +31,18 @@ export class EventService {
     if (!city) {
       throw new NotFoundException('city가 존재하지 않습니다.');
     }
-    
-    if(payload.startTime < new Date()){
-      throw new ConflictException('시작 시간이 현재 시간보다 빠를 수 없습니다.');
+
+    if (payload.startTime < new Date()) {
+      throw new ConflictException(
+        '시작 시간이 현재 시간보다 빠를 수 없습니다.',
+      );
     }
 
-    if(payload.startTime > payload.endTime){
-      throw new ConflictException('시작 시간이 끝나는 시간보다 늦을 수 없습니다.');
-    }    
-
+    if (payload.startTime > payload.endTime) {
+      throw new ConflictException(
+        '시작 시간이 끝나는 시간보다 늦을 수 없습니다.',
+      );
+    }
 
     const createData: CreateEventData = {
       hostId: payload.hostId,
@@ -83,7 +86,6 @@ export class EventService {
 
     const event = await this.eventRepository.getEventById(eventId);
 
-
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
@@ -91,8 +93,6 @@ export class EventService {
     if (event.endTime < new Date()) {
       throw new ConflictException('이미 시작된 이벤트는 참가할 수 없습니다.');
     }
-
-    
 
     const currentPeople = await this.eventRepository.getEventJoinCount(eventId);
 
@@ -115,8 +115,6 @@ export class EventService {
     if (isUserHost) {
       throw new ConflictException('host는 이벤트에서 나갈 수 없습니다.');
     }
-
-  
 
     const event = await this.eventRepository.getEventById(eventId);
     if (!event) {
