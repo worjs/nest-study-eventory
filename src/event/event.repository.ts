@@ -136,7 +136,6 @@ export class EventRepository {
       },
     });
   }
- 
 
   async getEventById(id: number): Promise<EventData | null> {
     return this.prisma.event.findUnique({
