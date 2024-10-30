@@ -50,4 +50,11 @@ export class EventService {
         const event = await this.eventRepository.createEvent(createEvent);
         return EventDto.from(event);
     }
+    async getEventById(eventId: number): Promise<EventDto> {
+        const event = await this.eventRepository.getEventById(eventId);
+        if (!event) {
+            throw new NotFoundException('해당 모임을 찾을 수 없습니다.');
+        }
+        return EventDto.from(event);
+    }
 }
