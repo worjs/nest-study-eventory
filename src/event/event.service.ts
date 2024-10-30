@@ -15,8 +15,6 @@ export class EventService {
   constructor(private readonly eventRepository: EventRepository) {}
 
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
-   
-
     const user = await this.eventRepository.getUserById(payload.hostId);
     if (!user) {
       throw new NotFoundException('host가 존재하지 않습니다.');
