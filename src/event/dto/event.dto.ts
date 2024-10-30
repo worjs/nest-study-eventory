@@ -69,4 +69,22 @@ export class EventDto {
             maxPeople: event.maxPeople,
         };
     }
+
+    static fromArray(events: EventData[]): EventDto[] {
+        return events.map((event) => this.from(event));
+    }
+}
+
+export class EventListDto {
+    @ApiProperty({
+        description: '모임 리스트',
+        type: [EventDto],
+    })
+    events!: EventDto[];
+
+    static from(events: EventData[]): EventListDto {
+        return {
+            events: EventDto.fromArray(events),
+        };
+    }
 }

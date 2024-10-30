@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { EventRepository } from './event.repository';
 import { CreateEventPayload } from './payload/create-event.payload';
-import { EventDto } from './dto/event.dto';
+import { EventDto , EventListDto} from './dto/event.dto';
 import { CreateEventData } from './type/create-event-data.type';
+import { EventQuery } from './query/event.query';
 
 @Injectable()
 export class EventService {
@@ -56,5 +57,10 @@ export class EventService {
             throw new NotFoundException('해당 모임을 찾을 수 없습니다.');
         }
         return EventDto.from(event);
+    }
+
+    async getEvents(query: EventQuery): Promise<EventListDto> {
+        const events = await this.eventRepository.getEvents(query);
+        return EventListDto.from(events);
     }
 }

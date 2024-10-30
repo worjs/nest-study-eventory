@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { EventService } from './event.service';
 import { ApiCreatedResponse, ApiOperation, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { EventDto } from './dto/event.dto';
+import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
+import { EventQuery } from './query/event.query';
 
 @Controller('events')
 @ApiTags('Event API')
@@ -21,5 +22,12 @@ export class EventController {
   @ApiOkResponse({ type: EventDto })
   async getEventbyId(@Param('eventId', ParseIntPipe) eventId: number): Promise<EventDto> {
     return this.eventService.getEventById(eventId);
+  }
+
+  @Get()
+  @ApiOperation ({ summary: '여러 모임을 조회합니다' })
+  @ApiOkResponse({ type: EventListDto })
+  async getEvents(@Query() query: EventQuery): Promise<EventListDto> {
+    return this.eventService.getEvents(query);
   }
 }
