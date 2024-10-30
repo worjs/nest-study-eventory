@@ -4,7 +4,7 @@ import { CategoryListDto } from "./dto/category.dto";
 import { Controller, Get } from '@nestjs/common';
 import { CategoryService } from './category.service';
 
-@Controller('categorys')
+@Controller('categories')
 @ApiTags('category API')
 export class CategoryController{
     constructor(private readonly categoryService: CategoryService) {}
@@ -12,8 +12,8 @@ export class CategoryController{
     @Get()
     @ApiOperation({summary: '모든 카테고리'})
     @ApiOkResponse({type:CategoryListDto})
-    async findAllCategorys(): Promise<CategoryListDto> {
-        return this.categoryService.findAllCategorys();
+    async findAllCategories(): Promise<CategoryListDto> {
+        return this.categoryService.findAllCategories();
     }
 
 

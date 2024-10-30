@@ -8,10 +8,10 @@ import { CategoryData } from "./type/category-data.type";
 export class CategoryService {
     constructor(private readonly categoryRepository: CategoryRepository) {}
 
-    async findAllCategorys(): Promise<CategoryListDto> {
-        const categorys: CategoryData[] = await this.categoryRepository.findAllCategorys();
+    async findAllCategories(): Promise<CategoryListDto> {
+        const categories: CategoryData[] = await this.categoryRepository.findAllCategories();
 
-        return CategoryListDto.from(categorys);
+        return CategoryListDto.from(categories);
     }
 
 }
