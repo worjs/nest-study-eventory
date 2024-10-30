@@ -108,4 +108,32 @@ export class EventRepository {
       },
     });
   }
+
+  async getParticipantsCount(eventId: number): Promise<number> {
+    return this.prisma.eventJoin.count({
+      where: {
+        eventId,
+      },
+    });
+  }
+
+  async isUserExist(eventId: number, userId: number): Promise<boolean> {
+    const user = await this.prisma.eventJoin.findFirst({
+      where: {
+        eventId,
+        userId,
+      },
+    });
+
+    return !!user;
+  }
+
+  async joinEvent(eventId: number, userId: number): Promise<void> {
+    await this.prisma.eventJoin.create({
+      data: {
+        eventId,
+        userId,
+      },
+    });
+  }
 }
