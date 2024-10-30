@@ -20,6 +20,7 @@ import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
 import { EventQuery } from './query/event.query';
 import { JoinEventPayload } from './payload/join-event.payload';
+import { OutEventPayload } from './payload/out-event.payload';
 @Controller('events')
 @ApiTags('Events API')
 export class EventController {
@@ -57,5 +58,16 @@ export class EventController {
     @Body() payload: JoinEventPayload,
   ): Promise<void> {
     await this.eventService.joinEvent(eventId, payload);
+  }
+
+  @Post(':eventId/out')
+  @ApiOperation({ summary: '사용자를 특정 ID의 모임에서 탈퇴시킵니다' })
+  @ApiNoContentResponse({ description: '성공적으로 탈퇴했습니다' })
+  @HttpCode(204)
+  async outEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+    @Body() payload: OutEventPayload,
+  ): Promise<void> {
+    await this.eventService.outEvent(eventId, payload);
   }
 }

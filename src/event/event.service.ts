@@ -100,4 +100,23 @@ export class EventService {
 
     await this.eventRepository.joinEvent(eventId, userId);
   }
+
+  async outEvent(eventId: number, payload: JoinEventPayload): Promise<void> {
+    const userId = payload.userId;
+    const event = await this.eventRepository.getEventById(eventId);
+
+    if (!event) {
+      throw new NotFoundException('Event가 존재하지 않습니다.');
+    }
+
+    if (event.endTime < new Date()) {
+      throw new ConflictException('Event가 이미 종료되었습니다.');
+    }
+
+    if (!(await this.eventRepository.isUserExist(eventId, userId))) {
+      throw new ConflictException('참여하지 않은 사용자입니다.');
+    }
+
+    await this.eventRepository.outEvent(eventId, userId);
+  }
 }
