@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -19,6 +20,9 @@ import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
 import { EventParticipantPayload } from './payload/create-eventJoin.payload';
 import { EventQuery } from './query/event.query';
+import { PatchUpdateEventPayload } from './payload/patch-update-event.payload';
+
+
 
 @Controller('events')
 @ApiTags('Event API')
@@ -67,4 +71,18 @@ export class EventController {
   ): Promise<void> {
     return this.eventService.outEvent(eventId, payload.userId);
   }
+
+  @Patch(':eventId')
+  @ApiOperation({ summary: '모임을 수정합니다' })
+  @ApiOkResponse({ type: EventDto })
+  async patchUpdateEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+    @Body() payload: PatchUpdateEventPayload,
+  ): Promise<EventDto> {
+    return this.eventService.patchUpdateEvent(eventId, payload);
+  }
+
+
+
+
 }
