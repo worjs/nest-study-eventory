@@ -22,8 +22,6 @@ import { EventParticipantPayload } from './payload/create-eventJoin.payload';
 import { EventQuery } from './query/event.query';
 import { PatchUpdateEventPayload } from './payload/patch-update-event.payload';
 
-
-
 @Controller('events')
 @ApiTags('Event API')
 export class EventController {
@@ -81,8 +79,4 @@ export class EventController {
   ): Promise<EventDto> {
     return this.eventService.patchUpdateEvent(eventId, payload);
   }
-
-
-
-
 }

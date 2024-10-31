@@ -7,7 +7,6 @@ import { EventQuery } from './query/event.query';
 import { PrismaClient } from '@prisma/client';
 import { UpdateEventData } from './type/update-event-data.type';
 
-
 @Injectable()
 export class EventRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -179,7 +178,6 @@ export class EventRepository {
     });
   }
 
-
   async updateEvent(
     eventId: number,
     data: UpdateEventData,
@@ -210,8 +208,4 @@ export class EventRepository {
       },
     });
   }
-
-
-
-
 }

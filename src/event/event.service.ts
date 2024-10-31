@@ -135,35 +135,33 @@ export class EventService {
     eventId: number,
     payload: PatchUpdateEventPayload,
   ): Promise<EventDto> {
-    if(payload.title === null ) {
+    if (payload.title === null) {
       throw new BadRequestException('title은 null이 될 수 없습니다.');
     }
-    if(payload.description === null ) {
+    if (payload.description === null) {
       throw new BadRequestException('description은 null이 될 수 없습니다.');
     }
-    if(payload.categoryId === null ) {
+    if (payload.categoryId === null) {
       throw new BadRequestException('categoryId은 null이 될 수 없습니다.');
     }
-    if(payload.cityId === null ) {
+    if (payload.cityId === null) {
       throw new BadRequestException('cityId은 null이 될 수 없습니다.');
     }
-    if(payload.startTime === null ) {
+    if (payload.startTime === null) {
       throw new BadRequestException('startTime은 null이 될 수 없습니다.');
     }
-    if(payload.endTime === null ) {
+    if (payload.endTime === null) {
       throw new BadRequestException('endTime은 null이 될 수 없습니다.');
     }
-    if(payload.maxPeople === null ) {
+    if (payload.maxPeople === null) {
       throw new BadRequestException('maxPeople은 null이 될 수 없습니다.');
     }
-
 
     const event = await this.eventRepository.getEventById(eventId);
 
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
-
 
     const updateData: UpdateEventData = {
       title: payload.title,
@@ -179,9 +177,8 @@ export class EventService {
       eventId,
       updateData,
     );
-    
-    const eventpayload = await this.eventRepository.getEventById(eventId);
 
+    const eventpayload = await this.eventRepository.getEventById(eventId);
 
     if (!eventpayload || event.hostId !== eventpayload.hostId) {
       throw new ConflictException('host만 수정할 수 있습니다.');
@@ -194,25 +191,21 @@ export class EventService {
     if (event.endTime < new Date()) {
       throw new ConflictException('이미 종료된 이벤트는 수정할 수 없습니다.');
     }
-    if (!payload.startTime || !payload.endTime || payload.startTime > payload.endTime) {
+    if (
+      !payload.startTime ||
+      !payload.endTime ||
+      payload.startTime > payload.endTime
+    ) {
       throw new ConflictException(
         '시작 시간이 끝나는 시간보다 늦게 수정할 수 없습니다.',
-      )
+      );
     }
-    if(payload.startTime < new Date()) {
+    if (payload.startTime < new Date()) {
       throw new ConflictException(
         '시작 시간이 현재 시간보다 빠르게 수정할 수 없습니다.',
       );
     }
 
-
-
     return EventDto.from(updatedEvent);
-  
   }
 }
-
-
-
-
-
