@@ -194,9 +194,9 @@ export class EventService {
 
 
 
-  async patchUpdateEvent(
+  async putUpdateEvent(
     eventId: number,
-    payload: PatchUpdateEventPayload,
+    payload: PutUpdateEventPayload,
   ): Promise<EventDto> {
     if(payload.title === null ) {
       throw new BadRequestException('title은 null이 될 수 없습니다.');
@@ -227,7 +227,6 @@ export class EventService {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
 
-
     const updateData: UpdateEventData = {
       title: payload.title,
       description: payload.description,
@@ -239,7 +238,7 @@ export class EventService {
     };
 
     
-    
+
     const eventpayload = await this.eventRepository.getEventById(eventId);
 
 
