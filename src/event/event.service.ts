@@ -188,9 +188,9 @@ export class EventService {
     return EventDto.from(updatedEvent);
   }
 
-  async putUpdateEvent(
+  async patchUpdateEvent(
     eventId: number,
-    payload: PutUpdateEventPayload,
+    payload: PatchUpdateEventPayload,
   ): Promise<EventDto> {
     if (payload.title === null) {
       throw new BadRequestException('title은 null이 될 수 없습니다.');
