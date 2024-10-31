@@ -12,6 +12,7 @@ import { EventQuery } from './query/event.query';
 import { EventParticipantPayload } from './payload/create-eventJoin.payload';
 import { UpdateEventData } from './type/update-event-data.type';
 import { PatchUpdateEventPayload } from './payload/patch-update-event.payload';
+import { PutUpdateEventPayload } from './payload/put-update-event.payload';
 
 @Injectable()
 export class EventService {
@@ -131,6 +132,68 @@ export class EventService {
     await this.eventRepository.outEvent(eventId, userId);
   }
 
+  async putUpdateEvent(
+    eventId: number,
+    payload: PutUpdateEventPayload,
+  ): Promise<EventDto> {
+    const event = await this.eventRepository.getEventById(eventId);
+
+    if (!event) {
+      throw new NotFoundException('Event가 존재하지 않습니다.');
+    }
+
+    const updateData: UpdateEventData = {
+      title: payload.title,
+      description: payload.description,
+      categoryId: payload.categoryId,
+      cityId: payload.cityId,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      maxPeople: payload.maxPeople,
+    };
+    
+
+    const eventpayload = await this.eventRepository.getEventById(eventId);
+
+
+    if (!eventpayload || event.hostId !== eventpayload.hostId) {
+      throw new ConflictException('host만 수정할 수 있습니다.');
+    }
+
+    if (event.startTime < new Date()) {
+      throw new ConflictException('이미 시작된 이벤트는 수정할 수 없습니다.');
+    }
+
+    if (event.endTime < new Date()) {
+      throw new ConflictException('이미 종료된 이벤트는 수정할 수 없습니다.');
+    }
+    if (!payload.startTime || !payload.endTime || payload.startTime > payload.endTime) {
+      throw new ConflictException(
+        '시작 시간이 끝나는 시간보다 늦게 수정할 수 없습니다.',
+      )
+    }
+    if(payload.startTime < new Date()) {
+      throw new ConflictException(
+        '시작 시간이 현재 시간보다 빠르게 수정할 수 없습니다.',
+      );
+    }
+
+
+
+    const updatedEvent = await this.eventRepository.updateEvent(
+      eventId,
+      updateData,
+    );
+
+
+    return EventDto.from(updatedEvent);
+  }
+
+
+
+
+
+
   async patchUpdateEvent(
     eventId: number,
     payload: PatchUpdateEventPayload,
@@ -175,10 +238,7 @@ export class EventService {
       maxPeople: payload.maxPeople,
     };
 
-    const updatedEvent = await this.eventRepository.updateEvent(
-      eventId,
-      updateData,
-    );
+    
     
     const eventpayload = await this.eventRepository.getEventById(eventId);
 
@@ -205,6 +265,11 @@ export class EventService {
       );
     }
 
+
+    const updatedEvent = await this.eventRepository.updateEvent(
+      eventId,
+      updateData,
+    );
 
 
     return EventDto.from(updatedEvent);
