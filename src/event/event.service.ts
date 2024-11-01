@@ -141,6 +141,7 @@ export class EventService {
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
+    
 
     const updateData: UpdateEventData = {
       title: payload.title,
@@ -152,22 +153,31 @@ export class EventService {
       maxPeople: payload.maxPeople,
     };
 
-    const eventpayload = await this.eventRepository.getEventById(eventId);
-
-    if (!eventpayload || event.hostId !== eventpayload.hostId) {
-      throw new ConflictException('host만 수정할 수 있습니다.');
+    if(payload.maxPeople<1){
+      throw new ConflictException('maxPeople은 1이상이어야 합니다.');
     }
+
+    const category = await this.eventRepository.getCategoryById(
+      payload.categoryId,
+    );
+
+    if (!category) {
+      throw new NotFoundException('category가 존재하지 않습니다.');
+    }
+
+    const city = await this.eventRepository.getCityById(payload.cityId);
+
+    if (!city) {
+      throw new NotFoundException('city가 존재하지 않습니다.');
+    }
+    
 
     if (event.startTime < new Date()) {
       throw new ConflictException('이미 시작된 이벤트는 수정할 수 없습니다.');
     }
 
-    if (event.endTime < new Date()) {
-      throw new ConflictException('이미 종료된 이벤트는 수정할 수 없습니다.');
-    }
+    
     if (
-      !payload.startTime ||
-      !payload.endTime ||
       payload.startTime > payload.endTime
     ) {
       throw new ConflictException(
@@ -230,11 +240,7 @@ export class EventService {
       maxPeople: payload.maxPeople,
     };
 
-    const eventpayload = await this.eventRepository.getEventById(eventId);
-
-    if (!eventpayload || event.hostId !== eventpayload.hostId) {
-      throw new ConflictException('host만 수정할 수 있습니다.');
-    }
+    
 
     if (event.startTime < new Date()) {
       throw new ConflictException('이미 시작된 이벤트는 수정할 수 없습니다.');
@@ -257,6 +263,33 @@ export class EventService {
         '시작 시간이 현재 시간보다 빠르게 수정할 수 없습니다.',
       );
     }
+    
+    if(!payload.maxPeople || payload.maxPeople<1){
+      throw new ConflictException('maxPeople은 1이상이어야 합니다.');
+    }
+
+    if(payload.categoryId){
+      const category = await this.eventRepository.getCategoryById(
+        payload.categoryId,
+      );
+
+      if (!category) {
+        throw new NotFoundException('category가 존재하지 않습니다.');
+      }
+    }
+
+    if(payload.cityId){
+      const city = await this.eventRepository.getCityById(payload.cityId);
+
+      if (!city) {
+        throw new NotFoundException('city가 존재하지 않습니다.');
+      }
+    }
+    
+
+
+
+
 
     const updatedEvent = await this.eventRepository.updateEvent(
       eventId,
@@ -265,4 +298,35 @@ export class EventService {
 
     return EventDto.from(updatedEvent);
   }
+
+  async deleteEvent(eventId: number): Promise<void> {
+    const event = await this.eventRepository.getEventById(eventId);
+
+    if (!event) {
+      throw new NotFoundException('Event가 존재하지 않습니다.');
+    }
+
+
+    if (event.startTime < new Date()) {
+      throw new ConflictException('이미 시작된 이벤트는 삭제할 수 없습니다.');
+    }
+
+
+
+
+    await this.eventRepository.deleteEventJoin(eventId);
+
+    await this.eventRepository.deleteEvent(eventId);
+  }
+
+
+
+
+
+
+
+
+
+
+
 }

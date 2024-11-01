@@ -3,7 +3,7 @@ import { IsDate, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class PutUpdateEventPayload {
-  @IsOptional()
+  
   @IsString()
   @ApiPropertyOptional({
     description: '모임 이름',
@@ -11,7 +11,7 @@ export class PutUpdateEventPayload {
   })
   title!: string;
 
-  @IsOptional()
+  
   @IsString()
   @ApiPropertyOptional({
     description: '모임 설명',
@@ -19,7 +19,7 @@ export class PutUpdateEventPayload {
   })
   description!: string;
 
-  @IsOptional()
+  
   @IsInt()
   @ApiPropertyOptional({
     description: '카테고리 ID',
@@ -27,7 +27,7 @@ export class PutUpdateEventPayload {
   })
   categoryId!: number;
 
-  @IsOptional()
+  
   @IsInt()
   @ApiPropertyOptional({
     description: '도시 ID',
@@ -35,7 +35,7 @@ export class PutUpdateEventPayload {
   })
   cityId!: number;
 
-  @IsOptional()
+  
   @IsDate()
   @Type(() => Date)
   @ApiPropertyOptional({
@@ -44,7 +44,7 @@ export class PutUpdateEventPayload {
   })
   startTime!: Date;
 
-  @IsOptional()
+  
   @IsDate()
   @Type(() => Date)
   @ApiPropertyOptional({
@@ -53,7 +53,7 @@ export class PutUpdateEventPayload {
   })
   endTime!: Date;
 
-  @IsOptional()
+  
   @IsInt()
   @Min(1)
   @ApiPropertyOptional({
