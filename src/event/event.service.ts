@@ -141,7 +141,6 @@ export class EventService {
     if (!event) {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
-    
 
     const updateData: UpdateEventData = {
       title: payload.title,
@@ -153,7 +152,7 @@ export class EventService {
       maxPeople: payload.maxPeople,
     };
 
-    if(payload.maxPeople<1){
+    if (payload.maxPeople < 1) {
       throw new ConflictException('maxPeople은 1이상이어야 합니다.');
     }
 
@@ -170,16 +169,12 @@ export class EventService {
     if (!city) {
       throw new NotFoundException('city가 존재하지 않습니다.');
     }
-    
 
     if (event.startTime < new Date()) {
       throw new ConflictException('이미 시작된 이벤트는 수정할 수 없습니다.');
     }
 
-    
-    if (
-      payload.startTime > payload.endTime
-    ) {
+    if (payload.startTime > payload.endTime) {
       throw new ConflictException(
         '시작 시간이 끝나는 시간보다 늦게 수정할 수 없습니다.',
       );
@@ -240,8 +235,6 @@ export class EventService {
       maxPeople: payload.maxPeople,
     };
 
-    
-
     if (event.startTime < new Date()) {
       throw new ConflictException('이미 시작된 이벤트는 수정할 수 없습니다.');
     }
@@ -263,12 +256,12 @@ export class EventService {
         '시작 시간이 현재 시간보다 빠르게 수정할 수 없습니다.',
       );
     }
-    
-    if(!payload.maxPeople || payload.maxPeople<1){
+
+    if (!payload.maxPeople || payload.maxPeople < 1) {
       throw new ConflictException('maxPeople은 1이상이어야 합니다.');
     }
 
-    if(payload.categoryId){
+    if (payload.categoryId) {
       const category = await this.eventRepository.getCategoryById(
         payload.categoryId,
       );
@@ -278,18 +271,13 @@ export class EventService {
       }
     }
 
-    if(payload.cityId){
+    if (payload.cityId) {
       const city = await this.eventRepository.getCityById(payload.cityId);
 
       if (!city) {
         throw new NotFoundException('city가 존재하지 않습니다.');
       }
     }
-    
-
-
-
-
 
     const updatedEvent = await this.eventRepository.updateEvent(
       eventId,
@@ -306,27 +294,12 @@ export class EventService {
       throw new NotFoundException('Event가 존재하지 않습니다.');
     }
 
-
     if (event.startTime < new Date()) {
       throw new ConflictException('이미 시작된 이벤트는 삭제할 수 없습니다.');
     }
-
-
-
 
     await this.eventRepository.deleteEventJoin(eventId);
 
     await this.eventRepository.deleteEvent(eventId);
   }
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -157,10 +157,6 @@ export class EventRepository {
     });
   }
 
-
-
-
-
   async getEvents(query: EventQuery): Promise<EventData[]> {
     return this.prisma.event.findMany({
       where: {
@@ -181,9 +177,6 @@ export class EventRepository {
       },
     });
   }
-
-
-
 
   async updateEvent(
     eventId: number,
@@ -216,22 +209,13 @@ export class EventRepository {
     });
   }
 
-
-
-
-
   async deleteEventJoin(eventid: number): Promise<void> {
     await this.prisma.eventJoin.deleteMany({
-
       where: {
         id: eventid,
       },
-
     });
-
   }
-
-
 
   async deleteEvent(eventId: number): Promise<void> {
     await this.prisma.event.delete({
@@ -240,10 +224,4 @@ export class EventRepository {
       },
     });
   }
-  
-
-  
-
-
-
 }

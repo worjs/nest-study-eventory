@@ -94,21 +94,13 @@ export class EventController {
     return this.eventService.putUpdateEvent(eventId, payload);
   }
 
-
   @Delete(':eventId')
   @HttpCode(204)
-  @ApiOperation({ summary: '모임을 삭제합니다.'})
+  @ApiOperation({ summary: '모임을 삭제합니다.' })
   @ApiNoContentResponse()
   async deleteEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
   ): Promise<void> {
     return this.eventService.deleteEvent(eventId);
   }
-  
-
-
-
-
-
-
 }
