@@ -250,18 +250,20 @@ export class EventService {
       throw new ConflictException('이미 종료된 이벤트는 수정할 수 없습니다.');
     }
     if (
-      !payload.startTime ||
-      !payload.endTime ||
-      payload.startTime > payload.endTime
-    ) {
-      throw new ConflictException(
-        '시작 시간이 끝나는 시간보다 늦게 수정할 수 없습니다.',
-      );
+      !payload.startTime && payload.endTime) {
+        if( payload.endTime <event.startTime){
+          throw new ConflictException('시작 시간이 끝나는 시간보다 늦게 수정할 수 없습니다.');
+        }
+      }
+    if (payload.startTime && !payload.endTime) {
+      if( payload.startTime >event.endTime){
+        throw new ConflictException('시작 시간이 끝나는 시간보다 늦게 수정할 수 없습니다.');
+      }
     }
-    if (payload.startTime < new Date()) {
-      throw new ConflictException(
-        '시작 시간이 현재 시간보다 빠르게 수정할 수 없습니다.',
-      );
+    if(payload.startTime && payload.endTime){
+      if( payload.startTime >payload.endTime){
+        throw new ConflictException('시작 시간이 끝나는 시간보다 늦게 수정할 수 없습니다.');
+      }
     }
     
     if(!payload.maxPeople || payload.maxPeople<1){
