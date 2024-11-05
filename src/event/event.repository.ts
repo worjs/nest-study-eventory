@@ -20,7 +20,7 @@ export class EventRepository{
                 categoryId: data.categoryId,
                 cityId: data.cityId,
                 startTime: data.startTime,
-                endTime: data.endTime
+                endTime: data.endTime,
                 maxPeople: data.maxPeople,
             },
             select: {
