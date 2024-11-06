@@ -1,65 +1,78 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import type { EventService } from './event.service';
-import { ApiConflictResponse, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { EventDto, EventListDto } from './dto/event.dto';
 import type { CreateEventPayload } from './payload/create-event-payload';
 import type { EventQuery } from './query/event.query';
 import { UpdateEventJoinPayload } from './payload/update-event-join-payload';
 
-
 @Controller('events')
 @ApiTags('Event API')
 export class EventController {
-    constructor(private readonly eventService : EventService) {}
+  constructor(private readonly eventService: EventService) {}
 
-    @Post()
-    @HttpCode(201)
-    @ApiOperation({ summary : '모임 생성'})
-    @ApiCreatedResponse({ type : EventDto})
-    async createdEvent(@Body() payload: CreateEventPayload) : Promise<EventDto> {
-        return this.eventService.createEvent(payload);
-    }
+  @Post()
+  @HttpCode(201)
+  @ApiOperation({ summary: '모임 생성' })
+  @ApiCreatedResponse({ type: EventDto })
+  async createdEvent(@Body() payload: CreateEventPayload): Promise<EventDto> {
+    return this.eventService.createEvent(payload);
+  }
 
-    @Get(':eventId')
-    @HttpCode(200)
-    @ApiOperation({summary: '특정 id의 모임 데이터를 가져옵니다.'})
-    @ApiOkResponse({ type : EventDto})
-    async getEventById(@Param('eventId', ParseIntPipe) eventId: number,
-    ): Promise<EventDto> {
-        
-        return this.eventService.getEventById(eventId);
-    }
+  @Get(':eventId')
+  @HttpCode(200)
+  @ApiOperation({ summary: '특정 id의 모임 데이터를 가져옵니다.' })
+  @ApiOkResponse({ type: EventDto })
+  async getEventById(
+    @Param('eventId', ParseIntPipe) eventId: number,
+  ): Promise<EventDto> {
+    return this.eventService.getEventById(eventId);
+  }
 
-    @Get()
-    @HttpCode(200)
-    @ApiOperation({summary: '특정 id의 모임 데이터를 가져옵니다.'})
-    @ApiOkResponse({ type : EventListDto})
-    async getEvents(@Query() query: EventQuery) : Promise<EventListDto> {
-        return this.eventService.getEvents(query);
-    }
+  @Get()
+  @HttpCode(200)
+  @ApiOperation({ summary: '특정 id의 모임 데이터를 가져옵니다.' })
+  @ApiOkResponse({ type: EventListDto })
+  async getEvents(@Query() query: EventQuery): Promise<EventListDto> {
+    return this.eventService.getEvents(query);
+  }
 
-    @Post(':eventId/join')
-    @HttpCode(204)
-    @ApiOperation({summary: '유저를 event에 참여시킵니다'})
-    @ApiNoContentResponse()
-    async joinEvent(
-        @Param('eventId', ParseIntPipe) eventId: number,
-        @Body() payload : UpdateEventJoinPayload,
-    ): Promise<void> {
-        this.eventService.joinEvent(eventId, payload);
-    }
+  @Post(':eventId/join')
+  @HttpCode(204)
+  @ApiOperation({ summary: '유저를 event에 참여시킵니다' })
+  @ApiNoContentResponse()
+  async joinEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+    @Body() payload: UpdateEventJoinPayload,
+  ): Promise<void> {
+    this.eventService.joinEvent(eventId, payload);
+  }
 
-    @Post(':eventId/out')
-    @HttpCode(204)
-    @ApiOperation({summary: '유저를 event에서 내보냅니다'})
-    @ApiNoContentResponse()
-    async outEvent(
-        @Param('eventId', ParseIntPipe) eventId: number,
-        @Body() payload : UpdateEventJoinPayload,
-    ): Promise<void> {
-        this.eventService.outEvent(eventId, payload);
-    }
-
-    
-
+  @Post(':eventId/out')
+  @HttpCode(204)
+  @ApiOperation({ summary: '유저를 event에서 내보냅니다' })
+  @ApiNoContentResponse()
+  async outEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+    @Body() payload: UpdateEventJoinPayload,
+  ): Promise<void> {
+    this.eventService.outEvent(eventId, payload);
+  }
 }
