@@ -22,6 +22,11 @@ export class EventRepository{
                 startTime: data.startTime,
                 endTime: data.endTime,
                 maxPeople: data.maxPeople,
+                eventJoin: {
+                    create: {
+                        userId: data.hostId,
+                    },
+                },
             },
             select: {
                 id: true,
@@ -100,7 +105,7 @@ export class EventRepository{
     }
 
     async joinEvent(eventId: number, payload:UpdateEventJoinPayload) : Promise<void> {
-        return this.prisma.eventJoin.create({
+        this.prisma.eventJoin.create({
             data: {
                 eventId: eventId,
                 userId: payload.userId,
@@ -135,6 +140,14 @@ export class EventRepository{
                     eventId,
                     userId,
                 },
+            },
+        });
+    }
+
+    async getEventHeadCount(eventId: number) : Promise<number> {
+        return this.prisma.eventJoin.count({
+            where: {
+                eventId : eventId,
             },
         });
     }

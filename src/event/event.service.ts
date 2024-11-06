@@ -36,17 +36,13 @@ export class EventService {
 
        const now = new Date();
 
-       if (payload.startTime < now) {
-            throw new ConflictException("시작 시간은 현재 시간보다 빠를 수 없습니다");
-       }
+        if (payload.startTime < now || payload.endTime < now) {
+            throw new ConflictException("시작 시간과 종료 시간은 현재 시간보다 빠를 수 없습니다.");
+        }
 
-       if (payload.endTime < now) {
-            throw new ConflictException("종료 시간은 현재 시간보다 빠를 수 없습니다");
-       }
-
-       if (payload.startTime > payload.endTime) {
-            throw new ConflictException("시작 시간은 종료시간보다 늘릴 수 없습니다.");
-       }
+        if (payload.startTime > payload.endTime) {
+            throw new ConflictException("시작 시간은 종료시간보다 느릴 수 없습니다.");
+        }
 
        const createData: CreateEventData = {
             hostId:payload.hostId,
@@ -60,6 +56,7 @@ export class EventService {
        }
 
        const event = await this.eventRepository.createEvent(createData);
+
 
        return EventDto.from(event);
     }
@@ -79,11 +76,6 @@ export class EventService {
     async getEvents(query: EventQuery) : Promise<EventListDto> {
         
         const events = await this.eventRepository.getEvents(query);
-
-        if (!events) {
-            throw new NotFoundException('event가 존재하지 않습니다.');
-        }
-
         return EventListDto.from(events);
     }
 
@@ -108,15 +100,15 @@ export class EventService {
 
         }
 
-        //시작일
         if(event.startTime < new Date()) {
             throw new ConflictException('모임 시작 전까지만 참가가 가능합니다');
         }
 
-        //종료일
-        if(event.endTime < new Date()) {
-            throw new ConflictException('이미 종료된 모임에는 참가할 수 없습니다.');
+        const eventHeadCount = await this.eventRepository.getEventHeadCount(eventId);
+        if(event.maxPeople === eventHeadCount) {
+            throw new ConflictException('모임 인원이 가득차 참가할 수 없습니다');
         }
+
 
         await this.eventRepository.joinEvent(eventId, payload);
         
@@ -144,14 +136,17 @@ export class EventService {
 
         }
 
-        //시작일
         if(event.startTime < new Date()) {
             throw new ConflictException('모임 시작 전까지만 탈퇴가 가능합니다');
         }
 
-        //종료일
         if(event.endTime < new Date()) {
             throw new ConflictException('이미 종료된 모임에는 탈퇴 할 수 없습니다.');
+        }
+
+        const eventHeadCount = await this.eventRepository.getEventHeadCount(eventId);
+        if(1 === eventHeadCount) {
+            throw new ConflictException('모임 인원은 최소 1명 이상이여야 합니다');
         }
 
         await this.eventRepository.outEvent(eventId, payload.userId);
