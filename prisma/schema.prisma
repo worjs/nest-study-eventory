@@ -16,7 +16,6 @@ datasource db {
 model User {
   id           Int       @id @default(autoincrement())
   cityId       Int?      @map("city_id")
-  categoryId   Int       @map("category_id")
   name         String
   email        String    @unique
   password     String
@@ -30,10 +29,24 @@ model User {
   eventJoin EventJoin[]
   review    Review[]
 
-  city     City?    @relation(fields: [cityId], references: [id])
-  category Category @relation(fields: [categoryId], references: [id])
+  city         City?          @relation(fields: [cityId], references: [id])
+  userCategory UserCategory[]
 
   @@map("user")
+}
+
+model UserCategory {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  categoryId Int      @map("category_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  user     User     @relation(fields: [userId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([userId, categoryId])
+  @@map("user_category")
 }
 
 model Category {
@@ -42,8 +55,8 @@ model Category {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  event Event[]
-  user  User[]
+  event        Event[]
+  userCategory UserCategory[]
 
   @@map("category")
 }
