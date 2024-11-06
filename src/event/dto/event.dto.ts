@@ -21,6 +21,12 @@ export class EventDto {
   title!: string;
 
   @ApiProperty({
+    description: '내용',
+    type: String,
+  })
+  description!: string;
+
+  @ApiProperty({
     description: '카테고리',
     type: Number,
   })
@@ -55,6 +61,7 @@ export class EventDto {
       id: event.id,
       hostId: event.hostId,
       title: event.title,
+      description: event.description,
       categoryId: event.categoryId,
       cityId: event.cityId,
       startTime: event.startTime,

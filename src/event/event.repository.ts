@@ -15,6 +15,7 @@ export class EventRepository {
       data: {
         hostId: data.hostId,
         title: data.title,
+        description: data.description,
         categoryId: data.categoryId,
         cityId: data.cityId,
         startTime: data.startTime,
@@ -30,6 +31,7 @@ export class EventRepository {
         id: true,
         hostId: true,
         title: true,
+        description: true,
         categoryId: true,
         cityId: true,
         startTime: true,
@@ -72,6 +74,7 @@ export class EventRepository {
         id: true,
         hostId: true,
         title: true,
+        description: true,
         categoryId: true,
         cityId: true,
         startTime: true,

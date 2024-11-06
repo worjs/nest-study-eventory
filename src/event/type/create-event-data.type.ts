@@ -1,7 +1,7 @@
 export type CreateEventData = {
   hostId: number;
-  title: String;
-  description: String;
+  title: string;
+  description: string;
   categoryId: number;
   cityId: number;
   startTime: Date;
