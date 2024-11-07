@@ -6,7 +6,7 @@ import { CategoryData } from './type/category-data.type';
 export class CategoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllCategorys(): Promise<CategoryData[]> {
+  async findAllCategories(): Promise<CategoryData[]> {
     return this.prisma.category.findMany({
       select: {
         id: true,
