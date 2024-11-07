@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import type { EventService } from './event.service';
+import { EventService } from './event.service';
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -19,8 +19,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EventDto, EventListDto } from './dto/event.dto';
-import type { CreateEventPayload } from './payload/create-event-payload';
-import type { EventQuery } from './query/event.query';
+import { CreateEventPayload } from './payload/create-event-payload';
+import { EventQuery } from './query/event.query';
 import { UpdateEventJoinPayload } from './payload/update-event-join-payload';
 
 @Controller('events')

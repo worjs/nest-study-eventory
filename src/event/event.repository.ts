@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/services/prisma.service';
-import type { CreateEventData } from './type/create-event-data.type';
-import type { EventData } from './type/event-data';
-import type { Category, City, User } from '@prisma/client';
-import type { EventQuery } from './query/event.query';
-import type { UpdateEventJoinPayload } from './payload/update-event-join-payload';
+import { CreateEventData } from './type/create-event-data.type';
+import { EventData } from './type/event-data';
+import { Category, City, User } from '@prisma/client';
+import { EventQuery } from './query/event.query';
+import { UpdateEventJoinPayload } from './payload/update-event-join-payload';
 
 @Injectable()
 export class EventRepository {

@@ -3,12 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { EventRepository } from './event.repository';
-import type { CreateEventPayload } from './payload/create-event-payload';
+import { EventRepository } from './event.repository';
+import { CreateEventPayload } from './payload/create-event-payload';
 import { EventDto, EventListDto } from './dto/event.dto';
-import type { CreateEventData } from './type/create-event-data.type';
-import type { EventQuery } from './query/event.query';
-import type { UpdateEventJoinPayload } from './payload/update-event-join-payload';
+import { CreateEventData } from './type/create-event-data.type';
+import { EventQuery } from './query/event.query';
+import { UpdateEventJoinPayload } from './payload/update-event-join-payload';
 
 @Injectable()
 export class EventService {
