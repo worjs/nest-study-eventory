@@ -5,6 +5,7 @@ import { EventData } from './type/event-data';
 import { Category, City, User } from '@prisma/client';
 import { EventQuery } from './query/event.query';
 import { UpdateEventJoinPayload } from './payload/update-event-join-payload';
+import type { UpdateEventData } from './type/update-event-data';
 
 @Injectable()
 export class EventRepository {
@@ -45,6 +46,7 @@ export class EventRepository {
     return this.prisma.user.findUnique({
       where: {
         id: userId,
+        deletedAt: null,
       },
     });
   }
@@ -131,6 +133,9 @@ export class EventRepository {
           eventId,
           userId,
         },
+        user : {
+          deletedAt: null,
+        },
       },
     });
 
@@ -152,7 +157,49 @@ export class EventRepository {
     return this.prisma.eventJoin.count({
       where: {
         eventId: eventId,
+        user : {
+          deletedAt: null,
+        },
       },
     });
   }
+
+  async updateEvent(eventId: number, data : UpdateEventData): Promise<EventData> {
+    return this.prisma.event.update({
+      where: {
+        id: eventId,
+      },
+      data : {
+        title: data.title,
+        description: data.description,
+        categoryId: data.categoryId,
+        cityId: data.cityId,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        maxPeople: data.maxPeople,
+      },
+      select: {
+        id: true,
+        hostId: true,
+        title: true,
+        description: true,
+        categoryId: true,
+        cityId: true,
+        startTime: true,
+        endTime: true,
+        maxPeople: true,
+      }
+
+    });
+  }
+
+  async deleteEvent(eventId: number): Promise<void> {
+    await this.prisma.event.delete({
+      where: {
+        id: eventId,
+      },
+    });
+  }
+
+
 }

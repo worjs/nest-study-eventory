@@ -9,6 +9,8 @@ import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventData } from './type/create-event-data.type';
 import { EventQuery } from './query/event.query';
 import { UpdateEventJoinPayload } from './payload/update-event-join-payload';
+import type { PutUpdateEventPayload } from './payload/put-update-event-payload';
+import type { UpdateEventData } from './type/update-event-data';
 
 @Injectable()
 export class EventService {
@@ -148,4 +150,75 @@ export class EventService {
 
     await this.eventRepository.outEvent(eventId, payload.userId);
   }
+
+
+  async putUpdateEvent(
+    eventId: number,
+    payload : PutUpdateEventPayload,
+  ):Promise<EventDto> {
+    const event = await this.eventRepository.getEventById(eventId);
+
+    if (!event) {
+      throw new NotFoundException('Event가 존재하지 않습니다.');
+    }
+
+    const isCategoryExist = await this.eventRepository.getCategoryById(
+      payload.categoryId,
+    );
+    if (!isCategoryExist) {
+      throw new NotFoundException('카테고리가 존재하지 않습니다.');
+    }
+
+    const isCityExist = await this.eventRepository.getCityById(payload.cityId);
+    if (!isCityExist) {
+      throw new NotFoundException('지역이 존재하지 않습니다.');
+    }
+
+    const now = new Date();
+
+    if (payload.startTime < now || payload.endTime < now) {
+      throw new ConflictException(
+        '시작 시간과 종료 시간은 현재 시간보다 빠를 수 없습니다.',
+      );
+    }
+
+    if (payload.startTime > payload.endTime) {
+      throw new ConflictException('시작 시간은 종료시간보다 느릴 수 없습니다.');
+    }
+
+    const eventHeadCount = await this.eventRepository.getEventHeadCount(eventId);
+
+    if (payload.maxPeople < eventHeadCount) {
+      throw new ConflictException('최대 인원은 현재 인원보다 적을 수 없습니다');
+    }
+
+    const updateData: UpdateEventData = {
+      title: payload.title,
+      description: payload.description,
+      categoryId: payload.categoryId,
+      cityId: payload.cityId,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      maxPeople: payload.maxPeople,
+    };
+
+
+    const updatedEvent = await this.eventRepository.updateEvent(
+      eventId,
+      updateData,
+    );
+
+    return EventDto.from(updatedEvent);
+  }
+
+  async deleteEvent(eventId: number) : Promise<void> {
+    const event = await this.eventRepository.getEventById(eventId);
+
+    if(!event) {
+      throw new NotFoundException('event가 존재하지 않습니다.');
+    }
+
+    await this.eventRepository.deleteEvent(eventId);
+  }
+
 }
