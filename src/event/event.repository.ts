@@ -133,7 +133,7 @@ export class EventRepository {
           eventId,
           userId,
         },
-        user : {
+        user: {
           deletedAt: null,
         },
       },
@@ -157,19 +157,22 @@ export class EventRepository {
     return this.prisma.eventJoin.count({
       where: {
         eventId: eventId,
-        user : {
+        user: {
           deletedAt: null,
         },
       },
     });
   }
 
-  async updateEvent(eventId: number, data : UpdateEventData): Promise<EventData> {
+  async updateEvent(
+    eventId: number,
+    data: UpdateEventData,
+  ): Promise<EventData> {
     return this.prisma.event.update({
       where: {
         id: eventId,
       },
-      data : {
+      data: {
         title: data.title,
         description: data.description,
         categoryId: data.categoryId,
@@ -188,8 +191,7 @@ export class EventRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
-      }
-
+      },
     });
   }
 
@@ -200,6 +202,4 @@ export class EventRepository {
       },
     });
   }
-
-
 }
