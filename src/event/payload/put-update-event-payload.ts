@@ -1,10 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsDate, IsInt, IsString, Min } from "class-validator";
-
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsDate, IsInt, IsString, Min } from 'class-validator';
 
 export class PutUpdateEventPayload {
-    @IsString()
+  @IsString()
   @ApiProperty({
     description: '제목',
     type: String,

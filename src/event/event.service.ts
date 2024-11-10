@@ -151,11 +151,10 @@ export class EventService {
     await this.eventRepository.outEvent(eventId, payload.userId);
   }
 
-
   async putUpdateEvent(
     eventId: number,
-    payload : PutUpdateEventPayload,
-  ):Promise<EventDto> {
+    payload: PutUpdateEventPayload,
+  ): Promise<EventDto> {
     const event = await this.eventRepository.getEventById(eventId);
 
     if (!event) {
@@ -190,7 +189,8 @@ export class EventService {
       throw new ConflictException('시작 시간은 종료시간보다 느릴 수 없습니다.');
     }
 
-    const eventHeadCount = await this.eventRepository.getEventHeadCount(eventId);
+    const eventHeadCount =
+      await this.eventRepository.getEventHeadCount(eventId);
 
     if (payload.maxPeople < eventHeadCount) {
       throw new ConflictException('최대 인원은 현재 인원보다 적을 수 없습니다');
@@ -206,7 +206,6 @@ export class EventService {
       maxPeople: payload.maxPeople,
     };
 
-
     const updatedEvent = await this.eventRepository.updateEvent(
       eventId,
       updateData,
@@ -215,10 +214,10 @@ export class EventService {
     return EventDto.from(updatedEvent);
   }
 
-  async deleteEvent(eventId: number) : Promise<void> {
+  async deleteEvent(eventId: number): Promise<void> {
     const event = await this.eventRepository.getEventById(eventId);
 
-    if(!event) {
+    if (!event) {
       throw new NotFoundException('event가 존재하지 않습니다.');
     }
 
@@ -228,5 +227,4 @@ export class EventService {
 
     await this.eventRepository.deleteEvent(eventId);
   }
-
 }
