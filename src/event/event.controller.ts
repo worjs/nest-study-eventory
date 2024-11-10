@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { EventService } from './event.service';
@@ -22,6 +23,7 @@ import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event-payload';
 import { EventQuery } from './query/event.query';
 import { UpdateEventJoinPayload } from './payload/update-event-join-payload';
+import type { PutUpdateEventPayload } from './payload/put-update-event-payload';
 
 @Controller('events')
 @ApiTags('Event API')
@@ -74,5 +76,25 @@ export class EventController {
     @Body() payload: UpdateEventJoinPayload,
   ): Promise<void> {
     this.eventService.outEvent(eventId, payload);
+  }
+
+  @Put(':eventId')
+  @ApiOperation({ summary: '모임을 수정합니다' })
+  @ApiOkResponse({ type: EventDto })
+  async putUpdateEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+    @Body() payload: PutUpdateEventPayload,
+  ): Promise<EventDto> {
+    return this.eventService.putUpdateEvent(eventId, payload);
+  }
+
+  @Delete(':eventId')
+  @HttpCode(204)
+  @ApiOperation({ summary: '이벤트를 삭제합니다' })
+  @ApiNoContentResponse()
+  async deleteEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+  ): Promise<void> {
+    return this.eventService.deleteEvent(eventId);
   }
 }

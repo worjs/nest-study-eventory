@@ -9,26 +9,28 @@ import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventData } from './type/create-event-data.type';
 import { EventQuery } from './query/event.query';
 import { UpdateEventJoinPayload } from './payload/update-event-join-payload';
+import type { PutUpdateEventPayload } from './payload/put-update-event-payload';
+import type { UpdateEventData } from './type/update-event-data';
 
 @Injectable()
 export class EventService {
   constructor(private readonly eventRepository: EventRepository) {}
 
   async createEvent(payload: CreateEventPayload): Promise<EventDto> {
-    const isHostExist = await this.eventRepository.getUserById(payload.hostId);
-    if (!isHostExist) {
+    const host = await this.eventRepository.getUserById(payload.hostId);
+    if (!host) {
       throw new NotFoundException('호스트가 존재하지 않습니다.');
     }
 
-    const isCategoryExist = await this.eventRepository.getCategoryById(
+    const category = await this.eventRepository.getCategoryById(
       payload.categoryId,
     );
-    if (!isCategoryExist) {
+    if (!category) {
       throw new NotFoundException('카테고리가 존재하지 않습니다.');
     }
 
-    const isCityExist = await this.eventRepository.getCityById(payload.cityId);
-    if (!isCityExist) {
+    const city = await this.eventRepository.getCityById(payload.cityId);
+    if (!city) {
       throw new NotFoundException('지역이 존재하지 않습니다.');
     }
 
@@ -36,7 +38,7 @@ export class EventService {
 
     if (payload.startTime < now || payload.endTime < now) {
       throw new ConflictException(
-        '시작 시간과 종료 시간은 현재 시간보다 빠를 수 없습니다.',
+        '시작 시간 또는 종료 시간은 현재 시간보다 빠를 수 없습니다.',
       );
     }
 
@@ -79,8 +81,8 @@ export class EventService {
     eventId: number,
     payload: UpdateEventJoinPayload,
   ): Promise<void> {
-    const isUserExist = await this.eventRepository.getUserById(payload.userId);
-    if (!isUserExist) {
+    const user = await this.eventRepository.getUserById(payload.userId);
+    if (!user) {
       throw new NotFoundException('유저가 존재하지 않습니다.');
     }
 
@@ -114,8 +116,8 @@ export class EventService {
     eventId: number,
     payload: UpdateEventJoinPayload,
   ): Promise<void> {
-    const isUserExist = await this.eventRepository.getUserById(payload.userId);
-    if (!isUserExist) {
+    const user = await this.eventRepository.getUserById(payload.userId);
+    if (user) {
       throw new NotFoundException('유저가 존재하지 않습니다.');
     }
 
@@ -147,5 +149,82 @@ export class EventService {
     }
 
     await this.eventRepository.outEvent(eventId, payload.userId);
+  }
+
+  async putUpdateEvent(
+    eventId: number,
+    payload: PutUpdateEventPayload,
+  ): Promise<EventDto> {
+    const event = await this.eventRepository.getEventById(eventId);
+
+    if (!event) {
+      throw new NotFoundException('Event가 존재하지 않습니다.');
+    }
+
+    const category = await this.eventRepository.getCategoryById(
+      payload.categoryId,
+    );
+    if (!category) {
+      throw new NotFoundException('카테고리가 존재하지 않습니다.');
+    }
+
+    const city = await this.eventRepository.getCityById(payload.cityId);
+    if (!city) {
+      throw new NotFoundException('지역이 존재하지 않습니다.');
+    }
+
+    const now = new Date();
+
+    if (event.startTime < now) {
+      throw new ConflictException('모임 시작 전까지만 수정이 가능합니다');
+    }
+
+    if (payload.startTime < now || payload.endTime < now) {
+      throw new ConflictException(
+        '시작 시간 또는 종료 시간은 현재 시간보다 빠를 수 없습니다.',
+      );
+    }
+
+    if (payload.startTime > payload.endTime) {
+      throw new ConflictException('시작 시간은 종료시간보다 느릴 수 없습니다.');
+    }
+
+    const eventHeadCount =
+      await this.eventRepository.getEventHeadCount(eventId);
+
+    if (payload.maxPeople < eventHeadCount) {
+      throw new ConflictException('최대 인원은 현재 인원보다 적을 수 없습니다');
+    }
+
+    const updateData: UpdateEventData = {
+      title: payload.title,
+      description: payload.description,
+      categoryId: payload.categoryId,
+      cityId: payload.cityId,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      maxPeople: payload.maxPeople,
+    };
+
+    const updatedEvent = await this.eventRepository.updateEvent(
+      eventId,
+      updateData,
+    );
+
+    return EventDto.from(updatedEvent);
+  }
+
+  async deleteEvent(eventId: number): Promise<void> {
+    const event = await this.eventRepository.getEventById(eventId);
+
+    if (!event) {
+      throw new NotFoundException('event가 존재하지 않습니다.');
+    }
+
+    if (event.startTime < new Date()) {
+      throw new ConflictException('모임 시작 전까지만 삭제 가능합니다');
+    }
+
+    await this.eventRepository.deleteEvent(eventId);
   }
 }
