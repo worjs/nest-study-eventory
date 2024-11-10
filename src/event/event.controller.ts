@@ -79,7 +79,7 @@ export class EventController {
   }
 
   @Put(':eventId')
-  @ApiOperation({summary: '모임을 수정합니다'})
+  @ApiOperation({summary: '모임을 수정합니다.'})
   @ApiOkResponse({type: EventDto})
   async putUpdateEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
