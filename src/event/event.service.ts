@@ -218,7 +218,7 @@ export class EventService {
     const event = await this.eventRepository.getEventById(eventId);
 
     if (!event) {
-      throw new NotFoundException('event가 존재하지 않습니다.');
+      throw new NotFoundException('event가 존재하지 않습니다');
     }
 
     if (event.startTime < new Date()) {
