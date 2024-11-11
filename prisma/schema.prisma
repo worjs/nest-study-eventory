@@ -14,22 +14,22 @@ datasource db {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  cityId       Int?      @map("city_id")
-  name         String
-  email        String    @unique
-  password     String
+  id        Int       @id @default(autoincrement())
+  cityId    Int?      @map("city_id")
+  name      String
+  email     String    @unique
+  password  String
   refreshToken String?   @map("refresh_token")
-  birthday     DateTime?
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
-  deletedAt    DateTime? @map("deleted_at")
+  birthday  DateTime?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
 
   event     Event[]
   eventJoin EventJoin[]
   review    Review[]
 
-  city         City?          @relation(fields: [cityId], references: [id])
+  city City? @relation(fields: [cityId], references: [id])
   userCategory UserCategory[]
 
   @@map("user")
@@ -49,15 +49,29 @@ model UserCategory {
   @@map("user_category")
 }
 
+model EventCity {
+  id         Int      @id @default(autoincrement())
+  eventId    Int      @map("event_id")
+  cityId     Int      @map("city_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  event     Event     @relation(fields: [eventId], references: [id])
+  city      City      @relation(fields: [cityId], references: [id])
+
+  @@unique([eventId, cityId])
+  @@map("event_city")
+}
+
 model Category {
   id        Int      @id @default(autoincrement())
   name      String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  event        Event[]
+  event Event[]
   userCategory UserCategory[]
-
+  
   @@map("category")
 }
 
@@ -65,7 +79,6 @@ model Event {
   id          Int      @id @default(autoincrement())
   hostId      Int      @map("host_id")
   categoryId  Int      @map("category_id")
-  cityId      Int      @map("city_id")
   title       String
   description String
   maxPeople   Int      @map("max_people")
@@ -76,10 +89,10 @@ model Event {
 
   host     User     @relation(fields: [hostId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
-  city     City     @relation(fields: [cityId], references: [id])
 
   eventJoin EventJoin[]
   review    Review[]
+  eventCity EventCity[]
 
   @@map("event")
 }
@@ -133,8 +146,8 @@ model City {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  event Event[]
   user  User[]
+  eventCity EventCity[]
 
   region Region @relation(fields: [regionId], references: [id])
 
