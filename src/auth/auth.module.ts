@@ -5,6 +5,8 @@ import { AuthRepository } from './auth.repository';
 import { JwtStrategy } from './guard/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { BcryptPasswordService } from './bcrypt-password.service';
+import { TokenService } from './token.service';
 
 @Module({
   imports: [
@@ -19,6 +21,12 @@ import { ConfigService } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, AuthRepository, JwtStrategy],
+  providers: [
+    AuthService,
+    AuthRepository,
+    JwtStrategy,
+    BcryptPasswordService,
+    TokenService,
+  ],
 })
 export class AuthModule {}
