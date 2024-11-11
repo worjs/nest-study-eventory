@@ -9,6 +9,7 @@ import { BcryptPasswordService } from './bcrypt-password.service';
 import { SignUpData } from './type/sign-up-data.type';
 import { Tokens } from './type/tokens.type';
 import { TokenService } from './token.service';
+import { LoginPayload } from './payload/login.payload';
 
 @Injectable()
 export class AuthService {
@@ -54,6 +55,24 @@ export class AuthService {
     const createdUser = await this.authRepository.createUser(inputData);
 
     return this.generateTokens(createdUser.id);
+  }
+
+  async login(payload: LoginPayload): Promise<Tokens> {
+    const user = await this.authRepository.getUserByEmail(payload.email);
+    if (!user) {
+      throw new NotFoundException('존재하지 않는 이메일입니다.');
+    }
+
+    const isPasswordMatch = await this.passwordService.validatePassword(
+      payload.password,
+      user.password,
+    );
+
+    if (!isPasswordMatch) {
+      throw new ConflictException('비밀번호가 일치하지 않습니다.');
+    }
+
+    return this.generateTokens(user.id);
   }
 
   private async generateTokens(userId: number): Promise<Tokens> {
