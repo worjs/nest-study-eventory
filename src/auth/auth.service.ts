@@ -53,8 +53,16 @@ export class AuthService {
 
     const createdUser = await this.authRepository.createUser(inputData);
 
-    return this.tokenService.generateTokens({
-      userId: createdUser.id,
+    return this.generateTokens(createdUser.id);
+  }
+
+  private async generateTokens(userId: number): Promise<Tokens> {
+    const tokens = this.tokenService.generateTokens({ userId });
+
+    await this.authRepository.updateUser(userId, {
+      refreshToken: tokens.refreshToken,
     });
+
+    return tokens;
   }
 }

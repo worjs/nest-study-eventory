@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { UserBaseInfo } from './type/user-base-info.type';
 import { Category, City } from '@prisma/client';
 import { SignUpData } from './type/sign-up-data.type';
+import { UpdateUserData } from './type/update-user-data.type';
 
 @Injectable()
 export class AuthRepository {
@@ -10,6 +11,31 @@ export class AuthRepository {
 
   async createUser(data: SignUpData): Promise<UserBaseInfo> {
     return this.prisma.user.create({
+      data: {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        birthday: data.birthday,
+        categoryId: data.categoryId,
+        cityId: data.cityId,
+      },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        name: true,
+        birthday: true,
+        categoryId: true,
+        cityId: true,
+      },
+    });
+  }
+
+  async updateUser(id: number, data: UpdateUserData): Promise<UserBaseInfo> {
+    return this.prisma.user.update({
+      where: {
+        id: id,
+      },
       data: {
         email: data.email,
         password: data.password,
