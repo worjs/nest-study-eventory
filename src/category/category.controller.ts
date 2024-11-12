@@ -1,8 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
-import { Category } from '@prisma/client';
-import { CategoryListDto } from '../region/dto/category.dto';
+import { CategoryListDto } from './dto/category.dto';
 
 @Controller('categories')
 @ApiTags('Category API')
