@@ -1,20 +1,22 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from '../auth/auth.module';
+import { CategoryModule } from '../category/category.module';
+import { CommonModule } from '../common/common.module';
 import { configModule } from './modules/config.module';
 import { LoggerMiddleware } from '../common/middlewares/logger.middleware';
 import { RegionModule } from '../region/region.module';
-import { CommonModule } from '../common/common.module';
 import { ReviewModule } from '../review/review.module';
 import { UserModule } from '../user/user.module';
-import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
     AuthModule,
+    CategoryModule,
+    CommonModule,
     configModule,
     RegionModule,
-    CommonModule,
     ReviewModule,
     UserModule,
   ],
