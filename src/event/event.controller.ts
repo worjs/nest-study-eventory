@@ -9,7 +9,7 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Post()
-  @ApiOperation({ summary: '이벤트를 생성합니다' })
+  @ApiOperation({ summary: '새로운 모임을 생성합니다.' })
   @ApiCreatedResponse({ type: EventDto })
   async createReview(@Body() payload: CreateEventPayload): Promise<EventDto> {
     return this.eventService.createEvent(payload);

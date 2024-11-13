@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
 import { PrismaService } from '../common/services/prisma.service';
 import { CreateEventData } from './type/create-event-data.type';
 import { EventData } from './type/event-data.type';
-import { User } from '@prisma/client';
-
 @Injectable()
 export class EventRepository {
   constructor(private readonly prisma: PrismaService) {}

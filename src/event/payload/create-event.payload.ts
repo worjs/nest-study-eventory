@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsInt, IsPositive, IsString, Min } from 'class-validator';
+import { IsDate, IsInt, IsString, Min } from 'class-validator';
 
 export class CreateEventPayload {
   @IsString()
