@@ -11,9 +11,11 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
-import { EventDto } from './dto/event.dto';
+import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
+import { EventListQuery } from './query/event-list.query';
 
 @Controller('events')
 export class EventController {
@@ -33,5 +35,13 @@ export class EventController {
     @Param('eventID', ParseIntPipe) eventID: number,
   ): Promise<EventDto> {
     return this.eventService.getEvent(eventID);
+  }
+
+  @Get()
+  @ApiOperation({ summary: '조건에 따른 모임 목록을 조회합니다.' })
+  @ApiOkResponse({ type: EventListDto })
+  async getEvents(@Query() query: EventListQuery): Promise<EventListDto> {
+    console.log(query);
+    return this.eventService.getEvents(query);
   }
 }

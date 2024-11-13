@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { CreateEventPayload } from './payload/create-event.payload';
 import { CreateEventData } from './type/create-event-data.type';
-import { EventDto } from './dto/event.dto';
+import { EventDto, EventListDto } from './dto/event.dto';
 import { EventRepository } from './event.repository';
+import { EventListQuery } from './query/event-list.query';
 
 @Injectable()
 export class EventService {
@@ -61,7 +62,11 @@ export class EventService {
     if (!event) {
       throw new NotFoundException('해당 Event가 존재하지 않습니다.');
     }
-
     return EventDto.from(event);
+  }
+
+  async getEvents(query: EventListQuery): Promise<EventListDto> {
+    const events = await this.eventRepository.getEvents(query);
+    return EventListDto.from(events);
   }
 }
