@@ -41,7 +41,6 @@ export class EventController {
   @ApiOperation({ summary: '조건에 따른 모임 목록을 조회합니다.' })
   @ApiOkResponse({ type: EventListDto })
   async getEvents(@Query() query: EventListQuery): Promise<EventListDto> {
-    console.log(query);
     return this.eventService.getEvents(query);
   }
 }
