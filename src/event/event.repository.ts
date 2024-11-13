@@ -102,4 +102,13 @@ export class EventRepository {
       },
     });
   }
+
+  async joinUserToEvent(data: { eventID: number; userID: number }) {
+    return this.prisma.eventJoin.create({
+      data: {
+        eventId: data.eventID,
+        userId: data.userID,
+      },
+    });
+  }
 }
