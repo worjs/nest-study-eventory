@@ -18,10 +18,21 @@ export class EventController {
     //     return this.eventService.findAllEvents();
     // }
 
+    @Get(':eventId')
+    @ApiOperation({ summary: '이벤트 상세 정보를 가져옵니다' })
+    @ApiOkResponse({ type: EventDto })
+    async getEventById(
+        @Param('eventId', ParseIntPipe) eventId: number,
+    ): Promise<EventDto> {
+        return this.eventService.getEventById(eventId);
+    }
+
     @Get()  
     @ApiOperation({ summary: '여러 야벤트 정보를 가져옵니다'})
     @ApiOkResponse({ type: EventListDto })
     async getEvents(@Query() query: EventQuery): Promise<EventListDto> {
         return this.eventService.getEvents(query);
     }
+
+    
 }
