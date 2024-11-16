@@ -10,38 +10,29 @@ export class EventRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async createEvent(data: CreateEventData): Promise<EventData> {
-    return await this.prisma.$transaction(async (prisma) => {
-      const event = await prisma.event.create({
-        data: {
-          title: data.title,
-          description: data.description,
-          hostId: data.hostId,
-          categoryId: data.categoryId,
-          cityId: data.cityId,
-          startTime: data.startTime,
-          endTime: data.endTime,
-          maxPeople: data.maxPeople,
-        },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          hostId: true,
-          categoryId: true,
-          cityId: true,
-          startTime: true,
-          endTime: true,
-          maxPeople: true,
-        },
-      });
-      await prisma.eventJoin.create({
-        data: {
-          eventId: event.id,
-          userId: data.hostId,
-        },
-      });
+    return this.prisma.event.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        hostId: data.hostId,
+        categoryId: data.categoryId,
+        cityId: data.cityId,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        maxPeople: data.maxPeople,
+      },
 
-      return event;
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        hostId: true,
+        categoryId: true,
+        cityId: true,
+        startTime: true,
+        endTime: true,
+        maxPeople: true,
+      },
     });
   }
 
@@ -108,15 +99,6 @@ export class EventRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
-      },
-    });
-  }
-
-  async joinUserToEvent(data: { eventID: number; userID: number }) {
-    return this.prisma.eventJoin.create({
-      data: {
-        eventId: data.eventID,
-        userId: data.userID,
       },
     });
   }
