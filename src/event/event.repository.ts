@@ -60,4 +60,23 @@ export class EventRepository {
     });
     return !!city;
   }
+
+  async getEventById(eventId: number): Promise<EventData | null> {
+    return this.prisma.event.findUnique({
+      where: {
+        id: eventId,
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        hostId: true,
+        categoryId: true,
+        cityId: true,
+        startTime: true,
+        endTime: true,
+        maxPeople: true,
+      },
+    });
+  }
 }

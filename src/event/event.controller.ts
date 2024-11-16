@@ -1,6 +1,17 @@
-import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { EventService } from './event.service';
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { EventDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
 
@@ -13,5 +24,14 @@ export class EventController {
   @ApiCreatedResponse({ type: EventDto })
   async createReview(@Body() payload: CreateEventPayload): Promise<EventDto> {
     return this.eventService.createEvent(payload);
+  }
+
+  @Get(':eventID')
+  @ApiOperation({ summary: '특정 모임을 조회합니다.' })
+  @ApiOkResponse({ type: EventDto })
+  async getEvent(
+    @Param('eventID', ParseIntPipe) eventID: number,
+  ): Promise<EventDto> {
+    return this.eventService.getEvent(eventID);
   }
 }
