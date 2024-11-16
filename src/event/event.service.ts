@@ -79,24 +79,24 @@ export class EventService {
     if (!user) {
       throw new NotFoundException('해당 user는 존재하지 않습니다.');
     }
-
-    const { exists, isFull, startTime } =
-      await this.eventRepository.checkEventStatus(eventID);
-
-    if (!exists) {
+    const event = await this.eventRepository.getEventById(eventID);
+    if (!event) {
       throw new NotFoundException('해당 Event가 존재하지 않습니다.');
-    } else if (isFull) {
-      throw new BadRequestException('Event가 꽉 찼습니다.');
+    } else if (event.startTime < new Date()) {
+      throw new BadRequestException(
+        'Event는 이미 시작되었습니다. 시작한 Event에는 참여할 수 없습니다.',
+      );
+    } else if (
+      await this.eventRepository.isUserJoinedToEvent({ eventID, userID })
+    ) {
+      throw new BadRequestException('이미 참여한 Event입니다.');
+    } else if (
+      event.maxPeople <=
+      (await this.eventRepository.getJoinedUserCount(eventID))
+    ) {
+      throw new BadRequestException('Event 참여인원이 꽉 찼습니다.');
     } else {
-      if (await this.eventRepository.isUserJoinedToEvent({ eventID, userID })) {
-        throw new BadRequestException('이미 참가한 Event입니다.');
-      } else if (startTime < new Date()) {
-        throw new BadRequestException(
-          'Event가 이미 시작되어 참여할 수 없습니다.',
-        );
-      } else {
-        await this.eventRepository.joinUserToEvent({ eventID, userID });
-      }
+      await this.eventRepository.joinUserToEvent({ eventID, userID });
     }
   }
 }

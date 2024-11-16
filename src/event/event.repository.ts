@@ -131,31 +131,24 @@ export class EventRepository {
     return !!eventJoin;
   }
 
-  async checkEventStatus(
-    eventID: number,
-  ): Promise<{ exists: boolean; isFull: boolean; startTime: Date }> {
+  async getJoinedUserCount(eventID: number): Promise<number> {
     const event = await this.prisma.event.findUnique({
       where: {
         id: eventID,
       },
-      select: {
-        startTime: true,
-        maxPeople: true,
-      },
     });
 
     if (!event) {
-      return { exists: false, isFull: true, startTime: new Date() };
+      return 0;
     }
 
-    const eventJoinCount = await this.prisma.eventJoin.count({
+    const joinCount = await this.prisma.eventJoin.count({
       where: {
         eventId: eventID,
       },
     });
 
-    const isFull = event.maxPeople <= eventJoinCount;
-    return { exists: true, isFull, startTime: event.startTime };
+    return joinCount;
   }
 
   // async getEventJoinUsers(eventID: number): Promise<User[]> {
