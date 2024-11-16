@@ -103,7 +103,13 @@ export class EventRepository {
     });
   }
 
-  async joinUserToEvent(data: { eventID: number; userID: number }) {
+  async joinUserToEvent(data: { eventID: number; userID: number }): Promise<{
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    eventId: number;
+    userId: number;
+  }> {
     return this.prisma.eventJoin.create({
       data: {
         eventId: data.eventID,
@@ -111,4 +117,66 @@ export class EventRepository {
       },
     });
   }
+
+  async isUserJoinedToEvent(data: {
+    eventID: number;
+    userID: number;
+  }): Promise<boolean> {
+    const eventJoin = await this.prisma.eventJoin.findFirst({
+      where: {
+        eventId: data.eventID,
+        userId: data.userID,
+      },
+    });
+    return !!eventJoin;
+  }
+
+  async checkEventStatus(
+    eventID: number,
+  ): Promise<{ exists: boolean; isFull: boolean; startTime: Date }> {
+    const event = await this.prisma.event.findUnique({
+      where: {
+        id: eventID,
+      },
+      select: {
+        startTime: true,
+        maxPeople: true,
+      },
+    });
+
+    if (!event) {
+      return { exists: false, isFull: true, startTime: new Date() };
+    }
+
+    const eventJoinCount = await this.prisma.eventJoin.count({
+      where: {
+        eventId: eventID,
+      },
+    });
+
+    const isFull = event.maxPeople <= eventJoinCount;
+    return { exists: true, isFull, startTime: event.startTime };
+  }
+
+  // async getEventJoinUsers(eventID: number): Promise<User[]> {
+  //   return this.prisma.eventJoin
+  //     .findMany({
+  //       where: {
+  //         eventId: eventID,
+  //       },
+  //       select: {
+  //         userId: true,
+  //       },
+  //     })
+  //     .then((eventJoins) => {
+  //       const userIds = eventJoins.map((eventJoin) => eventJoin.userId);
+  //       return this.prisma.user.findMany({
+  //         where: {
+  //           id: {
+  //             in: userIds,
+  //           },
+  //         },
+  //       });
+  //     });
+  // }
 }
