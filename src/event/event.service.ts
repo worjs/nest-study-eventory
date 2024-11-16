@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -97,6 +98,36 @@ export class EventService {
       } else {
         await this.eventRepository.joinUserToEvent({ eventID, userID });
       }
+    }
+  }
+
+  async outEvent(eventID: number, userID: number): Promise<void> {
+    const user = await this.eventRepository.getUserById(userID);
+    if (!user) {
+      throw new NotFoundException('해당 user는 존재하지 않습니다.');
+    }
+
+    const { exists, _, startTime } =
+      await this.eventRepository.checkEventStatus(eventID);
+
+    if (!exists) {
+      throw new NotFoundException('해당 Event가 존재하지 않습니다.');
+    } else if (startTime < new Date()) {
+      throw new BadRequestException(
+        'Event가 이미 시작되어 탈퇴할 수 없습니다.',
+      );
+    } else {
+      if (
+        !(await this.eventRepository.isUserJoinedToEvent({ eventID, userID }))
+      ) {
+        throw new BadRequestException('참가하지 않은 Event입니다.');
+      } else if (
+        userID === (await this.eventRepository.getEventHostId(eventID))
+      ) {
+        throw new ConflictException('주최자는 탈퇴할 수 없습니다.');
+      }
+
+      await this.eventRepository.outUserFromEvent({ eventID, userID });
     }
   }
 }

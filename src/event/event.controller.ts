@@ -17,6 +17,7 @@ import {
 import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
 import { EventJoinPayload } from './payload/event-join.payload';
+import { EventOutPayload } from './payload/event-out.payload';
 import { EventListQuery } from './query/event-list.query';
 
 @Controller('events')
@@ -54,5 +55,15 @@ export class EventController {
     @Body() payload: EventJoinPayload,
   ): Promise<void> {
     return this.eventService.joinEvent(eventID, payload.userID);
+  }
+
+  @Post(':eventID/out')
+  @ApiOperation({ summary: 'user가 특정 모임에서 탈퇴합니다.' })
+  @ApiNoContentResponse() // 204
+  async outEvent(
+    @Param('eventID', ParseIntPipe) eventID: number,
+    @Body() payload: EventOutPayload,
+  ): Promise<void> {
+    return this.eventService.outEvent(eventID, payload.userID);
   }
 }

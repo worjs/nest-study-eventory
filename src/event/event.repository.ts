@@ -158,6 +158,30 @@ export class EventRepository {
     return { exists: true, isFull, startTime: event.startTime };
   }
 
+  async outUserFromEvent(data: {
+    eventID: number;
+    userID: number;
+  }): Promise<void> {
+    await this.prisma.eventJoin.deleteMany({
+      where: {
+        eventId: data.eventID,
+        userId: data.userID,
+      },
+    });
+  }
+
+  async getEventHostId(eventID: number): Promise<number> {
+    const event = await this.prisma.event.findUnique({
+      where: {
+        id: eventID,
+      },
+      select: {
+        hostId: true,
+      },
+    });
+    return event.hostId; // hostId가 null이 아니므로 null 체크는 하지 않음
+  }
+
   // async getEventJoinUsers(eventID: number): Promise<User[]> {
   //   return this.prisma.eventJoin
   //     .findMany({
