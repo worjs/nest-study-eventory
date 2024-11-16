@@ -4,6 +4,7 @@ import { PrismaService } from '../common/services/prisma.service';
 import { CreateEventData } from './type/create-event-data.type';
 import { EventData } from './type/event-data.type';
 import { EventListQuery } from './query/event-list.query';
+import { EventUpdatePayload } from './payload/event-update.payload';
 
 @Injectable()
 export class EventRepository {
@@ -131,6 +132,14 @@ export class EventRepository {
     return !!eventJoin;
   }
 
+  async getJoinedUsersCount(eventID: number): Promise<number> {
+    return this.prisma.eventJoin.count({
+      where: {
+        eventId: eventID,
+      },
+    });
+  }
+
   async checkEventStatus(
     eventID: number,
   ): Promise<{ exists: boolean; isFull: boolean; startTime: Date }> {
@@ -180,6 +189,29 @@ export class EventRepository {
       },
     });
     return event.hostId; // hostId가 null이 아니므로 null 체크는 하지 않음
+  }
+
+  async updateEvent(
+    eventID: number,
+    payload: EventUpdatePayload,
+  ): Promise<EventData> {
+    return this.prisma.event.update({
+      where: {
+        id: eventID,
+      },
+      data: payload,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        hostId: true,
+        categoryId: true,
+        cityId: true,
+        startTime: true,
+        endTime: true,
+        maxPeople: true,
+      },
+    });
   }
 
   // async getEventJoinUsers(eventID: number): Promise<User[]> {
