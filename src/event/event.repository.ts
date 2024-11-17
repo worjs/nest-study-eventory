@@ -132,39 +132,24 @@ export class EventRepository {
     return !!eventJoin;
   }
 
-  async getJoinedUsersCount(eventID: number): Promise<number> {
-    return this.prisma.eventJoin.count({
-      where: {
-        eventId: eventID,
-      },
-    });
-  }
-
-  async checkEventStatus(
-    eventID: number,
-  ): Promise<{ exists: boolean; isFull: boolean; startTime: Date }> {
+  async getJoinedUserCount(eventID: number): Promise<number> {
     const event = await this.prisma.event.findUnique({
       where: {
         id: eventID,
       },
-      select: {
-        startTime: true,
-        maxPeople: true,
-      },
     });
 
     if (!event) {
-      return { exists: false, isFull: true, startTime: new Date() };
+      return 0;
     }
 
-    const eventJoinCount = await this.prisma.eventJoin.count({
+    const joinCount = await this.prisma.eventJoin.count({
       where: {
         eventId: eventID,
       },
     });
 
-    const isFull = event.maxPeople <= eventJoinCount;
-    return { exists: true, isFull, startTime: event.startTime };
+    return joinCount;
   }
 
   async outUserFromEvent(data: {
@@ -179,7 +164,7 @@ export class EventRepository {
     });
   }
 
-  async getEventHostId(eventID: number): Promise<number> {
+  async getEventHostId(eventID: number): Promise<number | null> {
     const event = await this.prisma.event.findUnique({
       where: {
         id: eventID,
@@ -188,7 +173,8 @@ export class EventRepository {
         hostId: true,
       },
     });
-    return event.hostId; // hostId가 null이 아니므로 null 체크는 하지 않음
+
+    return event ? event.hostId : null;
   }
 
   async updateEvent(

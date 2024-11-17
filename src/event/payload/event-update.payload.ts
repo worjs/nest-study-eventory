@@ -9,7 +9,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 
-export class UpdateEventPayload {
+export class EventUpdatePayload {
   @IsString()
   @NotEquals(null)
   @ValidateIf((object, value) => value !== undefined)
