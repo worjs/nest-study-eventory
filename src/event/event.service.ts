@@ -55,10 +55,6 @@ export class EventService {
     };
 
     const event = await this.eventRepository.createEvent(createData);
-    await this.eventRepository.joinUserToEvent({
-      eventID: event.id,
-      userID: event.hostId,
-    });
 
     return EventDto.from(event);
   }
