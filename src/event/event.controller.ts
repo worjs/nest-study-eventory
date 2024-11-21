@@ -1,9 +1,9 @@
-import { Controller, Get, ParseIntPipe, Query, Param, Body} from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, ParseIntPipe, Query, Param, Body} from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiTags, ApiCreatedResponse } from '@nestjs/swagger';
 import { EventService } from './event.service';
 import { Event} from '@prisma/client';
 import { EventListDto, EventDto } from './dto/event.dto';
-import { CategoryListDto } from 'src/category/dto/category.dto';
+import { CreateEventPayload } from './payload/create-event.payload'; 
 import { EventQuery } from './query/event.query';
 
 @Controller('event')
@@ -11,12 +11,12 @@ import { EventQuery } from './query/event.query';
 export class EventController {
     constructor(private readonly eventService: EventService) {}
 
-    // @Get()  
-    // @ApiOperation({ summary: 'all events list'})
-    // @ApiOkResponse({ type: EventListDto })
-    // async findAllevents(): Promise<EventListDto> {
-    //     return this.eventService.findAllEvents();
-    // }
+    @Post()
+    @ApiOperation({ summary: '이벤트를 생성합니다' })
+    @ApiCreatedResponse({ type:EventDto })
+    async createEvent(@Body() payload: CreateEventPayload): Promise<EventDto> {
+        return this.eventService.createEvent(payload);
+    }
 
     @Get(':eventId')
     @ApiOperation({ summary: '이벤트 상세 정보를 가져옵니다' })
@@ -33,6 +33,4 @@ export class EventController {
     async getEvents(@Query() query: EventQuery): Promise<EventListDto> {
         return this.eventService.getEvents(query);
     }
-
-    
 }

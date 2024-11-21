@@ -1,26 +1,78 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException} from '@nestjs/common';
 import { EventRepository } from './event.repository';
 import { EventListDto, EventDto } from './dto/event.dto';
-import { EventData } from './type/event-data.type';
+import { CreateEventData } from './type/create-event-data.type';
 import { EventQuery } from './query/event.query';
+import { CreateEventPayload } from './payload/create-event.payload';
+import { EventData } from './type/event-data.type';
+import { EventJoin } from '@prisma/client';
 
 @Injectable()
 export class EventService {
     constructor(private readonly eventRepository: EventRepository) {}
 
-    // async findAllEvents():  Promise<EventListDto> {
-    //     const events: EventData[] = await this.eventRepository.findAllEvents();
+    async createEvent(payload: CreateEventPayload): Promise<EventDto> {
+        const isEventExist = await this.eventRepository.isEventExist(
+            payload.hostId,
+            // payload.cityId,
+            // payload.categoryId,
+        );
 
-    //     return EventListDto.from(events);
-    // }
+        if (isEventExist) {
+            throw new ConflictException('Event가 이미 존재합니다.');
+        }
+
+        if (payload.startTime <= new Date()) {  
+            throw new ConflictException(
+                'Event가 이미 시작되었습니다. 수정하거나 삭제할 수 없습니다.');
+        }
+
+        if (payload.startTime >= payload.endTime) {
+            throw new ConflictException(
+                '시작 시간은 종료 시간보다 이전이어야 합니다.');
+        }
+
+        if (payload.maxPeople <= 0) {
+            throw new BadRequestException('최대 정원은 1명 이상이어야 합니다.');
+        }
+       
+        // payload에 userId와 eventId가 없어 어떤 걸 써야 할지 모르겠어요..
+        // const isUserJoinedEvent = await this.eventRepository.isUserJoinedEvent(
+        // );
+        // already implemented in the repos
+        // if (!isUserJoinedEvent){
+        //     throw new ConflictException('해당 유저가 Event에 참가하지 않았습니다.');
+        // }
+
+        const createData: CreateEventData = {
+            hostId: payload.hostId,
+            title: payload.title,
+            description: payload.description,
+            categoryId: payload.categoryId,
+            cityId: payload.cityId,
+            startTime: payload.startTime,
+            endTime: payload.endTime,
+            maxPeople: payload.maxPeople,
+        }
+
+        const event = await this.eventRepository.createEvent(createData);
+
+        const host = await this.eventRepository.isHost(event.id, payload.hostId);
+        if (!host) {
+            throw new NotFoundException('host가 존재하지 않습니다')
+        }
+
+        return EventDto.from(event);
+    }
 
     async getEventById(eventId: number): Promise<EventDto> {
         const event = await this.eventRepository.getEventById(eventId);
-         if (!event) {
-            throw new NotFoundException('Event가 존재하지 않습니다.');
-         }
 
-         return EventDto.from(event);
+        if (!event) {
+            throw new NotFoundException('Event가 존재하지 않습니다.');
+        }
+
+        return EventDto.from(event);
     }
 
     async getEvents(query: EventQuery): Promise<EventListDto> {
