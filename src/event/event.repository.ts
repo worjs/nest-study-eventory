@@ -104,7 +104,7 @@ export class EventRepository {
     });
   }
 
-  async joinUserToEvent(data: { eventID: number; userID: number }): Promise<{
+  async joinUserToEvent(data: { eventId: number; userID: number }): Promise<{
     id: number;
     createdAt: Date;
     updatedAt: Date;
@@ -113,39 +113,29 @@ export class EventRepository {
   }> {
     return this.prisma.eventJoin.create({
       data: {
-        eventId: data.eventID,
+        eventId: data.eventId,
         userId: data.userID,
       },
     });
   }
 
   async isUserJoinedToEvent(data: {
-    eventID: number;
+    eventId: number;
     userID: number;
   }): Promise<boolean> {
     const eventJoin = await this.prisma.eventJoin.findFirst({
       where: {
-        eventId: data.eventID,
+        eventId: data.eventId,
         userId: data.userID,
       },
     });
     return !!eventJoin;
   }
 
-  async getJoinedUserCount(eventID: number): Promise<number> {
-    const event = await this.prisma.event.findUnique({
-      where: {
-        id: eventID,
-      },
-    });
-
-    if (!event) {
-      return 0;
-    }
-
+  async getJoinedUserCount(eventId: number): Promise<number> {
     const joinCount = await this.prisma.eventJoin.count({
       where: {
-        eventId: eventID,
+        eventId: eventId,
       },
     });
 
@@ -153,37 +143,26 @@ export class EventRepository {
   }
 
   async outUserFromEvent(data: {
-    eventID: number;
+    eventId: number;
     userID: number;
   }): Promise<void> {
-    await this.prisma.eventJoin.deleteMany({
+    await this.prisma.eventJoin.delete({
       where: {
-        eventId: data.eventID,
-        userId: data.userID,
+        eventId_userId: {
+          eventId: data.eventId,
+          userId: data.userID,
+        },
       },
     });
-  }
-
-  async getEventHostId(eventID: number): Promise<number | null> {
-    const event = await this.prisma.event.findUnique({
-      where: {
-        id: eventID,
-      },
-      select: {
-        hostId: true,
-      },
-    });
-
-    return event ? event.hostId : null;
   }
 
   async updateEvent(
-    eventID: number,
+    eventId: number,
     payload: EventUpdatePayload,
   ): Promise<EventData> {
     return this.prisma.event.update({
       where: {
-        id: eventID,
+        id: eventId,
       },
       data: payload,
       select: {
@@ -198,14 +177,13 @@ export class EventRepository {
         maxPeople: true,
       },
     });
-
   }
 
-  // async getEventJoinUsers(eventID: number): Promise<User[]> {
+  // async getEventJoinUsers(eventId: number): Promise<User[]> {
   //   return this.prisma.eventJoin
   //     .findMany({
   //       where: {
-  //         eventId: eventID,
+  //         eventId: eventId,
   //       },
   //       select: {
   //         userId: true,
