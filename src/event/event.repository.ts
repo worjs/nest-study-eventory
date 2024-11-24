@@ -153,11 +153,14 @@ export class EventRepository {
     return this.prisma.event.findMany({
       where: {
         categoryId: query.categoryId,
-        hostId: query.hostId,
         eventCity: {
           some: {
             cityId: query.cityId,
           },
+        },
+        host: {
+          id: query.hostId,
+          deletedAt: null,
         },
       },
       select: {
@@ -178,7 +181,7 @@ export class EventRepository {
     });
   }
 
-  async getEventsJoinedBy(userId): Promise<EventData[]> {
+  async getEventsJoinedBy(userId: number): Promise<EventData[]> {
     return this.prisma.event.findMany({
       where: {
         eventJoin: {
