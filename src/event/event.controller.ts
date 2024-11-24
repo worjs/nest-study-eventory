@@ -13,6 +13,7 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  HttpCode,
   Patch,
 } from '@nestjs/common';
 import { EventDto, EventListDto } from './dto/event.dto';
