@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Patch,
   UseGuards,
 } from '@nestjs/common';
@@ -38,10 +39,11 @@ export class UserController {
   @ApiOperation({ summary: '유저 정보를 수정합니다' })
   @ApiOkResponse({ type: UserDto })
   async updateUser(
+    @Param('userId', ParseIntPipe) userId: number,
     @Body() payload: UpdateUserPayload,
     @CurrentUser() user: UserBaseInfo,
   ): Promise<UserDto> {
-    return this.userService.updateUser(payload, user);
+    return this.userService.updateUser(userId, payload, user);
   }
 
   @Delete(':userId')
