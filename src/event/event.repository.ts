@@ -191,7 +191,6 @@ export class EventRepository {
       }),
     ]);
   }
-  }
 
   // async getEventJoinUsers(eventId: number): Promise<User[]> {
   //   return this.prisma.eventJoin
