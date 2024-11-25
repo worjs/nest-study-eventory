@@ -114,17 +114,11 @@ export class EventRepository {
     });
   }
 
-  async joinUserToEvent(data: { eventId: number; userID: number }): Promise<{
-    id: number;
-    createdAt: Date;
-    updatedAt: Date;
-    eventId: number;
-    userId: number;
-  }> {
-    return this.prisma.eventJoin.create({
+  async joinUserToEvent(eventId: number, userId: number): Promise<void> {
+    await this.prisma.eventJoin.create({
       data: {
-        eventId: data.eventId,
-        userId: data.userID,
+        eventId: eventId,
+        userId: userId,
       },
     });
   }
