@@ -175,6 +175,12 @@ export class EventService {
       }
     }
 
+    if (payload.startTime && payload.endTime) {
+      if (payload.startTime >= payload.endTime) {
+        throw new ConflictException('Event는 시작 후에 종료될 수 있습니다.');
+      }
+    }
+
     if (payload.maxPeople) {
       const numJoinedUsers =
         await this.eventRepository.getJoinedUserCount(eventId);
