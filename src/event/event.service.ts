@@ -77,23 +77,31 @@ export class EventService {
     if (!user) {
       throw new NotFoundException('해당 user는 존재하지 않습니다.');
     }
+
     const event = await this.eventRepository.getEventById(eventId);
     if (!event) {
       throw new NotFoundException('해당 Event가 존재하지 않습니다.');
-    } else if (event.startTime < new Date()) {
+    }
+
+    if (event.startTime < new Date()) {
       throw new ConflictException(
         'Event는 이미 시작되었습니다. 시작한 Event에는 참여할 수 없습니다.',
       );
-    } else if (
-      await this.eventRepository.isUserJoinedToEvent(eventId, userID)
-    ) {
-      throw new BadRequestException('이미 참여한 Event입니다.');
-    } else if (
-      event.maxPeople <=
-      (await this.eventRepository.getJoinedUserCount(eventId))
-    ) {
-      throw new BadRequestException('Event 참여인원이 꽉 찼습니다.');
     }
+
+    const joinedCheck = await this.eventRepository.isUserJoinedToEvent(
+      eventId,
+      userID,
+    );
+    if (joinedCheck) {
+      throw new ConflictException('이미 참여한 Event입니다.');
+    }
+
+    const userCount = await this.eventRepository.getJoinedUserCount(eventId);
+    if (event.maxPeople <= userCount) {
+      throw new ConflictException('Event 참여인원이 꽉 찼습니다.');
+    }
+
     await this.eventRepository.joinUserToEvent({ eventId, userID });
   }
 
@@ -102,20 +110,30 @@ export class EventService {
     if (!user) {
       throw new NotFoundException('해당 user는 존재하지 않습니다.');
     }
+
     const event = await this.eventRepository.getEventById(eventId);
     if (!event) {
       throw new NotFoundException('해당 Event가 존재하지 않습니다.');
-    } else if (event.startTime < new Date()) {
+    }
+
+    if (event.startTime < new Date()) {
       throw new ConflictException(
         'Event는 이미 시작되었습니다. 들어올 땐 마음대로지만 나갈 땐 아니랍니다.',
       );
-    } else if (user.id == event.hostId) {
-      throw new BadRequestException('주최자는 탈퇴할 수 없습니다.');
-    } else if (
-      !(await this.eventRepository.isUserJoinedToEvent(eventId, userID))
-    ) {
+    }
+
+    if (user.id == event.hostId) {
+      throw new ConflictException('주최자는 탈퇴할 수 없습니다.');
+    }
+
+    const joinedCheck = await this.eventRepository.isUserJoinedToEvent(
+      eventId,
+      user.id,
+    );
+    if (!joinedCheck) {
       throw new BadRequestException('참가하지 않은 Event입니다.');
     }
+
     await this.eventRepository.outUserFromEvent({ eventId, userID });
   }
 
