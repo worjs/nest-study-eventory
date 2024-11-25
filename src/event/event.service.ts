@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateEventPayload } from './payload/create-event.payload';
 import { CreateEventData } from './type/create-event-data.type';
+import { UpdateEventData } from './type/update-event-data.type';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { EventRepository } from './event.repository';
 import { EventListQuery } from './query/event-list.query';
@@ -147,13 +148,31 @@ export class EventService {
     }
 
     if (event.startTime < new Date()) {
-      throw new BadRequestException(
-        'Event는 현재시간 이후에 시작할 수 있습니다.',
-      );
+      throw new ConflictException('이미 시작된 Event를 수정할 수 없습니다');
     }
 
-    if (event.startTime >= event.endTime) {
-      throw new BadRequestException('Event는 시작 후에 종료될 수 있습니다.');
+    if (payload.startTime) {
+      if (payload.startTime < new Date()) {
+        throw new ConflictException(
+          'Event는 현재시간 이후에 시작할 수 있습니다.',
+        );
+      }
+
+      if (payload.startTime >= event.endTime) {
+        throw new ConflictException('Event는 시작 후에 종료될 수 있습니다.');
+      }
+    }
+
+    if (payload.endTime) {
+      if (payload.endTime < new Date()) {
+        throw new ConflictException(
+          'Event는 현재시간 이후에 종료될 수 있습니다.',
+        );
+      }
+
+      if (event.startTime >= payload.endTime) {
+        throw new ConflictException('Event는 시작 후에 종료될 수 있습니다.');
+      }
     }
 
     if (payload.maxPeople) {
@@ -182,9 +201,19 @@ export class EventService {
       }
     }
 
+    const updateData: UpdateEventData = {
+      title: payload.title,
+      description: payload.description,
+      categoryId: payload.categoryId,
+      cityId: payload.cityId,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      maxPeople: payload.maxPeople,
+    };
+
     const updatedEvent = await this.eventRepository.updateEvent(
       eventId,
-      payload,
+      updateData,
     );
 
     return EventDto.from(updatedEvent);
