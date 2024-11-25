@@ -147,38 +147,21 @@ export class EventService {
       throw new NotFoundException('해당 Event가 존재하지 않습니다.');
     }
 
-    if (event.startTime < new Date()) {
+    const startTime = payload.startTime ?? event.startTime;
+    const endTime = payload.endTime ?? event.endTime;
+
+    if (startTime < new Date()) {
       throw new ConflictException('이미 시작된 Event를 수정할 수 없습니다');
     }
 
-    if (payload.startTime) {
-      if (payload.startTime < new Date()) {
-        throw new ConflictException(
-          'Event는 현재시간 이후에 시작할 수 있습니다.',
-        );
-      }
-
-      if (payload.startTime >= event.endTime) {
-        throw new ConflictException('Event는 시작 후에 종료될 수 있습니다.');
-      }
+    if (endTime < new Date()) {
+      throw new ConflictException(
+        'Event는 현재시간 이후에 종료될 수 있습니다.',
+      );
     }
 
-    if (payload.endTime) {
-      if (payload.endTime < new Date()) {
-        throw new ConflictException(
-          'Event는 현재시간 이후에 종료될 수 있습니다.',
-        );
-      }
-
-      if (event.startTime >= payload.endTime) {
-        throw new ConflictException('Event는 시작 후에 종료될 수 있습니다.');
-      }
-    }
-
-    if (payload.startTime && payload.endTime) {
-      if (payload.startTime >= payload.endTime) {
-        throw new ConflictException('Event는 시작 후에 종료될 수 있습니다.');
-      }
+    if (startTime >= endTime) {
+      throw new BadRequestException('Event는 시작 후에 종료될 수 있습니다.');
     }
 
     if (payload.maxPeople) {
