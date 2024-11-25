@@ -195,8 +195,8 @@ export class EventService {
       description: payload.description,
       categoryId: payload.categoryId,
       cityId: payload.cityId,
-      startTime: payload.startTime,
-      endTime: payload.endTime,
+      startTime: startTime,
+      endTime: endTime,
       maxPeople: payload.maxPeople,
     };
 
