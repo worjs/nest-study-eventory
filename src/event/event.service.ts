@@ -85,7 +85,7 @@ export class EventService {
         'Event는 이미 시작되었습니다. 시작한 Event에는 참여할 수 없습니다.',
       );
     } else if (
-      await this.eventRepository.isUserJoinedToEvent({ eventId, userID })
+      await this.eventRepository.isUserJoinedToEvent(eventId, userID)
     ) {
       throw new BadRequestException('이미 참여한 Event입니다.');
     } else if (
@@ -112,7 +112,7 @@ export class EventService {
     } else if (user.id == event.hostId) {
       throw new BadRequestException('주최자는 탈퇴할 수 없습니다.');
     } else if (
-      !(await this.eventRepository.isUserJoinedToEvent({ eventId, userID }))
+      !(await this.eventRepository.isUserJoinedToEvent(eventId, userID))
     ) {
       throw new BadRequestException('참가하지 않은 Event입니다.');
     }
