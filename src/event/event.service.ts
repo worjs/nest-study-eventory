@@ -137,6 +137,7 @@ export class EventService {
     await this.eventRepository.outUserFromEvent(eventId, userId);
   }
 
+<<<<<<< HEAD
   // async updateEvent(
   //   eventId: number,
   //   payload: EventUpdatePayload,
@@ -145,17 +146,28 @@ export class EventService {
   //   if (!event) {
   //     throw new NotFoundException('해당 Event가 존재하지 않습니다.');
   //   }
+=======
+  async updateEvent(
+    eventID: number,
+    payload: EventUpdatePayload,
+  ): Promise<EventDto> {
+    const event = await this.eventRepository.getEventById(eventID);
+    if (!event) {
+      throw new NotFoundException('해당 Event가 존재하지 않습니다.');
+    }
+>>>>>>> 80c0cbc (모임을 수정하는 API)
 
-  //   if (payload.startTime < new Date()) {
-  //     throw new BadRequestException(
-  //       'Event는 현재시간 이후에 시작할 수 있습니다.',
-  //     );
-  //   }
+    if (event.startTime < new Date()) {
+      throw new BadRequestException(
+        'Event는 현재시간 이후에 시작할 수 있습니다.',
+      );
+    }
 
-  //   if (payload.startTime >= payload.endTime) {
-  //     throw new BadRequestException('Event는 시작 후에 종료될 수 있습니다.');
-  //   }
+    if (event.startTime >= event.endTime) {
+      throw new BadRequestException('Event는 시작 후에 종료될 수 있습니다.');
+    }
 
+<<<<<<< HEAD
   //   if (payload.maxPeople) {
   //     const numJoinedUsers =
   //       await this.eventRepository.getJoinedUserCount(eventId);
@@ -163,29 +175,40 @@ export class EventService {
   //       throw new ConflictException('참가자 수가 최대 인원보다 많습니다.');
   //     }
   //   }
+=======
+    if (payload.maxPeople) {
+      const numJoinedUsers =
+        await this.eventRepository.getJoinedUserCount(eventID);
+      if (payload.maxPeople < numJoinedUsers) {
+        throw new ConflictException('참가자 수가 최대 인원보다 많습니다.');
+      }
+    }
+>>>>>>> 80c0cbc (모임을 수정하는 API)
 
-  //   if (payload.hostId !== event.hostId) {
-  //     throw new ConflictException('주최자는 수정할 수 없습니다.');
-  //   }
+    if (payload.categoryId) {
+      const isCategoryExist = await this.eventRepository.isCategoryExist(
+        payload.categoryId,
+      );
+      if (!isCategoryExist) {
+        throw new NotFoundException('해당 카테고리가 존재하지 않습니다.');
+      }
+    }
 
-  //   if (payload.categoryId) {
-  //     const isCategoryExist = await this.eventRepository.isCategoryExist(
-  //       payload.categoryId,
-  //     );
-  //     if (!isCategoryExist) {
-  //       throw new NotFoundException('해당 카테고리가 존재하지 않습니다.');
-  //     }
-  //   }
+    if (payload.cityId) {
+      const isCityExist = await this.eventRepository.isCityExist(
+        payload.cityId,
+      );
+      if (!isCityExist) {
+        throw new NotFoundException('해당 도시가 존재하지 않습니다.');
+      }
+    }
 
-  //   if (payload.cityId) {
-  //     const isCityExist = await this.eventRepository.isCityExist(
-  //       payload.cityId,
-  //     );
-  //     if (!isCityExist) {
-  //       throw new NotFoundException('해당 도시가 존재하지 않습니다.');
-  //     }
-  //   }
+    const updatedEvent = await this.eventRepository.updateEvent(
+      eventID,
+      payload,
+    );
 
+<<<<<<< HEAD
   //   const updatedEvent = await this.eventRepository.updateEvent(
   //     eventId,
   //     payload,
@@ -193,4 +216,8 @@ export class EventService {
 
   //   return EventDto.from(updatedEvent);
   // }
+=======
+    return EventDto.from(updatedEvent);
+  }
+>>>>>>> 80c0cbc (모임을 수정하는 API)
 }
