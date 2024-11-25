@@ -72,13 +72,13 @@ export class EventController {
     return this.eventService.outEvent(eventId, payload.userId);
   }
 
-  // @Patch(':eventId')
-  // @ApiOperation({ summary: '특정 모임을 수정합니다.' })
-  // @ApiOkResponse({ type: EventDto })
-  // async updateEvent(
-  //   @Param('eventId', ParseIntPipe) eventId: number,
-  //   @Body() payload: EventUpdatePayload,
-  // ): Promise<EventDto> {
-  //   return this.eventService.updateEvent(eventId, payload);
-  // }
+  @Patch(':eventId')
+  @ApiOperation({ summary: '특정 모임을 수정합니다.' })
+  @ApiOkResponse({ type: EventDto })
+  async updateEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+    @Body() payload: EventUpdatePayload,
+  ): Promise<EventDto> {
+    return this.eventService.updateEvent(eventId, payload);
+  }
 }
