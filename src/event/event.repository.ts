@@ -178,16 +178,19 @@ export class EventRepository {
   }
 
   async deleteEvent(eventId: number): Promise<void> {
-    await this.prisma.event.delete({
-      where: {
-        id: eventId,
-      },
-      // softdelete지원 필요? :
-      // await this.prisma.event.update({
-      //   where: { id: eventId },
-      //   data: { deletedAt: new Date() },
-      // });
-    });
+    await this.prisma.$transaction([
+      this.prisma.eventJoin.deleteMany({
+        where: {
+          eventId: eventId,
+        },
+      }),
+      this.prisma.event.delete({
+        where: {
+          id: eventId,
+        },
+      }),
+    ]);
+  }
   }
 
   // async getEventJoinUsers(eventId: number): Promise<User[]> {

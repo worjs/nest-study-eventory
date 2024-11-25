@@ -19,8 +19,6 @@ import {
 } from '@nestjs/common';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
-import { CurrentUser } from '../auth/decorator/user.decorator';
-import { UserBaseInfo } from '../auth/type/user-base-info.type';
 import { EventJoinPayload } from './payload/event-join.payload';
 import { EventOutPayload } from './payload/event-out.payload';
 import { EventListQuery } from './query/event-list.query';
@@ -87,12 +85,11 @@ export class EventController {
 
   @Delete(':eventId')
   @HttpCode(204)
-  @ApiOperation({ summary: '이벤트를 삭제합니다.' })
+  @ApiOperation({ summary: '모임을 삭제합니다.' })
   @ApiNoContentResponse()
   async deleteEvent(
     @Param('eventId', ParseIntPipe) eventId: number,
-    @CurrentUser() user: UserBaseInfo,
   ): Promise<void> {
-    return this.eventService.deleteEvent(eventId, user);
+    return this.eventService.deleteEvent(eventId);
   }
 }
