@@ -7,6 +7,7 @@ import {
 import { CreateEventPayload } from './payload/create-event.payload';
 import { CreateEventData } from './type/create-event-data.type';
 import { UpdateEventData } from './type/update-event-data.type';
+import { UserBaseInfo } from '../auth/type/user-base-info.type';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { EventRepository } from './event.repository';
 import { EventListQuery } from './query/event-list.query';
@@ -217,5 +218,22 @@ export class EventService {
     );
 
     return EventDto.from(updatedEvent);
+  }
+
+  async deleteEvent(eventId: number, user: UserBaseInfo): Promise<void> {
+    const event = await this.eventRepository.getEventById(eventId);
+    if (!event) {
+      throw new NotFoundException('해당 Event가 존재하지 않습니다.');
+    }
+
+    if (event.startTime < new Date()) {
+      throw new ConflictException('이미 시작된 Event를 삭제할 수 없습니다.');
+    }
+
+    if (event.hostId != user.id) {
+      throw new ConflictException('주최자만 Event를 삭제할 수 있습니다.');
+    }
+
+    await this.eventRepository.deleteEvent(eventId);
   }
 }

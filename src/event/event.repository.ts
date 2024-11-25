@@ -177,6 +177,19 @@ export class EventRepository {
     });
   }
 
+  async deleteEvent(eventId: number): Promise<void> {
+    await this.prisma.event.delete({
+      where: {
+        id: eventId,
+      },
+      // softdelete지원 필요? :
+      // await this.prisma.event.update({
+      //   where: { id: eventId },
+      //   data: { deletedAt: new Date() },
+      // });
+    });
+  }
+
   // async getEventJoinUsers(eventId: number): Promise<User[]> {
   //   return this.prisma.eventJoin
   //     .findMany({
