@@ -119,14 +119,11 @@ export class EventRepository {
     });
   }
 
-  async isUserJoinedToEvent(data: {
-    eventId: number;
-    userID: number;
-  }): Promise<boolean> {
+  async isUserJoinedToEvent(eventId: number, userId: number): Promise<boolean> {
     const eventJoin = await this.prisma.eventJoin.findFirst({
       where: {
-        eventId: data.eventId,
-        userId: data.userID,
+        eventId,
+        userId,
       },
     });
     return !!eventJoin;
