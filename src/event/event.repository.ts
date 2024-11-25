@@ -21,8 +21,12 @@ export class EventRepository {
         startTime: data.startTime,
         endTime: data.endTime,
         maxPeople: data.maxPeople,
+        eventJoin: {
+          create: {
+            userId: data.hostId,
+          },
+        },
       },
-
       select: {
         id: true,
         title: true,
@@ -33,6 +37,12 @@ export class EventRepository {
         startTime: true,
         endTime: true,
         maxPeople: true,
+        eventJoin: {
+          select: {
+            id: true,
+            userId: true,
+          },
+        },
       },
     });
   }
