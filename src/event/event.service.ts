@@ -131,10 +131,10 @@ export class EventService {
       user.id,
     );
     if (!joinedCheck) {
-      throw new BadRequestException('참가하지 않은 Event입니다.');
+      throw new ConflictException('참가하지 않은 Event입니다.');
     }
 
-    await this.eventRepository.outUserFromEvent({ eventId, userId });
+    await this.eventRepository.outUserFromEvent(eventId, userId);
   }
 
   // async updateEvent(
