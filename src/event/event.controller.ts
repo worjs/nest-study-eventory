@@ -58,11 +58,7 @@ export class EventController {
     @Param('eventId', ParseIntPipe) eventId: number,
     @Body() payload: EventJoinPayload,
   ): Promise<void> {
-<<<<<<< HEAD
     return this.eventService.joinEvent(eventId, payload.userId);
-=======
-    return this.eventService.joinEvent(eventID, payload.userId);
->>>>>>> 80c0cbc (모임을 수정하는 API)
   }
 
   @Post(':eventId/out')
@@ -75,7 +71,6 @@ export class EventController {
   ): Promise<void> {
     return this.eventService.outEvent(eventId, payload.userId);
   }
-<<<<<<< HEAD
 
   // @Patch(':eventId')
   // @ApiOperation({ summary: '특정 모임을 수정합니다.' })
@@ -86,6 +81,4 @@ export class EventController {
   // ): Promise<EventDto> {
   //   return this.eventService.updateEvent(eventId, payload);
   // }
-=======
->>>>>>> 80c0cbc (모임을 수정하는 API)
 }

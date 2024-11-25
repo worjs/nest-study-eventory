@@ -137,25 +137,14 @@ export class EventService {
     await this.eventRepository.outUserFromEvent(eventId, userId);
   }
 
-<<<<<<< HEAD
-  // async updateEvent(
-  //   eventId: number,
-  //   payload: EventUpdatePayload,
-  // ): Promise<EventDto> {
-  //   const event = await this.eventRepository.getEventById(eventId);
-  //   if (!event) {
-  //     throw new NotFoundException('해당 Event가 존재하지 않습니다.');
-  //   }
-=======
   async updateEvent(
-    eventID: number,
+    eventId: number,
     payload: EventUpdatePayload,
   ): Promise<EventDto> {
-    const event = await this.eventRepository.getEventById(eventID);
+    const event = await this.eventRepository.getEventById(eventId);
     if (!event) {
       throw new NotFoundException('해당 Event가 존재하지 않습니다.');
     }
->>>>>>> 80c0cbc (모임을 수정하는 API)
 
     if (event.startTime < new Date()) {
       throw new BadRequestException(
@@ -167,23 +156,13 @@ export class EventService {
       throw new BadRequestException('Event는 시작 후에 종료될 수 있습니다.');
     }
 
-<<<<<<< HEAD
-  //   if (payload.maxPeople) {
-  //     const numJoinedUsers =
-  //       await this.eventRepository.getJoinedUserCount(eventId);
-  //     if (payload.maxPeople < numJoinedUsers) {
-  //       throw new ConflictException('참가자 수가 최대 인원보다 많습니다.');
-  //     }
-  //   }
-=======
     if (payload.maxPeople) {
       const numJoinedUsers =
-        await this.eventRepository.getJoinedUserCount(eventID);
+        await this.eventRepository.getJoinedUserCount(eventId);
       if (payload.maxPeople < numJoinedUsers) {
         throw new ConflictException('참가자 수가 최대 인원보다 많습니다.');
       }
     }
->>>>>>> 80c0cbc (모임을 수정하는 API)
 
     if (payload.categoryId) {
       const isCategoryExist = await this.eventRepository.isCategoryExist(
@@ -204,20 +183,10 @@ export class EventService {
     }
 
     const updatedEvent = await this.eventRepository.updateEvent(
-      eventID,
+      eventId,
       payload,
     );
 
-<<<<<<< HEAD
-  //   const updatedEvent = await this.eventRepository.updateEvent(
-  //     eventId,
-  //     payload,
-  //   );
-
-  //   return EventDto.from(updatedEvent);
-  // }
-=======
     return EventDto.from(updatedEvent);
   }
->>>>>>> 80c0cbc (모임을 수정하는 API)
 }
