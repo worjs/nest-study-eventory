@@ -154,12 +154,6 @@ export class EventService {
       throw new ConflictException('이미 시작된 Event를 수정할 수 없습니다');
     }
 
-    if (endTime < new Date()) {
-      throw new ConflictException(
-        'Event는 현재시간 이후에 종료될 수 있습니다.',
-      );
-    }
-
     if (startTime >= endTime) {
       throw new BadRequestException('Event는 시작 후에 종료될 수 있습니다.');
     }
