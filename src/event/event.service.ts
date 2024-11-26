@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateEventPayload } from './payload/create-event.payload';
 import { CreateEventData } from './type/create-event-data.type';
+import { UpdateEventData } from './type/update-event-data.type';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { EventRepository } from './event.repository';
 import { EventListQuery } from './query/event-list.query';
@@ -137,60 +138,67 @@ export class EventService {
     await this.eventRepository.outUserFromEvent(eventId, userId);
   }
 
-  // async updateEvent(
-  //   eventId: number,
-  //   payload: EventUpdatePayload,
-  // ): Promise<EventDto> {
-  //   const event = await this.eventRepository.getEventById(eventId);
-  //   if (!event) {
-  //     throw new NotFoundException('해당 Event가 존재하지 않습니다.');
-  //   }
+  async updateEvent(
+    eventId: number,
+    payload: EventUpdatePayload,
+  ): Promise<EventDto> {
+    const event = await this.eventRepository.getEventById(eventId);
+    if (!event) {
+      throw new NotFoundException('해당 Event가 존재하지 않습니다.');
+    }
 
-  //   if (payload.startTime < new Date()) {
-  //     throw new BadRequestException(
-  //       'Event는 현재시간 이후에 시작할 수 있습니다.',
-  //     );
-  //   }
+    const startTime = payload.startTime ?? event.startTime;
+    const endTime = payload.endTime ?? event.endTime;
 
-  //   if (payload.startTime >= payload.endTime) {
-  //     throw new BadRequestException('Event는 시작 후에 종료될 수 있습니다.');
-  //   }
+    if (startTime < new Date()) {
+      throw new ConflictException('이미 시작된 Event를 수정할 수 없습니다');
+    }
 
-  //   if (payload.maxPeople) {
-  //     const numJoinedUsers =
-  //       await this.eventRepository.getJoinedUserCount(eventId);
-  //     if (payload.maxPeople < numJoinedUsers) {
-  //       throw new ConflictException('참가자 수가 최대 인원보다 많습니다.');
-  //     }
-  //   }
+    if (startTime >= endTime) {
+      throw new BadRequestException('Event는 시작 후에 종료될 수 있습니다.');
+    }
 
-  //   if (payload.hostId !== event.hostId) {
-  //     throw new ConflictException('주최자는 수정할 수 없습니다.');
-  //   }
+    if (payload.maxPeople) {
+      const numJoinedUsers =
+        await this.eventRepository.getJoinedUserCount(eventId);
+      if (payload.maxPeople < numJoinedUsers) {
+        throw new ConflictException('참가자 수가 최대 인원보다 많습니다.');
+      }
+    }
 
-  //   if (payload.categoryId) {
-  //     const isCategoryExist = await this.eventRepository.isCategoryExist(
-  //       payload.categoryId,
-  //     );
-  //     if (!isCategoryExist) {
-  //       throw new NotFoundException('해당 카테고리가 존재하지 않습니다.');
-  //     }
-  //   }
+    if (payload.categoryId) {
+      const isCategoryExist = await this.eventRepository.isCategoryExist(
+        payload.categoryId,
+      );
+      if (!isCategoryExist) {
+        throw new NotFoundException('해당 카테고리가 존재하지 않습니다.');
+      }
+    }
 
-  //   if (payload.cityId) {
-  //     const isCityExist = await this.eventRepository.isCityExist(
-  //       payload.cityId,
-  //     );
-  //     if (!isCityExist) {
-  //       throw new NotFoundException('해당 도시가 존재하지 않습니다.');
-  //     }
-  //   }
+    if (payload.cityId) {
+      const isCityExist = await this.eventRepository.isCityExist(
+        payload.cityId,
+      );
+      if (!isCityExist) {
+        throw new NotFoundException('해당 도시가 존재하지 않습니다.');
+      }
+    }
 
-  //   const updatedEvent = await this.eventRepository.updateEvent(
-  //     eventId,
-  //     payload,
-  //   );
+    const updateData: UpdateEventData = {
+      title: payload.title,
+      description: payload.description,
+      categoryId: payload.categoryId,
+      cityId: payload.cityId,
+      startTime: startTime,
+      endTime: endTime,
+      maxPeople: payload.maxPeople,
+    };
 
-  //   return EventDto.from(updatedEvent);
-  // }
+    const updatedEvent = await this.eventRepository.updateEvent(
+      eventId,
+      updateData,
+    );
+
+    return EventDto.from(updatedEvent);
+  }
 }
