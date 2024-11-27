@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from '../common/services/prisma.service';
 import { CreateEventData } from './type/create-event-data.type';
+import { UpdateEventData } from './type/update-event-data.type';
 import { EventData } from './type/event-data.type';
 import { EventListQuery } from './query/event-list.query';
 import { EventUpdatePayload } from './payload/event-update.payload';
@@ -156,13 +157,13 @@ export class EventRepository {
 
   async updateEvent(
     eventId: number,
-    payload: EventUpdatePayload,
+    data: UpdateEventData,
   ): Promise<EventData> {
     return this.prisma.event.update({
       where: {
         id: eventId,
       },
-      data: payload,
+      data: data,
       select: {
         id: true,
         title: true,
