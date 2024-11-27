@@ -157,13 +157,13 @@ export class EventRepository {
 
   async updateEvent(
     eventId: number,
-    data: UpdateEventData,
+    updatedData: UpdateEventData,
   ): Promise<EventData> {
     return this.prisma.event.update({
       where: {
         id: eventId,
       },
-      data: data,
+      data: updatedData,
       select: {
         id: true,
         title: true,
