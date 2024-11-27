@@ -22,8 +22,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package.json ./package.json
 COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/.dev.env ./.dev.env
+COPY --from=builder /usr/src/app/.dev.env ./.env
 
 EXPOSE 3000
 
-CMD ["yarn", "deploy:dev"]
+CMD ["node", "dist/main.js"]

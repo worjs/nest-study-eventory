@@ -2,7 +2,7 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 export const configModule = ConfigModule.forRoot({
   isGlobal: true,
-  envFilePath: `.${process.env.NODE_ENV}.env`,
+  envFilePath: process.env.NODE_ENV ? `.${process.env.NODE_ENV}.env` : '.env',
   validationSchema: Joi.object({
     NODE_ENV: Joi.string().valid('dev'),
     JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
