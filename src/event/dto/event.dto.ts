@@ -34,9 +34,9 @@ export class EventDto {
 
   @ApiProperty({
     description: '이벤트 도시 목록 ID',
-    type: number[],
+    type: [Number],
   })
-  cityIds!: number;
+  cityIds!: number[];
 
   @ApiProperty({
     description: '이벤트 시작 시간',
