@@ -8,13 +8,14 @@ import { EventService } from './event.service';
 import {
   Body,
   Controller,
-  Post,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
-  Query,
-  HttpCode,
   Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import { EventDto, EventListDto } from './dto/event.dto';
 import { CreateEventPayload } from './payload/create-event.payload';
@@ -80,5 +81,15 @@ export class EventController {
     @Body() payload: EventUpdatePayload,
   ): Promise<EventDto> {
     return this.eventService.updateEvent(eventId, payload);
+  }
+
+  @Delete(':eventId')
+  @HttpCode(204)
+  @ApiOperation({ summary: '모임을 삭제합니다.' })
+  @ApiNoContentResponse()
+  async deleteEvent(
+    @Param('eventId', ParseIntPipe) eventId: number,
+  ): Promise<void> {
+    return this.eventService.deleteEvent(eventId);
   }
 }
