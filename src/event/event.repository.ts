@@ -178,6 +178,21 @@ export class EventRepository {
     });
   }
 
+  async deleteEvent(eventId: number): Promise<void> {
+    await this.prisma.$transaction([
+      this.prisma.eventJoin.deleteMany({
+        where: {
+          eventId: eventId,
+        },
+      }),
+      this.prisma.event.delete({
+        where: {
+          id: eventId,
+        },
+      }),
+    ]);
+  }
+
   // async getEventJoinUsers(eventId: number): Promise<User[]> {
   //   return this.prisma.eventJoin
   //     .findMany({
