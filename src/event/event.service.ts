@@ -176,14 +176,12 @@ export class EventService {
       }
     }
 
-    if (!payload.cityIds || payload.cityIds.length == 0) {
-      throw new BadRequestException('도시는 최소 1개 이상이어야 합니다.');
-    }
-
-    for (const city of payload.cityIds) {
-      const CityExist = await this.eventRepository.isCityExist(city);
-      if (!CityExist) {
-        throw new NotFoundException('해당 지역이 존재하지 않습니다.');
+    if (payload.cityIds) {
+      for (const city of payload.cityIds) {
+        const CityExist = await this.eventRepository.isCityExist(city);
+        if (!CityExist) {
+          throw new NotFoundException('해당 지역이 존재하지 않습니다.');
+        }
       }
     }
 

@@ -8,6 +8,7 @@ import {
   Min,
   NotEquals,
   ValidateIf,
+  ArrayMinSize,
 } from 'class-validator';
 
 export class EventUpdatePayload {
@@ -41,6 +42,7 @@ export class EventUpdatePayload {
   @IsArray()
   @IsInt({ each: true })
   @NotEquals(null)
+  @ArrayMinSize(1)
   @ValidateIf((object, value) => value !== undefined)
   @ApiProperty({
     description: '이벤트 도시 목록 ID',
