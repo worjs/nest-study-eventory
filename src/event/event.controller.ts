@@ -10,14 +10,7 @@ import { EventQuery } from './query/event.query';
 @ApiTags('Event API')
 export class EventController {
     constructor(private readonly eventService: EventService) {}
-
-    @Post()
-    @ApiOperation({ summary: '이벤트를 생성합니다' })
-    @ApiCreatedResponse({ type:EventDto })
-    async createEvent(@Body() payload: CreateEventPayload): Promise<EventDto> {
-        return this.eventService.createEvent(payload);
-    }
-
+    
     @Get(':eventId')
     @ApiOperation({ summary: '이벤트 상세 정보를 가져옵니다' })
     @ApiOkResponse({ type: EventDto })
