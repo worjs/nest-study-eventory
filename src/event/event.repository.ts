@@ -83,6 +83,18 @@ export class EventRepository {
     return !!city;
   }
 
+  async areCitysExist(cityIds: number | number[]): Promise<boolean> {
+    const ids = Array.isArray(cityIds) ? cityIds : [cityIds];
+    const cities = await this.prisma.city.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+    return cities.length === ids.length;
+  }
+
   async getEventById(eventId: number): Promise<EventData | null> {
     return this.prisma.event.findUnique({
       where: {

@@ -24,12 +24,13 @@ export class EventService {
       throw new NotFoundException('해당 카테고리가 존재하지 않습니다.');
     }
 
-    for (const city of payload.cityIds) {
-      const isCityExist = await this.eventRepository.isCityExist(city);
-      if (!isCityExist) {
-        throw new NotFoundException('해당 도시가 존재하지 않습니다.');
-      }
+    const areCitysExist = await this.eventRepository.areCitysExist(
+      payload.cityIds,
+    );
+    if (!areCitysExist) {
+      throw new NotFoundException('해당 도시가 존재하지 않습니다.');
     }
+
     if (payload.startTime < new Date()) {
       throw new ConflictException(
         'Event는 현재시간 이후에 시작할 수 있습니다.',
