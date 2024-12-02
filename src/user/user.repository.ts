@@ -10,6 +10,18 @@ export class UserRepository {
     return this.prisma.user.findFirst({
       where: {
         id: userId,
+        deletedAt: null,
+      },
+    });
+  }
+
+  async deleteUser(userId: number): Promise<void> {
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        deletedAt: new Date(),
       },
     });
   }
