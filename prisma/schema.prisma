@@ -29,6 +29,7 @@ model User {
   event     Event[]
   eventJoin EventJoin[]
   review    Review[]
+
   club     Club[]
   clubJoin ClubJoin[]
 
@@ -181,5 +182,7 @@ enum ClubJoinStatus {
   APPLICANT
   MEMBER
   REJECTED
+
+  @@map("club_join_status")
 }
 
