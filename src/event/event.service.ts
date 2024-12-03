@@ -178,11 +178,11 @@ export class EventService {
     }
 
     if (payload.cityIds) {
-      for (const city of payload.cityIds) {
-        const CityExist = await this.eventRepository.isCityExist(city);
-        if (!CityExist) {
-          throw new NotFoundException('해당 지역이 존재하지 않습니다.');
-        }
+      const cityExist = await this.eventRepository.areCitysExist(
+        payload.cityIds,
+      );
+      if (!cityExist) {
+        throw new NotFoundException('해당 지역이 존재하지 않습니다.');
       }
     }
 
