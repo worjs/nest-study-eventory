@@ -29,6 +29,8 @@ model User {
   event     Event[]
   eventJoin EventJoin[]
   review    Review[]
+  clubs     Club[]  @relation("UserClubs")
+  leaderOf  Club?   @relation("UserLeaderOf")
 
   city     City?    @relation(fields: [cityId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
@@ -54,14 +56,17 @@ model Event {
   categoryId  Int      @map("category_id")
   title       String
   description String
-  maxPeople   Int      @map("max_people")
-  startTime   DateTime @map("start_time")
-  endTime     DateTime @map("end_time")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  maxPeople   Int       @map("max_people")
+  startTime   DateTime  @map("start_time")
+  endTime     DateTime  @map("end_time")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  clubId      Int?      @map("club_id")
 
   host     User     @relation(fields: [hostId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
+  club     Club?    @relation(fields: [clubId], references: [id])
 
   eventJoin EventJoin[]
   eventCity EventCity[]
@@ -139,4 +144,20 @@ model City {
   user      User[]
 
   @@map("city")
+}
+
+model Club {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  leaderId    Int       @unique @map("leader_id") 
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  leader  User    @relation("UserLeaderOf", fields: [leaderId], references: [id]) 
+  members User[]  @relation("UserClubs") 
+  events  Event[] 
+
+  @@map("club")
 }
