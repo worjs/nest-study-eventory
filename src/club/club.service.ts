@@ -107,4 +107,13 @@ export class ClubService {
 
     return ClubDto.from(updatedClub);
   }
+
+  async deleteClub(clubId: number): Promise<void> {
+    const club = await this.clubRepository.getClubById(clubId);
+    if (!club) {
+      throw new NotFoundException('해당 클럽이 존재하지 않습니다.');
+    }
+
+    await this.clubRepository.deleteClub(clubId);
+  }
 }

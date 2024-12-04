@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -13,6 +15,7 @@ import {
   ApiCreatedResponse,
   ApiOperation,
   ApiOkResponse,
+  ApiNoContentResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateClubPayload } from './payload/create-club.payload';
@@ -66,5 +69,15 @@ export class ClubController {
     @CurrentUser() user: UserBaseInfo,
   ): Promise<ClubDto> {
     return this.clubService.updateClub(clubId, payload, user);
+  }
+
+  @Delete(':clubId')
+  @HttpCode(204)
+  @ApiOperation({ summary: '클럽을 삭제합니다.' })
+  @ApiNoContentResponse()
+  async deleteClub(
+    @Param('clubId', ParseIntPipe) clubId: number,
+  ): Promise<void> {
+    return this.clubService.deleteClub(clubId);
   }
 }
