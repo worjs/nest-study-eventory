@@ -39,7 +39,9 @@ export class ClubRepository {
         userId,
         clubId,
         status: ClubJoinStatus.MEMBER,
-        deletedAt: null,
+        user: {
+          deletedAt: null,
+        },
       },
     });
     return !!isClubMember;
@@ -63,7 +65,9 @@ export class ClubRepository {
       where: {
         clubId,
         status: ClubJoinStatus.MEMBER,
-        deletedAt: null,
+        user: {
+          deletedAt: null,
+        },
       },
     });
   }
