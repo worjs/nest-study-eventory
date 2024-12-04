@@ -5,7 +5,7 @@ import { CreateEventData } from './type/create-event-data.type';
 import { UpdateEventData } from './type/update-event-data.type';
 import { EventData } from './type/event-data.type';
 import { EventListQuery } from './query/event-list.query';
-import { EventUpdatePayload } from './payload/event-update.payload';
+// import { EventUpdatePayload } from './payload/event-update.payload';
 
 @Injectable()
 export class EventRepository {
@@ -18,7 +18,11 @@ export class EventRepository {
         description: data.description,
         hostId: data.hostId,
         categoryId: data.categoryId,
-        cityId: data.cityId,
+        eventCity: {
+          create: data.cityIds.map((cityId) => ({
+            cityId: cityId,
+          })),
+        },
         startTime: data.startTime,
         endTime: data.endTime,
         maxPeople: data.maxPeople,
@@ -34,7 +38,11 @@ export class EventRepository {
         description: true,
         hostId: true,
         categoryId: true,
-        cityId: true,
+        eventCity: {
+          select: {
+            cityId: true,
+          },
+        },
         startTime: true,
         endTime: true,
         maxPeople: true,
@@ -66,13 +74,16 @@ export class EventRepository {
     return !!category;
   }
 
-  async isCityExist(cityId: number): Promise<boolean> {
-    const city = await this.prisma.city.findUnique({
+  async areCitysExist(cityIds: number | number[]): Promise<boolean> {
+    const ids = Array.isArray(cityIds) ? cityIds : [cityIds];
+    const cities = await this.prisma.city.findMany({
       where: {
-        id: cityId,
+        id: {
+          in: ids,
+        },
       },
     });
-    return !!city;
+    return cities.length === ids.length;
   }
 
   async getEventById(eventId: number): Promise<EventData | null> {
@@ -86,7 +97,11 @@ export class EventRepository {
         description: true,
         hostId: true,
         categoryId: true,
-        cityId: true,
+        eventCity: {
+          select: {
+            cityId: true,
+          },
+        },
         startTime: true,
         endTime: true,
         maxPeople: true,
@@ -98,7 +113,11 @@ export class EventRepository {
     return await this.prisma.event.findMany({
       where: {
         categoryId: query.categoryId,
-        cityId: query.cityId,
+        eventCity: {
+          some: {
+            cityId: query.cityId,
+          },
+        },
         hostId: query.hostId,
       },
       select: {
@@ -107,7 +126,11 @@ export class EventRepository {
         description: true,
         hostId: true,
         categoryId: true,
-        cityId: true,
+        eventCity: {
+          select: {
+            cityId: true,
+          },
+        },
         startTime: true,
         endTime: true,
         maxPeople: true,
@@ -170,7 +193,11 @@ export class EventRepository {
         description: true,
         hostId: true,
         categoryId: true,
-        cityId: true,
+        eventCity: {
+          select: {
+            cityId: true,
+          },
+        },
         startTime: true,
         endTime: true,
         maxPeople: true,

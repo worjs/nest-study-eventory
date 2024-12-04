@@ -24,8 +24,10 @@ export class EventService {
       throw new NotFoundException('해당 카테고리가 존재하지 않습니다.');
     }
 
-    const isCityExist = await this.eventRepository.isCityExist(payload.cityId);
-    if (!isCityExist) {
+    const areCitysExist = await this.eventRepository.areCitysExist(
+      payload.cityIds,
+    );
+    if (!areCitysExist) {
       throw new NotFoundException('해당 도시가 존재하지 않습니다.');
     }
 
@@ -49,7 +51,7 @@ export class EventService {
       title: payload.title,
       description: payload.description,
       categoryId: payload.categoryId,
-      cityId: payload.cityId,
+      cityIds: payload.cityIds,
       startTime: payload.startTime,
       endTime: payload.endTime,
       maxPeople: payload.maxPeople,
@@ -175,12 +177,12 @@ export class EventService {
       }
     }
 
-    if (payload.cityId) {
-      const isCityExist = await this.eventRepository.isCityExist(
-        payload.cityId,
+    if (payload.cityIds) {
+      const cityExist = await this.eventRepository.areCitysExist(
+        payload.cityIds,
       );
-      if (!isCityExist) {
-        throw new NotFoundException('해당 도시가 존재하지 않습니다.');
+      if (!cityExist) {
+        throw new NotFoundException('해당 지역이 존재하지 않습니다.');
       }
     }
 
@@ -188,7 +190,7 @@ export class EventService {
       title: payload.title,
       description: payload.description,
       categoryId: payload.categoryId,
-      cityId: payload.cityId,
+      cityIds: payload.cityIds,
       startTime: startTime,
       endTime: endTime,
       maxPeople: payload.maxPeople,
