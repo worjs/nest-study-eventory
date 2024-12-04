@@ -9,6 +9,7 @@ import { ReviewModule } from '../review/review.module';
 import { UserModule } from '../user/user.module';
 import { AuthModule } from '../auth/auth.module';
 import { EventModule } from '../event/event.module';
+import { ClubModule } from '../club/club.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { EventModule } from '../event/event.module';
     ReviewModule,
     UserModule,
     EventModule,
+    ClubModule,
   ],
   controllers: [AppController],
   providers: [AppService],
