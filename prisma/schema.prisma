@@ -29,7 +29,7 @@ model User {
   event     Event[]
   eventJoin EventJoin[]
   review    Review[]
-  clubs     Club[]  @relation("UserClubs")
+  clubs     ClubJoin[]  
   leaderOf  Club?   @relation("UserLeaderOf")
 
   city     City?    @relation(fields: [cityId], references: [id])
@@ -151,13 +151,27 @@ model Club {
   name        String
   description String?
   leaderId    Int       @unique @map("leader_id") 
+  maxPeople  Int        @map("max_people")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
-  deletedAt   DateTime? @map("deleted_at")
 
   leader  User    @relation("UserLeaderOf", fields: [leaderId], references: [id]) 
-  members User[]  @relation("UserClubs") 
+  members ClubJoin[] 
   events  Event[] 
 
   @@map("club")
+}
+
+model ClubJoin {
+  id        Int        @id @default(autoincrement())
+  clubId    Int        @map("club_id")
+  userId    Int        @map("user_id")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  club Club @relation(fields: [clubId], references: [id]) 
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([clubId, userId]) 
+  @@map("club_member")
 }
