@@ -9,7 +9,7 @@ import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
 import { CreateClubData } from './type/create-club-data.type';
 import { UpdateClubData } from './type/update-club-data.type';
-import { ClubDto } from './dto/club.dto';
+import { ClubDto, ClubListDto } from './dto/club.dto';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
 
 @Injectable()
@@ -38,6 +38,11 @@ export class ClubService {
       throw new NotFoundException('해당 클럽이 존재하지 않습니다.');
     }
     return ClubDto.from(club);
+  }
+
+  async getClubs(): Promise<ClubListDto> {
+    const clubs = await this.clubRepository.getClubs();
+    return ClubListDto.from(clubs);
   }
 
   async updateClub(

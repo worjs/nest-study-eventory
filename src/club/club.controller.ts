@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -11,11 +12,12 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOperation,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
-import { ClubDto } from './dto/club.dto';
+import { ClubDto, ClubListDto } from './dto/club.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorator/user.decorator';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
@@ -35,6 +37,22 @@ export class ClubController {
     @CurrentUser() user: UserBaseInfo,
   ): Promise<ClubDto> {
     return this.clubService.createClub(payload, user);
+  }
+
+  @Get(':clubId')
+  @ApiOperation({ summary: '클럽 정보를 조회합니다' })
+  @ApiOkResponse({ type: ClubDto })
+  async getClubById(
+    @Param('clubId', ParseIntPipe) clubId: number,
+  ): Promise<ClubDto> {
+    return this.clubService.getClubById(clubId);
+  }
+
+  @Get()
+  @ApiOperation({ summary: '여러 클럽 정보를 조회합니다' })
+  @ApiOkResponse({ type: ClubListDto })
+  async getClubs(): Promise<ClubListDto> {
+    return this.clubService.getClubs();
   }
 
   @Post(':clubId')

@@ -57,6 +57,18 @@ export class ClubRepository {
     });
   }
 
+  async getClubs(): Promise<ClubData[]> {
+    return this.prisma.club.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        leaderId: true,
+        maxPeople: true,
+      },
+    });
+  }
+
   async getClubMembersCount(clubId: number): Promise<number> {
     return this.prisma.clubJoin.count({
       where: {
