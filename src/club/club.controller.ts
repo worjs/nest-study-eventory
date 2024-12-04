@@ -72,12 +72,15 @@ export class ClubController {
   }
 
   @Delete(':clubId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @HttpCode(204)
   @ApiOperation({ summary: '클럽을 삭제합니다.' })
   @ApiNoContentResponse()
   async deleteClub(
     @Param('clubId', ParseIntPipe) clubId: number,
+    @CurrentUser() user: UserBaseInfo,
   ): Promise<void> {
-    return this.clubService.deleteClub(clubId);
+    return this.clubService.deleteClub(clubId, user);
   }
 }
