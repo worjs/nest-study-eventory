@@ -10,7 +10,7 @@ export class ClubRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async createClub(data: CreateClubData): Promise<ClubData> {
-    return this.prisma.club.create({
+    const club = await this.prisma.club.create({
       data: {
         title: data.title,
         description: data.description,
@@ -29,8 +29,21 @@ export class ClubRepository {
         description: true,
         leaderId: true,
         maxPeople: true,
+        clubJoin: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
+    return {
+      id: club.id,
+      title: club.title,
+      description: club.description,
+      leaderId: club.leaderId,
+      maxPeople: club.maxPeople,
+      members: club.clubJoin.map((join) => ({ userId: join.userId })),
+    };
   }
 
   async getUserIsClubMember(userId: number, clubId: number): Promise<boolean> {
@@ -48,7 +61,7 @@ export class ClubRepository {
   }
 
   async getClubById(clubId: number): Promise<ClubData | null> {
-    return this.prisma.club.findUnique({
+    const club = await this.prisma.club.findUnique({
       where: { id: clubId },
       select: {
         id: true,
@@ -56,20 +69,64 @@ export class ClubRepository {
         description: true,
         leaderId: true,
         maxPeople: true,
+        clubJoin: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
+    if (!club) return null;
+    return {
+      id: club.id,
+      title: club.title,
+      description: club.description,
+      leaderId: club.leaderId,
+      maxPeople: club.maxPeople,
+      members: club.clubJoin.map((join) => ({ userId: join.userId })),
+    };
   }
 
   async getClubs(): Promise<ClubData[]> {
-    return this.prisma.club.findMany({
+    const clubs = await this.prisma.club.findMany({
       select: {
         id: true,
         title: true,
         description: true,
         leaderId: true,
         maxPeople: true,
+        clubJoin: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
+
+    return clubs.map((club) => ({
+      id: club.id,
+      title: club.title,
+      description: club.description,
+      leaderId: club.leaderId,
+      maxPeople: club.maxPeople,
+      members: club.clubJoin.map((join) => ({ userId: join.userId })),
+    }));
+  }
+
+  async getClubMembers(clubId: number): Promise<number[]> {
+    const members = await this.prisma.clubJoin.findMany({
+      where: {
+        clubId,
+        status: ClubJoinStatus.MEMBER,
+        user: {
+          deletedAt: null,
+        },
+      },
+      select: {
+        userId: true,
+      },
+    });
+    return members.map((member) => member.userId);
   }
 
   async getClubMembersCount(clubId: number): Promise<number> {
@@ -85,7 +142,7 @@ export class ClubRepository {
   }
 
   async updateClub(clubId: number, data: UpdateClubData): Promise<ClubData> {
-    return this.prisma.club.update({
+    const updatedClub = await this.prisma.club.update({
       where: { id: clubId },
       data: {
         title: data.title,
@@ -99,7 +156,20 @@ export class ClubRepository {
         description: true,
         leaderId: true,
         maxPeople: true,
+        clubJoin: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
+    return {
+      id: updatedClub.id,
+      title: updatedClub.title,
+      description: updatedClub.description,
+      leaderId: updatedClub.leaderId,
+      maxPeople: updatedClub.maxPeople,
+      members: updatedClub.clubJoin.map((join) => ({ userId: join.userId })),
+    };
   }
 }

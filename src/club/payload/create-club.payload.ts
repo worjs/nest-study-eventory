@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, Min } from 'class-validator';
+import { IsArray, IsInt, IsString, Min } from 'class-validator';
 
 export class CreateClubPayload {
   @IsString()
@@ -30,4 +30,12 @@ export class CreateClubPayload {
     type: Number,
   })
   maxPeople!: number;
+
+  @Min(1)
+  @IsArray()
+  @ApiProperty({
+    description: '클럽 멤버원 ID 명단',
+    type: [Number],
+  })
+  members!: number[];
 }

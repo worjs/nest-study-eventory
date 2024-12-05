@@ -55,6 +55,15 @@ export class ClubController {
     return this.clubService.getClubs();
   }
 
+  @Get(':clubId/members')
+  @ApiOperation({ summary: '클럽 멤버 정보를 조회합니다' })
+  @ApiOkResponse({ type: [Number] })
+  async getClubMembers(
+    @Param('clubId', ParseIntPipe) clubId: number,
+  ): Promise<number[]> {
+    return this.clubService.getClubMembers(clubId);
+  }
+
   @Post(':clubId')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

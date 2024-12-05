@@ -25,6 +25,7 @@ export class ClubService {
       description: payload.description,
       leaderId: user.id,
       maxPeople: payload.maxPeople,
+      members: payload.members.map((member) => ({ userId: member })),
     };
 
     const club = await this.clubRepository.createClub(createData);
@@ -43,6 +44,11 @@ export class ClubService {
   async getClubs(): Promise<ClubListDto> {
     const clubs = await this.clubRepository.getClubs();
     return ClubListDto.from(clubs);
+  }
+
+  async getClubMembers(clubId: number): Promise<number[]> {
+    const members = await this.clubRepository.getClubMembers(clubId);
+    return members;
   }
 
   async updateClub(

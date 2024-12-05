@@ -3,4 +3,5 @@ export type CreateClubData = {
   description: string;
   leaderId: number;
   maxPeople: number;
+  members: { userId: number }[];
 };

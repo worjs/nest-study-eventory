@@ -32,6 +32,12 @@ export class ClubDto {
   })
   maxPeople!: number;
 
+  @ApiProperty({
+    description: '클럽 멤버원 ID 명단',
+    type: [Number],
+  })
+  members!: number[];
+
   static from(club: ClubData): ClubDto {
     return {
       id: club.id,
@@ -39,6 +45,7 @@ export class ClubDto {
       description: club.description,
       leaderId: club.leaderId,
       maxPeople: club.maxPeople,
+      members: club.members.map((member) => member.userId),
     };
   }
 
