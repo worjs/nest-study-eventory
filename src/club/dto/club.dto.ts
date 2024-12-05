@@ -32,11 +32,11 @@ export class ClubDto {
   })
   maxPeople!: number;
 
-  @ApiProperty({
-    description: '클럽 멤버원 ID 명단',
-    type: [Number],
-  })
-  members!: number[];
+  // @ApiProperty({
+  //   description: '클럽 멤버원 ID 명단',
+  //   type: [Number],
+  // })
+  // members!: number[];
 
   static from(club: ClubData): ClubDto {
     return {
@@ -45,8 +45,12 @@ export class ClubDto {
       description: club.description,
       leaderId: club.leaderId,
       maxPeople: club.maxPeople,
-      members: club.members.map((member) => member.userId),
+      // members: club.members.map((member) => member.userId),
     };
+  }
+
+  static fromMember(club: ClubData): number[] {
+    return club.members.map((member) => member.userId);
   }
 
   static fromArray(clubs: ClubData[]): ClubDto[] {
@@ -64,6 +68,17 @@ export class ClubListDto {
   static from(clubs: ClubData[]): ClubListDto {
     return {
       clubs: ClubDto.fromArray(clubs),
+    };
+  }
+}
+
+export class ClubMemberListDto {
+  @ApiProperty({ description: '클럽 멤버 ID 리스트', type: [Number] })
+  members!: number[];
+
+  static from(club: ClubData): ClubMemberListDto {
+    return {
+      members: ClubDto.fromMember(club),
     };
   }
 }
