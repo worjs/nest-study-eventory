@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/services/prisma.service';
 import { CreateClubData } from './type/create-club-data.type';
 import { ClubData } from './type/club-data.type';
@@ -97,16 +97,34 @@ export class ClubRepository {
     });
   }
 
-  async deleteClub(clubId: number): Promise<void> {
-    await this.prisma.$transaction([
-      this.prisma.clubJoin.deleteMany({
-        where: { clubId: clubId },
-      }),
-      this.prisma.club.delete({
+  async deleteClubWithEvents(clubId: number): Promise<void> {
+    await this.prisma.$transaction(async (prisma) => {
+      const startedEvents = await prisma.event.findMany({
+        where: {
+          clubId,
+          startTime: {
+            lt: new Date(),
+          },
+        },
+      });
+      if (startedEvents.length > 0) {
+        throw new BadRequestException(
+          '이미 시작된 클럽 전용 Event가 존재합니다. 클럽 삭제가 제한됩니다.',
+        );
+      }
+      await prisma.event.deleteMany({
+        where: {
+          clubId,
+        },
+      });
+      await prisma.clubJoin.deleteMany({
+        where: { clubId },
+      });
+      await prisma.club.delete({
         where: {
           id: clubId,
         },
-      }),
-    ]);
+      });
+    });
   }
 }

@@ -112,7 +112,10 @@ export class ClubService {
     return ClubDto.from(updatedClub);
   }
 
-  async deleteClub(clubId: number, user: UserBaseInfo): Promise<void> {
+  async deleteClubWithEvents(
+    clubId: number,
+    user: UserBaseInfo,
+  ): Promise<void> {
     const club = await this.clubRepository.getClubById(clubId);
     if (!club) {
       throw new NotFoundException('해당 클럽이 존재하지 않습니다.');
@@ -122,9 +125,6 @@ export class ClubService {
     }
 
     // 클럽에 속한 이벤트가 시작한 게 없으면, 정상적으로 삭제가 이뤄집니다.
-    // event.service.ts의 deleteClubEvents() 메서드를 참고하세요.
-    await this.eventService.deleteClubEvents(clubId);
-
-    await this.clubRepository.deleteClub(clubId);
+    await this.clubRepository.deleteClubWithEvents(clubId);
   }
 }

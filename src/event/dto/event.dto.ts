@@ -61,7 +61,7 @@ export class EventDto {
     type: Number,
     nullable: true,
   })
-  clubId?: number;
+  clubId!: number | null;
 
   static from(event: EventData): EventDto {
     return {
@@ -74,7 +74,7 @@ export class EventDto {
       startTime: event.startTime,
       endTime: event.endTime,
       maxPeople: event.maxPeople,
-      clubId: event.clubId || undefined,
+      clubId: event.clubId || null,
     };
   }
 

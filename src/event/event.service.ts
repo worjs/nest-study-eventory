@@ -7,7 +7,7 @@ import {
 import { CreateEventPayload } from './payload/create-event.payload';
 import { CreateEventData } from './type/create-event-data.type';
 import { UpdateEventData } from './type/update-event-data.type';
-import { EventDto, EventListDto, ClubEventListDto } from './dto/event.dto';
+import { EventDto, EventListDto } from './dto/event.dto';
 import { EventRepository } from './event.repository';
 import { EventListQuery } from './query/event-list.query';
 import { EventUpdatePayload } from './payload/event-update.payload';
@@ -217,23 +217,23 @@ export class EventService {
     await this.eventRepository.deleteEvent(eventId);
   }
 
-  async getClubEvents(clubId: number): Promise<ClubEventListDto> {
-    const events = await this.eventRepository.getClubEvents(clubId);
-    return ClubEventListDto.from(events);
-  }
+  // async getClubEvents(clubId: number): Promise<ClubEventListDto> {
+  //   const events = await this.eventRepository.getClubEvents(clubId);
+  //   return ClubEventListDto.from(events);
+  // }
 
-  async deleteClubEvents(clubId: number): Promise<void> {
-    const events = await this.eventRepository.getClubEvents(clubId);
-    for (const event of events) {
-      if (event.startTime < new Date()) {
-        throw new ConflictException(
-          '이미 시작된 클럽 전용 Event를 삭제할 수 없습니다. 클럽 삭제가 제한됩니다.',
-        );
-      }
-    }
+  // async deleteClubEvents(clubId: number): Promise<void> {
+  //   const events = await this.eventRepository.getClubEvents(clubId);
+  //   for (const event of events) {
+  //     if (event.startTime < new Date()) {
+  //       throw new ConflictException(
+  //         '이미 시작된 클럽 전용 Event를 삭제할 수 없습니다. 클럽 삭제가 제한됩니다.',
+  //       );
+  //     }
+  //   }
 
-    for (const event of events) {
-      await this.eventRepository.deleteEvent(event.id);
-    }
-  }
+  //   for (const event of events) {
+  //     await this.eventRepository.deleteEvent(event.id);
+  //   }
+  // }
 }

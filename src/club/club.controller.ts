@@ -81,6 +81,6 @@ export class ClubController {
     @Param('clubId', ParseIntPipe) clubId: number,
     @CurrentUser() user: UserBaseInfo,
   ): Promise<void> {
-    return this.clubService.deleteClub(clubId, user);
+    return this.clubService.deleteClubWithEvents(clubId, user);
   }
 }
