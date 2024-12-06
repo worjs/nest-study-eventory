@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
 import { ClubJoinStatus } from '@prisma/client';
 
-export class clubJoinStatusQuery {
+export class ClubJoinStatusQuery {
   @IsEnum(ClubJoinStatus, {
     message: 'status는 ClubJoinStatus Enum 값 중 하나여야 합니다.',
   })

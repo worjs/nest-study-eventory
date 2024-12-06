@@ -22,14 +22,13 @@ export class ClubService {
     payload: CreateClubPayload,
     user: UserBaseInfo,
   ): Promise<ClubDto> {
-    for (const memberId of payload.memberIds) {
-      const isMemberExist = await this.clubRepository.isUserExist(memberId);
-      if (!isMemberExist) {
-        throw new BadRequestException(
-          `멤버 ID(${memberId})가 유효하지 않습니다.`,
-        );
-      }
+    const memberIds = payload.memberIds;
+    const allMembersExist =
+      await this.clubRepository.validateUsersExist(memberIds);
+    if (!allMembersExist) {
+      throw new BadRequestException('멤버 ID가 유효한 user가 아닙니다.');
     }
+
     const isLeaderinMembers = payload.memberIds.includes(user.id);
     if (!isLeaderinMembers) {
       throw new BadRequestException('클럽 리더는 클럽 멤버여야 합니다.');
@@ -103,7 +102,7 @@ export class ClubService {
     }
 
     if (payload.leaderId) {
-      const isMemberExist = await this.clubRepository.isUserExist(
+      const isMemberExist = await this.clubRepository.validateUsersExist(
         payload.leaderId,
       );
       if (!isMemberExist) {

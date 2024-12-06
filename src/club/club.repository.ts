@@ -17,10 +17,10 @@ export class ClubRepository {
         leaderId: data.leaderId,
         maxPeople: data.maxPeople,
         clubJoin: {
-          create: {
-            userId: data.leaderId,
-            status: ClubJoinStatus.MEMBER,
-          },
+          create: data.members.map((member) => ({
+            userId: member.userId,
+            status: member.status,
+          })),
         },
       },
       select: {
@@ -50,11 +50,16 @@ export class ClubRepository {
     };
   }
 
-  async isUserExist(userId: number): Promise<boolean> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
+  async validateUsersExist(userIds: number | number[]): Promise<boolean> {
+    const ids = Array.isArray(userIds) ? userIds : [userIds];
+    const users = await this.prisma.user.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
     });
-    return !!user;
+    return users.length === ids.length;
   }
 
   async getUserIsClubMember(userId: number, clubId: number): Promise<boolean> {

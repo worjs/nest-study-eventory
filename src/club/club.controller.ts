@@ -20,11 +20,11 @@ import {
 import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
 import { ClubDto, ClubListDto } from './dto/club.dto';
-import { ClubMemberDto, ClubMemberListDto } from './dto/club-member.dto';
+import { ClubMemberListDto } from './dto/club-member.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorator/user.decorator';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
-import { clubJoinStatusQuery } from './query/club-join-status.query';
+import { ClubJoinStatusQuery } from './query/club-join-status.query';
 
 @Controller('clubs')
 @ApiTags('Club API')
@@ -64,13 +64,13 @@ export class ClubController {
   @ApiOkResponse({ type: ClubMemberListDto })
   async getClubMembers(
     @Param('clubId', ParseIntPipe) clubId: number,
-    @Query(new ValidationPipe({ transform: true })) query: clubJoinStatusQuery,
+    @Query(new ValidationPipe({ transform: true })) query: ClubJoinStatusQuery,
   ): Promise<ClubMemberListDto> {
     const members = await this.clubService.getClubMembersByStatus(
       clubId,
       query.status,
     );
-    return ClubMemberListDto.from(ClubMemberDto.fromArray(members));
+    return ClubMemberListDto.from(members);
   }
 
   @Post(':clubId')
