@@ -3,6 +3,7 @@ export type CreateEventData = {
   description: string;
   hostId: number;
   categoryId: number;
+  clubId?: number;
   cityIds: number[];
   startTime: Date;
   endTime: Date;

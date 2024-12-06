@@ -7,7 +7,7 @@ import {
 import { CreateEventPayload } from './payload/create-event.payload';
 import { CreateEventData } from './type/create-event-data.type';
 import { UpdateEventData } from './type/update-event-data.type';
-import { EventDto, EventListDto } from './dto/event.dto';
+import { EventDto, EventListDto, ClubEventListDto } from './dto/event.dto';
 import { EventRepository } from './event.repository';
 import { EventListQuery } from './query/event-list.query';
 import { EventUpdatePayload } from './payload/event-update.payload';
@@ -215,5 +215,10 @@ export class EventService {
     }
 
     await this.eventRepository.deleteEvent(eventId);
+  }
+
+  async getClubEvents(clubId: number): Promise<ClubEventListDto> {
+    const events = await this.eventRepository.getClubEvents(clubId);
+    return ClubEventListDto.from(events);
   }
 }
