@@ -34,10 +34,10 @@ export class ClubDto {
   maxPeople!: number;
 
   @ApiProperty({
-    description: '클럽 멤버원 명단',
-    type: [ClubMemberDto],
+    description: '클럽 멤버 정보',
+    type: Object,
   })
-  members!: ClubMemberDto[];
+  members!: { members: ClubMemberDto[] };
 
   static from(club: ClubData): ClubDto {
     return {
@@ -46,17 +46,13 @@ export class ClubDto {
       description: club.description,
       leaderId: club.leaderId,
       maxPeople: club.maxPeople,
-      members: ClubMemberDto.fromArray(club.members),
+      members: { members: ClubMemberDto.fromArray(club.members) },
     };
   }
 
   static fromMemberIds(club: ClubData): number[] {
     return club.members.map((member) => member.userId);
   }
-
-  // static fromMembers(club: ClubData): ClubMemberDto[] {
-  //   return ClubMemberDto.fromArray(club.members);
-  // }
 
   static fromArray(clubs: ClubData[]): ClubDto[] {
     return clubs.map((club) => this.from(club));

@@ -20,7 +20,7 @@ import {
 import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
 import { ClubDto, ClubListDto } from './dto/club.dto';
-import { ClubMemberDto } from './dto/club-member.dto';
+import { ClubMemberDto, ClubMemberListDto } from './dto/club-member.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorator/user.decorator';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
@@ -61,16 +61,16 @@ export class ClubController {
 
   @Get(':clubId/members')
   @ApiOperation({ summary: '클럽 멤버 정보를 조회합니다' })
-  @ApiOkResponse({ type: ClubMemberDto })
+  @ApiOkResponse({ type: ClubMemberListDto })
   async getClubMembers(
     @Param('clubId', ParseIntPipe) clubId: number,
     @Query(new ValidationPipe({ transform: true })) query: clubJoinStatusQuery,
-  ): Promise<ClubMemberDto[]> {
+  ): Promise<ClubMemberListDto> {
     const members = await this.clubService.getClubMembersByStatus(
       clubId,
       query.status,
     );
-    return ClubMemberDto.fromArray(members);
+    return ClubMemberListDto.from(ClubMemberDto.fromArray(members));
   }
 
   @Post(':clubId')

@@ -30,3 +30,17 @@ export class ClubMemberDto {
     return members.map((member) => this.from(member));
   }
 }
+
+export class ClubMemberListDto {
+  @ApiProperty({
+    description: '클럽 멤버 정보 리스트',
+    type: [ClubMemberDto],
+  })
+  members!: ClubMemberDto[];
+
+  static from(members: ClubMemberDto[]): ClubMemberListDto {
+    return {
+      members,
+    };
+  }
+}

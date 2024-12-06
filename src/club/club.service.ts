@@ -22,12 +22,25 @@ export class ClubService {
     payload: CreateClubPayload,
     user: UserBaseInfo,
   ): Promise<ClubDto> {
+    for (const memberId of payload.memberIds) {
+      const isMemberExist = await this.clubRepository.isUserExist(memberId);
+      if (!isMemberExist) {
+        throw new BadRequestException(
+          `멤버 ID(${memberId})가 유효하지 않습니다.`,
+        );
+      }
+    }
+    const isLeaderinMembers = payload.memberIds.includes(user.id);
+    if (!isLeaderinMembers) {
+      throw new BadRequestException('클럽 리더는 클럽 멤버여야 합니다.');
+    }
+
     const createData: CreateClubData = {
       title: payload.title,
       description: payload.description,
       leaderId: user.id,
       maxPeople: payload.maxPeople,
-      members: payload.members.map((member) => ({
+      members: payload.memberIds.map((member) => ({
         userId: member,
         status: ClubJoinStatus.MEMBER,
       })),
@@ -50,19 +63,6 @@ export class ClubService {
     const clubs = await this.clubRepository.getClubs();
     return ClubListDto.from(clubs);
   }
-
-  // async getClubMembers(clubId: number): Promise<number[]> {
-  //   const members = await this.clubRepository.getClubMembers(clubId);
-  //   return members;
-  // }
-
-  // async getClubMembers(clubId: number): Promise<ClubMemberListDto> {
-  //   const club = await this.clubRepository.getClubById(clubId);
-  //   if (!club) {
-  //     throw new NotFoundException('해당 클럽이 존재하지 않습니다.');
-  //   }
-  //   return ClubMemberListDto.from(club);
-  // }
 
   async getClubMembersByStatus(
     clubId: number,
@@ -100,6 +100,17 @@ export class ClubService {
     }
     if (payload.maxPeople === null) {
       throw new BadRequestException('최대 인원은 null이 될 수 없습니다.');
+    }
+
+    if (payload.leaderId) {
+      const isMemberExist = await this.clubRepository.isUserExist(
+        payload.leaderId,
+      );
+      if (!isMemberExist) {
+        throw new BadRequestException(
+          '멤버 ID(${payload.leaderId})가 유효한 user가 아닙니다.',
+        );
+      }
     }
 
     if (payload.leaderId) {
