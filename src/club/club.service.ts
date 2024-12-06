@@ -116,6 +116,7 @@ export class ClubService {
     if (club.leaderId !== user.id) {
       throw new ConflictException('클럽 리더만 수정할 수 있습니다.');
     }
+    // if 클럽 전용 모임이 시작한 경우.. 예외 처리 하기
 
     await this.clubRepository.deleteClub(clubId);
   }
