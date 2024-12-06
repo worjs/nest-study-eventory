@@ -9,8 +9,9 @@ import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
 import { CreateClubData } from './type/create-club-data.type';
 import { UpdateClubData } from './type/update-club-data.type';
-import { ClubDto, ClubListDto, ClubMemberListDto } from './dto/club.dto';
+import { ClubDto, ClubListDto, ClubMemberDto } from './dto/club.dto';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
+import { ClubJoinStatus } from '@prisma/client';
 
 @Injectable()
 export class ClubService {
@@ -25,7 +26,10 @@ export class ClubService {
       description: payload.description,
       leaderId: user.id,
       maxPeople: payload.maxPeople,
-      members: payload.members.map((member) => ({ userId: member })),
+      members: payload.members.map((member) => ({
+        userId: member,
+        status: ClubJoinStatus.MEMBER,
+      })),
     };
 
     const club = await this.clubRepository.createClub(createData);
@@ -51,12 +55,23 @@ export class ClubService {
   //   return members;
   // }
 
-  async getClubMembers(clubId: number): Promise<ClubMemberListDto> {
-    const club = await this.clubRepository.getClubById(clubId);
-    if (!club) {
-      throw new NotFoundException('해당 클럽이 존재하지 않습니다.');
-    }
-    return ClubMemberListDto.from(club);
+  // async getClubMembers(clubId: number): Promise<ClubMemberListDto> {
+  //   const club = await this.clubRepository.getClubById(clubId);
+  //   if (!club) {
+  //     throw new NotFoundException('해당 클럽이 존재하지 않습니다.');
+  //   }
+  //   return ClubMemberListDto.from(club);
+  // }
+
+  async getClubMembersByStatus(
+    clubId: number,
+    status: ClubJoinStatus,
+  ): Promise<ClubMemberDto[]> {
+    const members = await this.clubRepository.getClubMembersByStatus(
+      clubId,
+      status,
+    );
+    return ClubMemberDto.fromArray(members);
   }
 
   async updateClub(

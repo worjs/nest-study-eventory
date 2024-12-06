@@ -125,20 +125,43 @@ export class ClubRepository {
     }));
   }
 
-  async getClubMembers(clubId: number): Promise<number[]> {
+  // async getClubMembers(clubId: number): Promise<number[]> {
+  //   const members = await this.prisma.clubJoin.findMany({
+  //     where: {
+  //       clubId,
+  //       status: ClubJoinStatus.MEMBER,
+  //       user: {
+  //         deletedAt: null,
+  //       },
+  //     },
+  //     select: {
+  //       userId: true,
+  //     },
+  //   });
+  //   return members.map((member) => member.userId);
+  // }
+
+  async getClubMembersByStatus(
+    clubId: number,
+    status: ClubJoinStatus,
+  ): Promise<{ userId: number; status: ClubJoinStatus }[]> {
     const members = await this.prisma.clubJoin.findMany({
       where: {
         clubId,
-        status: ClubJoinStatus.MEMBER,
+        status,
         user: {
           deletedAt: null,
         },
       },
       select: {
         userId: true,
+        status: true,
       },
     });
-    return members.map((member) => member.userId);
+    return members.map((member) => ({
+      userId: member.userId,
+      status: member.status,
+    }));
   }
 
   async getClubMembersCount(clubId: number): Promise<number> {
