@@ -221,4 +221,19 @@ export class EventService {
     const events = await this.eventRepository.getClubEvents(clubId);
     return ClubEventListDto.from(events);
   }
+
+  async deleteClubEvents(clubId: number): Promise<void> {
+    const events = await this.eventRepository.getClubEvents(clubId);
+    for (const event of events) {
+      if (event.startTime < new Date()) {
+        throw new ConflictException(
+          '이미 시작된 클럽 전용 Event를 삭제할 수 없습니다. 클럽 삭제가 제한됩니다.',
+        );
+      }
+    }
+
+    for (const event of events) {
+      await this.eventRepository.deleteEvent(event.id);
+    }
+  }
 }

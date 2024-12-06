@@ -11,10 +11,14 @@ import { CreateClubData } from './type/create-club-data.type';
 import { UpdateClubData } from './type/update-club-data.type';
 import { ClubDto, ClubListDto } from './dto/club.dto';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
+import { EventService } from '../event/event.service';
 
 @Injectable()
 export class ClubService {
-  constructor(private readonly clubRepository: ClubRepository) {}
+  constructor(
+    private readonly clubRepository: ClubRepository,
+    private readonly eventService: EventService,
+  ) {}
 
   async createClub(
     payload: CreateClubPayload,
@@ -116,7 +120,10 @@ export class ClubService {
     if (club.leaderId !== user.id) {
       throw new ConflictException('클럽 리더만 수정할 수 있습니다.');
     }
-    // if 클럽 전용 모임이 시작한 경우.. 예외 처리 하기
+
+    // 클럽에 속한 이벤트가 시작한 게 없으면, 정상적으로 삭제가 이뤄집니다.
+    // event.service.ts의 deleteClubEvents() 메서드를 참고하세요.
+    await this.eventService.deleteClubEvents(clubId);
 
     await this.clubRepository.deleteClub(clubId);
   }
