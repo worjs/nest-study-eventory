@@ -10,7 +10,7 @@ export class ClubMemberDto {
   userId!: number;
 
   @ApiProperty({
-    description: '멤버 상태 (예: MEMBER, PENDING)',
+    description: '멤버 상태 (예: MEMBER, APPLICANT)',
     enum: ClubJoinStatus,
   })
   status!: ClubJoinStatus;
