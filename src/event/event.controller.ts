@@ -93,12 +93,12 @@ export class EventController {
     return this.eventService.deleteEvent(eventId);
   }
 
-  @Get('club-only')
-  @ApiOperation({ summary: '클럽 전용 이벤트 목록 조회' })
-  @ApiOkResponse({ type: ClubEventListDto })
-  async getClubEvents(
-    @Param('clubId', ParseIntPipe) clubId: number,
-  ): Promise<ClubEventListDto> {
-    return this.eventService.getClubEvents(clubId);
-  }
+  // @Get('clubs/:clubId/events')
+  // @ApiOperation({ summary: '클럽 전용 이벤트 목록 조회' })
+  // @ApiOkResponse({ type: ClubEventListDto })
+  // async getClubEvents(
+  //   @Param('clubId', ParseIntPipe) clubId: number,
+  // ): Promise<ClubEventListDto> {
+  //   return this.eventService.getClubEvents(clubId);
+  // }
 }
