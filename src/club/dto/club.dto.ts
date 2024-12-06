@@ -71,14 +71,3 @@ export class ClubListDto {
     };
   }
 }
-
-export class ClubMemberListDto {
-  @ApiProperty({ description: '클럽 멤버 ID 리스트', type: [Number] })
-  members!: number[];
-
-  static from(club: ClubData): ClubMemberListDto {
-    return {
-      members: ClubDto.fromMember(club),
-    };
-  }
-}

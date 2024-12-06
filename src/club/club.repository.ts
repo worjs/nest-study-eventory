@@ -32,6 +32,7 @@ export class ClubRepository {
         clubJoin: {
           select: {
             userId: true,
+            status: true,
           },
         },
       },
@@ -42,7 +43,10 @@ export class ClubRepository {
       description: club.description,
       leaderId: club.leaderId,
       maxPeople: club.maxPeople,
-      members: club.clubJoin.map((join) => ({ userId: join.userId })),
+      members: club.clubJoin.map((join) => ({
+        userId: join.userId,
+        status: join.status,
+      })),
     };
   }
 
@@ -72,6 +76,7 @@ export class ClubRepository {
         clubJoin: {
           select: {
             userId: true,
+            status: true,
           },
         },
       },
@@ -83,7 +88,10 @@ export class ClubRepository {
       description: club.description,
       leaderId: club.leaderId,
       maxPeople: club.maxPeople,
-      members: club.clubJoin.map((join) => ({ userId: join.userId })),
+      members: club.clubJoin.map((join) => ({
+        userId: join.userId,
+        status: join.status,
+      })),
     };
   }
 
@@ -98,6 +106,7 @@ export class ClubRepository {
         clubJoin: {
           select: {
             userId: true,
+            status: true,
           },
         },
       },
@@ -109,7 +118,10 @@ export class ClubRepository {
       description: club.description,
       leaderId: club.leaderId,
       maxPeople: club.maxPeople,
-      members: club.clubJoin.map((join) => ({ userId: join.userId })),
+      members: club.clubJoin.map((join) => ({
+        userId: join.userId,
+        status: join.status,
+      })),
     }));
   }
 
@@ -159,6 +171,7 @@ export class ClubRepository {
         clubJoin: {
           select: {
             userId: true,
+            status: true,
           },
         },
       },
@@ -169,7 +182,10 @@ export class ClubRepository {
       description: updatedClub.description,
       leaderId: updatedClub.leaderId,
       maxPeople: updatedClub.maxPeople,
-      members: updatedClub.clubJoin.map((join) => ({ userId: join.userId })),
+      members: updatedClub.clubJoin.map((join) => ({
+        userId: join.userId,
+        status: join.status,
+      })),
     };
   }
 }
