@@ -1,36 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ClubData } from '../type/club-data.type';
-import { ClubJoinStatus } from '@prisma/client';
-
-export class ClubMemberDto {
-  @ApiProperty({
-    description: '멤버 ID',
-    type: Number,
-  })
-  userId!: number;
-
-  @ApiProperty({
-    description: '멤버 상태 (예: MEMBER, APPLICANT)',
-    enum: ClubJoinStatus,
-  })
-  status!: ClubJoinStatus;
-
-  static from(member: {
-    userId: number;
-    status: ClubJoinStatus;
-  }): ClubMemberDto {
-    return {
-      userId: member.userId,
-      status: member.status,
-    };
-  }
-
-  static fromArray(
-    members: { userId: number; status: ClubJoinStatus }[],
-  ): ClubMemberDto[] {
-    return members.map((member) => this.from(member));
-  }
-}
+import { ClubMemberDto } from './club-member.dto';
 
 export class ClubDto {
   @ApiProperty({
@@ -64,7 +34,7 @@ export class ClubDto {
   maxPeople!: number;
 
   @ApiProperty({
-    description: '클럽 멤버원 ID 명단',
+    description: '클럽 멤버원 명단',
     type: [ClubMemberDto],
   })
   members!: ClubMemberDto[];
@@ -84,9 +54,9 @@ export class ClubDto {
     return club.members.map((member) => member.userId);
   }
 
-  static fromMembers(club: ClubData): ClubMemberDto[] {
-    return ClubMemberDto.fromArray(club.members);
-  }
+  // static fromMembers(club: ClubData): ClubMemberDto[] {
+  //   return ClubMemberDto.fromArray(club.members);
+  // }
 
   static fromArray(clubs: ClubData[]): ClubDto[] {
     return clubs.map((club) => this.from(club));

@@ -9,7 +9,8 @@ import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
 import { CreateClubData } from './type/create-club-data.type';
 import { UpdateClubData } from './type/update-club-data.type';
-import { ClubDto, ClubListDto, ClubMemberDto } from './dto/club.dto';
+import { ClubDto, ClubListDto } from './dto/club.dto';
+import { ClubMemberDto } from './dto/club-member.dto';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
 import { ClubJoinStatus } from '@prisma/client';
 

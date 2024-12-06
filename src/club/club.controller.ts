@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Post,
   UseGuards,
+  ValidationPipe,
   Query,
 } from '@nestjs/common';
 import { ClubService } from './club.service';
@@ -18,11 +19,12 @@ import {
 } from '@nestjs/swagger';
 import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
-import { ClubDto, ClubListDto, ClubMemberDto } from './dto/club.dto';
+import { ClubDto, ClubListDto } from './dto/club.dto';
+import { ClubMemberDto } from './dto/club-member.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorator/user.decorator';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
-import { ClubJoinStatus } from '@prisma/client';
+import { clubJoinStatusQuery } from './query/club-join-status.query';
 
 @Controller('clubs')
 @ApiTags('Club API')
@@ -62,11 +64,11 @@ export class ClubController {
   @ApiOkResponse({ type: ClubMemberDto })
   async getClubMembers(
     @Param('clubId', ParseIntPipe) clubId: number,
-    @Query('status') status: ClubJoinStatus,
+    @Query(new ValidationPipe({ transform: true })) query: clubJoinStatusQuery,
   ): Promise<ClubMemberDto[]> {
     const members = await this.clubService.getClubMembersByStatus(
       clubId,
-      status,
+      query.status,
     );
     return ClubMemberDto.fromArray(members);
   }
