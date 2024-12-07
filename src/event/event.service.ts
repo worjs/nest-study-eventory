@@ -48,6 +48,7 @@ export class EventService {
 
     const createData: CreateEventData = {
       hostId: payload.hostId,
+      clubId: payload.clubId,
       title: payload.title,
       description: payload.description,
       categoryId: payload.categoryId,

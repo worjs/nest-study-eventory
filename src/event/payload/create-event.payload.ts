@@ -72,12 +72,11 @@ export class CreateEventPayload {
   })
   maxPeople!: number;
 
-  @IsOptional()
   @IsInt()
   @ApiPropertyOptional({
     description: '클럽 ID (클럽 전용 이벤트일 경우)',
     type: Number,
     nullable: true,
   })
-  clubId?: number;
+  clubId!: number;
 }

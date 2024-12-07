@@ -74,7 +74,7 @@ export class EventDto {
       startTime: event.startTime,
       endTime: event.endTime,
       maxPeople: event.maxPeople,
-      clubId: event.clubId || null,
+      clubId: event.clubId,
     };
   }
 

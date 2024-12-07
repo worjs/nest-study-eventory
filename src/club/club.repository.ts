@@ -225,25 +225,29 @@ export class ClubRepository {
   }
 
   async deleteClubWithEvents(clubId: number): Promise<void> {
+    const upcomingEvents = await this.prisma.event.findMany({
+      where: {
+        clubId,
+        startTime: {
+          gte: new Date(),
+        },
+      },
+    });
+    const eventIdsToDelete = upcomingEvents.map((event) => event.id);
+
     await this.prisma.$transaction(async (prisma) => {
-      const startedEvents = await prisma.event.findMany({
-        where: {
-          clubId,
-          startTime: {
-            lt: new Date(),
+      if (eventIdsToDelete.length > 0) {
+        await prisma.eventJoin.deleteMany({
+          where: {
+            eventId: { in: eventIdsToDelete },
           },
-        },
-      });
-      if (startedEvents.length > 0) {
-        throw new BadRequestException(
-          '이미 시작된 클럽 전용 Event가 존재합니다. 클럽 삭제가 제한됩니다.',
-        );
+        });
+        await prisma.event.deleteMany({
+          where: {
+            id: { in: eventIdsToDelete },
+          },
+        });
       }
-      await prisma.event.deleteMany({
-        where: {
-          clubId,
-        },
-      });
       await prisma.clubJoin.deleteMany({
         where: { clubId },
       });

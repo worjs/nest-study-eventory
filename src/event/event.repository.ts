@@ -18,6 +18,7 @@ export class EventRepository {
         description: data.description,
         hostId: data.hostId,
         categoryId: data.categoryId,
+        clubId: data.clubId,
         eventCity: {
           create: data.cityIds.map((cityId) => ({
             cityId: cityId,
@@ -37,6 +38,7 @@ export class EventRepository {
         title: true,
         description: true,
         hostId: true,
+        clubId: true,
         categoryId: true,
         eventCity: {
           select: {
@@ -96,6 +98,7 @@ export class EventRepository {
         title: true,
         description: true,
         hostId: true,
+        clubId: true,
         categoryId: true,
         eventCity: {
           select: {
@@ -125,6 +128,7 @@ export class EventRepository {
         title: true,
         description: true,
         hostId: true,
+        clubId: true,
         categoryId: true,
         eventCity: {
           select: {
@@ -215,6 +219,7 @@ export class EventRepository {
         title: true,
         description: true,
         hostId: true,
+        clubId: true,
         categoryId: true,
         eventCity: {
           select: {
