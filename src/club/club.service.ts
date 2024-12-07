@@ -9,8 +9,10 @@ import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
 import { CreateClubData } from './type/create-club-data.type';
 import { UpdateClubData } from './type/update-club-data.type';
-import { ClubDto } from './dto/club.dto';
+import { ClubDto, ClubListDto } from './dto/club.dto';
+import { ClubMemberDto } from './dto/club-member.dto';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
+import { ClubJoinStatus } from '@prisma/client';
 
 @Injectable()
 export class ClubService {
@@ -20,11 +22,27 @@ export class ClubService {
     payload: CreateClubPayload,
     user: UserBaseInfo,
   ): Promise<ClubDto> {
+    const memberIds = payload.memberIds;
+    const allMembersExist =
+      await this.clubRepository.validateUsersExist(memberIds);
+    if (!allMembersExist) {
+      throw new BadRequestException('멤버 ID가 유효한 user가 아닙니다.');
+    }
+
+    const isLeaderinMembers = payload.memberIds.includes(user.id);
+    if (!isLeaderinMembers) {
+      throw new BadRequestException('클럽 리더는 클럽 멤버여야 합니다.');
+    }
+
     const createData: CreateClubData = {
       title: payload.title,
       description: payload.description,
       leaderId: user.id,
       maxPeople: payload.maxPeople,
+      members: payload.memberIds.map((member) => ({
+        userId: member,
+        status: ClubJoinStatus.MEMBER,
+      })),
     };
 
     const club = await this.clubRepository.createClub(createData);
@@ -38,6 +56,22 @@ export class ClubService {
       throw new NotFoundException('해당 클럽이 존재하지 않습니다.');
     }
     return ClubDto.from(club);
+  }
+
+  async getClubs(): Promise<ClubListDto> {
+    const clubs = await this.clubRepository.getClubs();
+    return ClubListDto.from(clubs);
+  }
+
+  async getClubMembersByStatus(
+    clubId: number,
+    status: ClubJoinStatus,
+  ): Promise<ClubMemberDto[]> {
+    const members = await this.clubRepository.getClubMembersByStatus(
+      clubId,
+      status,
+    );
+    return ClubMemberDto.fromArray(members);
   }
 
   async updateClub(
@@ -65,6 +99,17 @@ export class ClubService {
     }
     if (payload.maxPeople === null) {
       throw new BadRequestException('최대 인원은 null이 될 수 없습니다.');
+    }
+
+    if (payload.leaderId) {
+      const isMemberExist = await this.clubRepository.validateUsersExist(
+        payload.leaderId,
+      );
+      if (!isMemberExist) {
+        throw new BadRequestException(
+          '멤버 ID(${payload.leaderId})가 유효한 user가 아닙니다.',
+        );
+      }
     }
 
     if (payload.leaderId) {
