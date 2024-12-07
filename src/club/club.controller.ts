@@ -8,6 +8,8 @@ import {
   ParseIntPipe,
   Post,
   UseGuards,
+  ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { ClubService } from './club.service';
 import {
@@ -21,9 +23,11 @@ import {
 import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
 import { ClubDto, ClubListDto } from './dto/club.dto';
+import { ClubMemberListDto } from './dto/club-member.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorator/user.decorator';
 import { UserBaseInfo } from '../auth/type/user-base-info.type';
+import { ClubJoinStatusQuery } from './query/club-join-status.query';
 
 @Controller('clubs')
 @ApiTags('Club API')
@@ -56,6 +60,20 @@ export class ClubController {
   @ApiOkResponse({ type: ClubListDto })
   async getClubs(): Promise<ClubListDto> {
     return this.clubService.getClubs();
+  }
+
+  @Get(':clubId/members')
+  @ApiOperation({ summary: '클럽 멤버 정보를 조회합니다' })
+  @ApiOkResponse({ type: ClubMemberListDto })
+  async getClubMembers(
+    @Param('clubId', ParseIntPipe) clubId: number,
+    @Query(new ValidationPipe({ transform: true })) query: ClubJoinStatusQuery,
+  ): Promise<ClubMemberListDto> {
+    const members = await this.clubService.getClubMembersByStatus(
+      clubId,
+      query.status,
+    );
+    return ClubMemberListDto.from(members);
   }
 
   @Post(':clubId')

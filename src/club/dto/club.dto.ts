@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ClubData } from '../type/club-data.type';
+import { ClubMemberDto } from './club-member.dto';
 
 export class ClubDto {
   @ApiProperty({
@@ -32,6 +33,12 @@ export class ClubDto {
   })
   maxPeople!: number;
 
+  @ApiProperty({
+    description: '클럽 멤버 정보',
+    type: Object,
+  })
+  members!: { members: ClubMemberDto[] };
+
   static from(club: ClubData): ClubDto {
     return {
       id: club.id,
@@ -39,7 +46,12 @@ export class ClubDto {
       description: club.description,
       leaderId: club.leaderId,
       maxPeople: club.maxPeople,
+      members: { members: ClubMemberDto.fromArray(club.members) },
     };
+  }
+
+  static fromMemberIds(club: ClubData): number[] {
+    return club.members.map((member) => member.userId);
   }
 
   static fromArray(clubs: ClubData[]): ClubDto[] {
