@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, NotFoundException} from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, BadRequestException, ForbiddenException} from '@nestjs/common';
 import { ClubRepository } from './club.repository';
 import { ClubDto, ClubListDto} from './dto/club.dto';
 import { CreateClubPayload } from './payload/create-club.payload';
@@ -6,11 +6,14 @@ import { CreateClubData } from './type/create-club-data.type';
 import { UserBaseInfo } from 'src/auth /type/user-base-info-type';
 import { ClubDetailDto } from './dto/club-detail.dto';
 import { ClubQuery } from './query/club.query';
+import { PutUpdateClubPayload } from './payload/put-update-club.payload';
+import { PatchUpdateClubPayload } from './payload/patch-update-club';
+import { UpdateClubData } from './type/update-club-data.type';
 
 @Injectable()
 export class ClubService {
     constructor(private readonly clubRepository: ClubRepository) {}
-        
+
     async createClub(payload: CreateClubPayload, user: UserBaseInfo): Promise<ClubDto> {
         const isNameExist = await this.clubRepository.isNameExist(
             payload.name,
@@ -46,4 +49,70 @@ export class ClubService {
 
         return ClubListDto.from(clubs);
     }
+
+    async putUpdateClub(clubId: number, payload: PutUpdateClubPayload, user: UserBaseInfo,): Promise<ClubDto> {
+        const club = await this.clubRepository.getClubById(clubId);
+
+        if (!club) {
+        throw new NotFoundException('Can not find a Club');
+        }
+
+        if (club.leaderId !== user.id) {
+        throw new ForbiddenException('Only leader can edit.');
+        }
+
+        const data: UpdateClubData = {
+            name: payload.name,
+            description: payload.description,
+            maxPeople: payload.maxPeople,
+        };
+
+        const updatedClub = await this.clubRepository.updateClub(clubId, data);
+
+        return ClubDto.from(updatedClub);
+    }
+
+    async patchUpdateClub( clubId: number, payload: PatchUpdateClubPayload, user: UserBaseInfo,): Promise<ClubDto> {
+        const data = this.validateNullOf(payload);
+
+        const club = await this.clubRepository.getClubById(clubId);
+
+        if (!club) {
+            throw new NotFoundException('Can not find a club.');
+        }
+
+        if (club.leaderId !== user.id) {
+            throw new ForbiddenException('Only leader can edit.');
+        }
+
+        const membersIds = await this.clubRepository.getMembersIds;
+
+        if (payload.maxPeople && membersIds.length > payload.maxPeople) {
+            throw new ConflictException('You cannot change the number of members to a number less than the current number.');
+        }
+
+        const updatedClub = await this.clubRepository.updateClub(clubId, data);
+
+        return ClubDto.from(updatedClub);
+    }
+
+    private validateNullOf(payload: PatchUpdateClubPayload): UpdateClubData {
+        if (payload.name === null) {
+            throw new BadRequestException('name can not be null');
+        }
+
+        if (payload.description === null) {
+            throw new BadRequestException('description can not be null');
+        }
+
+        if (payload.maxPeople === null) {
+            throw new BadRequestException('maxPeople can not be null');
+        }
+
+        return {
+            name: payload.name,
+            description: payload.description,
+            maxPeople: payload.maxPeople,
+        };
+    } 
 }
