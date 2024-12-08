@@ -1,7 +1,7 @@
 export type ClubData = {
   id: number;
   name: string;
-  description: string | null;
+  description: string;
   leaderId: number;
   maxPeople: number;
 };

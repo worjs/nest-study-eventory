@@ -36,7 +36,7 @@ export class ClubDto {
     return {
       id: club.id,
       name: club.name,
-      description: club.description ?? '',
+      description: club.description,
       leaderId: club.leaderId,
       maxPeople: club.maxPeople,
     };
