@@ -60,7 +60,7 @@ export class ClubController {
   }
 
   @Get(':clubId/members')
-  @ApiOperation({ summary: '클럽 멤버 정보를 조회합니다' })
+  @ApiOperation({ summary: '클럽 [멤버 정보/신청자/거절자]를 조회합니다' })
   @ApiOkResponse({ type: ClubMemberListDto })
   async getClubMembers(
     @Param('clubId', ParseIntPipe) clubId: number,
