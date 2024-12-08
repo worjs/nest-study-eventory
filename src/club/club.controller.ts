@@ -8,6 +8,7 @@ import {
   UseGuards,
   ValidationPipe,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import { ClubService } from './club.service';
 import {
@@ -16,6 +17,7 @@ import {
   ApiOperation,
   ApiOkResponse,
   ApiTags,
+  ApiNoContentResponse,
 } from '@nestjs/swagger';
 import { CreateClubPayload } from './payload/create-club.payload';
 import { UpdateClubPayload } from './payload/update-club.payload';
@@ -84,5 +86,18 @@ export class ClubController {
     @CurrentUser() user: UserBaseInfo,
   ): Promise<ClubDto> {
     return this.clubService.updateClub(clubId, payload, user);
+  }
+
+  @Post(':clubId/out')
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: '클럽 탈퇴' })
+  @ApiNoContentResponse()
+  async leaveClub(
+    @Param('clubId', ParseIntPipe) clubId: number,
+    @CurrentUser() user: UserBaseInfo,
+  ): Promise<void> {
+    return this.clubService.outClub(clubId, user);
   }
 }
