@@ -236,6 +236,11 @@ export class ClubRepository {
     const upcomingEventIds = upcomingEvents.map((event) => event.id);
     await this.prisma.$transaction(async (prisma) => {
       if (upcomingEventIds.length > 0) {
+        await prisma.eventCity.deleteMany({
+          where: {
+            eventId: { in: upcomingEventIds },
+          },
+        });
         await prisma.eventJoin.deleteMany({
           where: {
             eventId: { in: upcomingEventIds },
