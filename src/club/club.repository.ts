@@ -225,27 +225,15 @@ export class ClubRepository {
   }
 
   async deleteClubWithEvents(clubId: number): Promise<void> {
-    const [upcomingEvents, startedEvents] = await Promise.all([
-      this.prisma.event.findMany({
-        where: {
-          clubId,
-          startTime: {
-            gte: new Date(),
-          },
-        },
-      }),
-      this.prisma.event.findMany({
-        where: {
-          clubId,
-          startTime: {
-            lt: new Date(),
-          },
-        },
-      }),
-    ]);
+    const events = await this.prisma.event.findMany({
+      where: { clubId },
+    });
+
+    const now = new Date();
+    const upcomingEvents = events.filter((event) => event.startTime >= now);
+    const startedEvents = events.filter((event) => event.startTime < now);
 
     const upcomingEventIds = upcomingEvents.map((event) => event.id);
-
     await this.prisma.$transaction(async (prisma) => {
       if (upcomingEventIds.length > 0) {
         await prisma.eventJoin.deleteMany({
@@ -266,7 +254,7 @@ export class ClubRepository {
             id: { in: startedEvents.map((event) => event.id) },
           },
           data: {
-            archived: true, // TODO : 아카이빙 처리 후 나중에 조회 함수 서술 필요 (API 따로 파기)
+            archived: true, // TODO : 아카이빙 처리 후 나중에 조회 함수 서술 필요 (기존 함수 수정 필요)
             clubId: null, // NOTE :  FK 제약 조건 해결을 위해 clubId를 null로 설정
           },
         });
