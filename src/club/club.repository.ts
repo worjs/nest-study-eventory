@@ -6,22 +6,30 @@ import { CreateClubData } from './type/create-club-data.type';
 import { ClubDetailData } from './type/club-detail-data.type';
 import { ClubQuery } from './query/club.query';
 import { ClubJoin } from '@prisma/client';
+import { ClubStatus } from '@prisma/client';
 
 
 @Injectable()
 export class ClubRepository {
   constructor(private readonly prisma: PrismaService) {}
   
-  async createClub(data: CreateClubData): Promise<ClubData> {
+ async createClub(data: CreateClubData): Promise<ClubData> {
     return this.prisma.club.create({
       data: {
         name: data.name,
         description: data.description,
         leaderId: data.leaderId,
-        maxPeople: data.maxPeople
+        maxPeople: data.maxPeople,
+        members: {
+          create: {
+            userId: data.leaderId,
+            status: ClubStatus.PENDING,
+          },
+        },
       },
     });
   }
+
 
   async isNameExist(clubName: string): Promise<boolean> {
     const club = await this.prisma.club.findUnique({
