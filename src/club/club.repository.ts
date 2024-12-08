@@ -266,7 +266,8 @@ export class ClubRepository {
             id: { in: startedEvents.map((event) => event.id) },
           },
           data: {
-            archived: true,
+            archived: true, // TODO : 아카이빙 처리 후 나중에 조회 함수 서술 필요 (API 따로 파기)
+            clubId: null, // NOTE :  FK 제약 조건 해결을 위해 clubId를 null로 설정
           },
         });
       }
