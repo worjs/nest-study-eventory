@@ -29,7 +29,7 @@ export class ClubDetailDto {
   })
   name!: string;
 
- @ApiProperty({
+  @ApiProperty({
     description: 'Leader ID',
     type: Number,
   })
@@ -52,7 +52,6 @@ export class ClubDetailDto {
     type: [SimpleUserDto],
   })
   participants!: SimpleUserDto[];
-
 
   static from(data: ClubDetailData): ClubDetailDto {
     return {
