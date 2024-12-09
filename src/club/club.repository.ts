@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/services/prisma.service';
 import { ClubData } from './type/club-data.type';
-import { User, Club } from '@prisma/client'
+import { User, Club } from '@prisma/client';
 import { CreateClubData } from './type/create-club-data.type';
 import { ClubDetailData } from './type/club-detail-data.type';
 import { ClubQuery } from './query/club.query';
@@ -14,8 +14,8 @@ import { UpdateClubData } from './type/update-club-data.type';
 @Injectable()
 export class ClubRepository {
   constructor(private readonly prisma: PrismaService) {}
-  
- async createClub(data: CreateClubData): Promise<ClubData> {
+
+  async createClub(data: CreateClubData): Promise<ClubData> {
     return this.prisma.club.create({
       data: {
         name: data.name,
@@ -31,7 +31,6 @@ export class ClubRepository {
       },
     });
   }
-
 
   async isNameExist(clubName: string): Promise<boolean> {
     const club = await this.prisma.club.findUnique({
@@ -64,7 +63,7 @@ export class ClubRepository {
         name: query.name,
         leader: {
           id: query.leaderId,
-          deletedAt: null
+          deletedAt: null,
         },
       },
       select: {
@@ -85,7 +84,6 @@ export class ClubRepository {
           deletedAt: null,
         },
         status: 'APPROVED', // 승인된 사람들만 멤버로 간주됩니다.
-
       },
       select: {
         userId: true,
