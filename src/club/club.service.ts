@@ -60,28 +60,38 @@ export class ClubService {
     return ClubListDto.from(clubs);
   }
 
-    async leadershipTransfer(clubId: number, payload: LeadershipTransferPayload, user: UserBaseInfo): Promise<void> {
-        const club = await this.clubRepository.getClubById(clubId);
+  async leadershipTransfer(
+    clubId: number,
+    payload: LeadershipTransferPayload,
+    user: UserBaseInfo,
+  ): Promise<void> {
+    const club = await this.clubRepository.getClubById(clubId);
 
-        if (!club) {
-            throw new NotFoundException('Can not find a club.');
-        }
-
-        if (club.leaderId !== user.id) {
-            throw new ForbiddenException('Only the current leader can transfer the leadership.');
-        }
-
-        const membersIds = await this.clubRepository.getMembersIds(clubId);
-        if (!membersIds.includes(payload.newLeaderId)) {
-            throw new ConflictException('The new leader must be a member of the club.');
-        }
-
-        if (club.leaderId === payload.newLeaderId) {
-            throw new ConflictException('The current leader cannot transfer leadership to themselves.');
-        }
-
-        await this.clubRepository.leadershipTransfer(clubId, payload.newLeaderId);
+    if (!club) {
+      throw new NotFoundException('Can not find a club.');
     }
+
+    if (club.leaderId !== user.id) {
+      throw new ForbiddenException(
+        'Only the current leader can transfer the leadership.',
+      );
+    }
+
+    const membersIds = await this.clubRepository.getMembersIds(clubId);
+    if (!membersIds.includes(payload.newLeaderId)) {
+      throw new ConflictException(
+        'The new leader must be a member of the club.',
+      );
+    }
+
+    if (club.leaderId === payload.newLeaderId) {
+      throw new ConflictException(
+        'The current leader cannot transfer leadership to themselves.',
+      );
+    }
+
+    await this.clubRepository.leadershipTransfer(clubId, payload.newLeaderId);
+  }
 
   async putUpdateClub(
     clubId: number,

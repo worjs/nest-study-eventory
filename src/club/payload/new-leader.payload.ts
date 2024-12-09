@@ -5,7 +5,7 @@ import { IsInt } from 'class-validator';
 export class LeadershipTransferPayload {
   @IsInt()
   @Type(() => Number)
-  @ApiProperty ({
+  @ApiProperty({
     description: 'New LeaderID',
     type: Number,
   })
