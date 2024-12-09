@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common/services/prisma.service';
 import { ClubData } from './type/club-data.type';
-import { User, Club } from '@prisma/client'
+import { User, Club } from '@prisma/client';
 import { CreateClubData } from './type/create-club-data.type';
 import { ClubDetailData } from './type/club-detail-data.type';
 import { ClubQuery } from './query/club.query';
 import { ClubJoin } from '@prisma/client';
 import { ClubStatus } from '@prisma/client';
-
+import { PutUpdateClubPayload } from './payload/put-update-club.payload';
+import { PatchUpdateClubPayload } from './payload/patch-update-club';
+import { UpdateClubData } from './type/update-club-data.type';
 
 @Injectable()
 export class ClubRepository {
   constructor(private readonly prisma: PrismaService) {}
-  
- async createClub(data: CreateClubData): Promise<ClubData> {
+
+  async createClub(data: CreateClubData): Promise<ClubData> {
     return this.prisma.club.create({
       data: {
         name: data.name,
@@ -29,7 +31,6 @@ export class ClubRepository {
       },
     });
   }
-
 
   async isNameExist(clubName: string): Promise<boolean> {
     const club = await this.prisma.club.findUnique({
@@ -62,7 +63,7 @@ export class ClubRepository {
         name: query.name,
         leader: {
           id: query.leaderId,
-          deletedAt: null
+          deletedAt: null,
         },
       },
       select: {
@@ -73,6 +74,22 @@ export class ClubRepository {
         maxPeople: true,
       },
     });
+  }
+
+  async getMembersIds(clubId: number): Promise<number[]> {
+    const data = await this.prisma.clubJoin.findMany({
+      where: {
+        clubId,
+        user: {
+          deletedAt: null,
+        },
+        status: 'APPROVED', // 승인된 사람들만 멤버로 간주됩니다.
+      },
+      select: {
+        userId: true,
+      },
+    });
+    return data.map((d) => d.userId);
   }
 
   async findClubDetailById(clubId: number): Promise<ClubDetailData | null> {
@@ -102,18 +119,23 @@ export class ClubRepository {
     });
   }
 
-  async deleteClub(id: number): Promise<void> {
-    await this.prisma.$transaction([
-      this.prisma.clubJoin.deleteMany({
-        where: {
-          clubId: id,
-        },
-      }),
-      this.prisma.club.delete({
-        where: {
-          id,
-        },
-      }),
-    ]);
+  async updateClub(id: number, data: UpdateClubData): Promise<ClubData> {
+    return this.prisma.club.update({
+      where: {
+        id,
+      },
+      data: {
+        name: data.name,
+        description: data.description,
+        maxPeople: data.maxPeople,
+      },
+      select: {
+        id: true,
+        name: true,
+        leaderId: true,
+        description: true,
+        maxPeople: true,
+      },
+    });
   }
 }
