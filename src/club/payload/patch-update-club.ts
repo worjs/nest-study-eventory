@@ -17,7 +17,7 @@ export class PatchUpdateClubPayload {
     description: 'Club name',
     type: String,
   })
-  name?: string | null;
+  name!: string;
 
   @IsOptional()
   @IsString()

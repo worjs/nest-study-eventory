@@ -61,11 +61,24 @@ export class ClubService {
         throw new ForbiddenException('Only leader can edit.');
         }
 
+        const isNameExist = await this.clubRepository.isNameExist(
+            payload.name,
+        );
+        if (isNameExist) {
+            throw new ConflictException('Such name already exists.');
+        }
+
         const data: UpdateClubData = {
             name: payload.name,
             description: payload.description,
             maxPeople: payload.maxPeople,
         };
+
+        const membersIds = await this.clubRepository.getMembersIds;
+
+        if (payload.maxPeople && membersIds.length > payload.maxPeople) {
+            throw new ConflictException('You cannot change the number of members to a number less than the current number.');
+        }
 
         const updatedClub = await this.clubRepository.updateClub(clubId, data);
 
@@ -83,6 +96,14 @@ export class ClubService {
 
         if (club.leaderId !== user.id) {
             throw new ForbiddenException('Only leader can edit.');
+        }
+
+        const isNameExist = await this.clubRepository.isNameExist(
+            payload.name,
+        );
+
+        if (isNameExist) {
+            throw new ConflictException('Such name already exists.');
         }
 
         const membersIds = await this.clubRepository.getMembersIds;
